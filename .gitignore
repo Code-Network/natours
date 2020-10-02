@@ -25,3 +25,7 @@ node_modules
 # Ignore js notes
 app1.js
 
+#Ignore .idea/
+.idea/
+
+

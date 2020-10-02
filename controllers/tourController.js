@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Tour = require('./../models/tourModel');
 
 /*
  Read the tours data first, and simultaneously parse

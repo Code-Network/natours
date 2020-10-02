@@ -12,7 +12,7 @@ const router = express.Router();
   next();
 });
 */
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 // Create a checkBody middleware function
 //  Check if body contains the name and price property

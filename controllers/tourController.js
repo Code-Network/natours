@@ -1,4 +1,4 @@
-const fs = require('fs');
+// const fs = require('fs');
 const Tour = require('./../models/tourModel');
 
 /*
@@ -16,13 +16,15 @@ const Tour = require('./../models/tourModel');
  But from `${__dirname}/controllers/tourController.js` we travel this way:
  -- `${__dirname}/../dev-data/data/tours-simple.json`
  */
-const tours = JSON.parse(
+/*const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-);
+);*/
 
-// Middleware
+// Middleware -- no longer necessary when switching to DB refactor
+/*
 exports.checkID = (req, res, next, val) => {
   console.log(`Tour id is ${val}`);
+
   // If the ID larger than the tours array, send a status 404
   if (req.params.id * 1 > tours.length) {
     return res.status(404).json({
@@ -30,7 +32,9 @@ exports.checkID = (req, res, next, val) => {
       message: 'Invalid ID'
     });
   }
+  next();
 };
+*/
 
 // Create a checkBody middleware function
 //  Check if body contains the name and price property
@@ -54,11 +58,11 @@ exports.getAllTours = (req, res) => {
   // console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
-    results: tours.length,
-    requestedAt: req.requestTime,
-    data: {
-      tours
-    }
+    // results: tours.length,
+    // requestedAt: req.requestTime,
+    // data: {
+    //   tours
+    // }
   });
 };
 
@@ -82,13 +86,13 @@ exports.getTour = (req, res) => {
   // Get the '5th' tour from tours-simple.json
   // find() returns an array where the comparison el.id===id is true
   // It will return
-  const tour = tours.find(el => el.id === id);
+  // const tour = tours.find(el => el.id === id);
 
   res.status(200).json({
     status: 'success',
-    data: {
-      tour
-    }
+    // data: {
+    //   tour
+    // }
   });
 };
 
@@ -96,23 +100,32 @@ exports.getTour = (req, res) => {
 // ---------------------------
 //
 
-/* TODO:  c.  POST Handler / Controller to CREATE NEW TOUR
- With a post request, we can send data from the client to the server
- --req holds all the info about the request that was done.
- And if the client sent some data, it will be on req var.
- -- Out of the box, Express does not put that data on the request, so in order
- to have that data available, we have to use middleware: app.use(express.json())
- -- app.use(express.json()) is just a step that the request goes through while
- it is being processed.
- -- With app.use(express.json()), the data the client sent, which is in var req,
- is added to var req object.  data === req.body, so 'body' is added by this middleware
- */
+// TODO:  c.  POST Handler / Controller to CREATE NEW TOUR
+// With a post request, we can send data from the client to the server
+// --req holds all the info about the request that was done.
+// And if the client sent some data, it will be on req var.
+// -- Out of the box, Express does not put that data on the request, so in order
+// to have that data available, we have to use middleware:
+//        app.use(express.json())
+// -- app.use(express.json()) is just a step that the request goes through while
+// it is being processed.
+// -- With app.use(express.json()), the data the client sent,
+//    which is in var req,
+// is added to var req object.
+//    data === req.body, so 'body' is added by this middleware
 exports.createTour = (req, res) => {
+  res.status(201).json({
+    status: 'success',
+    // data: {
+    //   tour: newTour
+    // }
+  });
+
   // Requires Middleware app.use(express.json())
   // console.log(req.body);
 
   // Take the ID of the last object in JSON file and add one to it
-  const newId = tours[tours.length - 1].id + 1;
+  // const newId = tours[tours.length - 1].id + 1;
 
   /*
 	 Object.assign enables us to create a new Object
@@ -121,12 +134,12 @@ exports.createTour = (req, res) => {
 	 Can also do:  req.body.id = newId, but we do not want to
 	 mutate the original body object
 	 */
-  const newTour = Object.assign({ id: newId }, req.body);
-  tours.push(newTour);
+  // const newTour = Object.assign({ id: newId }, req.body);
+  // tours.push(newTour);
 
   // Overwrite file
   // fs.writeFile(filename, data, [encoding], [callback])
-  fs.writeFile(
+  /*fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     err => {
@@ -139,7 +152,7 @@ exports.createTour = (req, res) => {
         }
       });
     }
-  );
+  );*/
 };
 
 //
@@ -167,12 +180,11 @@ exports.updateTour = (req, res) => {
 
 // TODO:  e.  Delete Tour Handler / Controller
 exports.deleteTour = (req, res) => {
-  /*
-	 -- This is just testing using API files
-	 -- status 204 = No Content, because as a result we usually
-	 don't send any data back, maybe just null to show that the tour no longer exists.
-	 -- Output on Postman doesn't even send the JSON we sent back.  Just 204.
-	 */
+  // This is just testing using API files
+  // status 204 = No Content, because as a result we usually
+  //     don't send any data back, maybe just null to show that
+  //     the tour no longer exists.
+  // Output on Postman doesn't even send the JSON we sent back.  Just 204.
 
   // status 204 is No Content
   res.status(204).json({

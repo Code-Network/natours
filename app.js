@@ -14,9 +14,8 @@ const userRouter = require('./routes/userRoutes');
 if (process.env.NODE_ENV === 'development') {
   // Morgan for logging
   app.use(morgan('dev'));
-
-  //
 }
+
 // Middleware:  a function that can modify the incoming request data
 //  Otherwise, req.body will be undefined instead of containing client post data
 app.use(express.json());
@@ -46,9 +45,6 @@ app.use(express.static(`${__dirname}/public`));
 
 //
 // ----------------------------
-//
-
-// -----------------------------
 //
 
 //  Middle ware functions that we want to add to the middleware stack

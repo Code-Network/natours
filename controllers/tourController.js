@@ -18,10 +18,6 @@ exports.getAllTours = (req, res) => {
   });
 };
 
-//
-// --------------------------
-//
-
 /* TODO: b.  GET ONE TOUR Handler / Controller
  -- By running localhost:3000/api/v1/tours/5, and console.log(req.params)
  the output to the console will be {id: 5}

@@ -5,17 +5,24 @@ const Tour = require('./../models/tourModel');
 // ==========================================================
 
 // TODO: a.  GET ALL TOURS Handler / Controller --------------------
-exports.getAllTours = (req, res) => {
-  // console.log(req.requestTime);
-  res.status(200).json({
-    status: 'success',
+exports.getAllTours = async (req, res) => {
+  // Returns an Array of every document object in the Tour Collection
 
-    // results: tours.length,
-    // requestedAt: req.requestTime,
-    // data: {
-    //   tours
-    // }
-  });
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
 /* TODO: b.  GET ONE TOUR Handler / Controller
@@ -51,7 +58,7 @@ exports.getTour = (req, res) => {
 
 // TODO:  c.  POST Handler / Controller to CREATE NEW TOUR
 // With a post request, we can send data from the client to the server
-// --req holds all the info about the request that was done.
+// -- req.body holds all the info about the request that was done.
 // And if the client sent some data, it will be on req var.
 // -- Out of the box, Express does not put that data on the request, so in order
 // to have that data available, we have to use middleware:

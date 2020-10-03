@@ -1,53 +1,8 @@
-// const fs = require('fs');
+
 const Tour = require('./../models/tourModel');
 
-/*
- Read the tours data first, and simultaneously parse
- the JSON into an array of JS objects
 
- -- `${__dirname}` is here:
- /Users/kokodev/WebstormProjects/nodejonas2/4-natours/natours
 
- We are now here:
- -- `${__dirname}/controllers`
-
- From `${__dirname}/app.js` to get tours-simple.json, we traveled this way:
- -- `${__dirname}/dev-data/data/tours-simple.json`
- But from `${__dirname}/controllers/tourController.js` we travel this way:
- -- `${__dirname}/../dev-data/data/tours-simple.json`
- */
-/*const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-);*/
-
-// Middleware -- no longer necessary when switching to DB refactor
-/*
-exports.checkID = (req, res, next, val) => {
-  console.log(`Tour id is ${val}`);
-
-  // If the ID larger than the tours array, send a status 404
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID'
-    });
-  }
-  next();
-};
-*/
-
-// Create a checkBody middleware function
-//  Check if body contains the name and price property
-// If missing, send status 400 => Bad Request
-exports.checkBody = (req, res, next) => {
-  if (!req.body.price || !req.body.name) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Missing name or price'
-    });
-  }
-  next();
-};
 
 // =================================================================
 // TODO: TOUR ROUTE HANDLERS / CONTROLLERS

@@ -1,8 +1,4 @@
-
 const Tour = require('./../models/tourModel');
-
-
-
 
 // =================================================================
 // TODO: TOUR ROUTE HANDLERS / CONTROLLERS

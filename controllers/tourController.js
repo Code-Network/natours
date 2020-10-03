@@ -66,64 +66,42 @@ exports.getTour = (req, res) => {
 //    which is in var req,
 // is added to var req object.
 //    data === req.body, so 'body' is added by this middleware
+// NOTE: With async/await, we need to check for errors using try/catch syntax
 exports.createTour = async (req, res) => {
-  // We used to create a new tour this way, which returned a PROMISE
-  // This called the method on the new document directly
-  // const newTour = new Tour({some data});
-  // newTour.save();
+  try {
+    // We used to create a new tour this way, which returned a PROMISE
+    // This called the method on the new document directly
+    // const newTour = new Tour({some data});
+    // newTour.save();
 
-  // Alternatively we can call the method directly on the model itself => Tour
-  // The create() method also returns a PROMISE;
-  // You can use .then() to gain access to data in doc
-  // OR use async/await.
-  // So we make this an async function
-  // and 'await' the promise of Tour.create and save the result
-  //   of this PROMISE in the newTour variable
-  // For the data, pass in the req.body, which is the data that comes
-  //    with the POST REQUEST == req.body
-  // This will be stored in the Database.
-  const newTour = await Tour.create(req.body);
+    // Alternatively we can call the method directly on the model itself => Tour
+    // The create() method also returns a PROMISE;
+    // You can use .then() to gain access to data in doc
+    // OR use async/await.
+    // So we make this an async function
+    // and 'await' the promise of Tour.create and save the result
+    //   of this PROMISE in the newTour variable
+    // For the data, pass in the req.body, which is the data that comes
+    //    with the POST REQUEST == req.body
+    // This will be stored in the Database.
+    const newTour = await Tour.create(req.body);
 
-  res.status(201).json({
-    status: 'success',
+    res.status(201).json({
+      status: 'success',
 
-    data: {
-      tour: newTour,
-    },
-  });
-
-  // Requires Middleware app.use(express.json())
-  // console.log(req.body);
-
-  // Take the ID of the last object in JSON file and add one to it
-  // const newId = tours[tours.length - 1].id + 1;
-
-  /*
-	 Object.assign enables us to create a new Object
-	 by merging two existing Objects together
-
-	 Can also do:  req.body.id = newId, but we do not want to
-	 mutate the original body object
-	 */
-  // const newTour = Object.assign({ id: newId }, req.body);
-  // tours.push(newTour);
-
-  // Overwrite file
-  // fs.writeFile(filename, data, [encoding], [callback])
-  /*fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    err => {
-      console.log('Error in var newTour', err);
-      // status 201 means CREATED
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tour: newTour
-        }
-      });
-    }
-  );*/
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (err) {
+    // Validation errors would be caught here (ex. missing a required field)
+    // If you have a validation error, the PROMISE would be rejected
+    // 400 stands for 'Bad Request'
+    res.status(400).json({
+      status: 'fail',
+      message: err
+    })
+  }
 };
 
 //

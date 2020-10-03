@@ -9,6 +9,7 @@ exports.getAllTours = (req, res) => {
   // console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+
     // results: tours.length,
     // requestedAt: req.requestTime,
     // data: {
@@ -41,6 +42,7 @@ exports.getTour = (req, res) => {
 
   res.status(200).json({
     status: 'success',
+
     // data: {
     //   tour
     // }
@@ -64,9 +66,27 @@ exports.getTour = (req, res) => {
 //    which is in var req,
 // is added to var req object.
 //    data === req.body, so 'body' is added by this middleware
-exports.createTour = (req, res) => {
+exports.createTour = async (req, res) => {
+  // We used to create a new tour this way, which returned a PROMISE
+  // This called the method on the new document directly
+  // const newTour = new Tour({some data});
+  // newTour.save();
+
+  // Alternatively we can call the method directly on the model itself => Tour
+  // The create() method also returns a PROMISE;
+  // You can use .then() to gain access to data in doc
+  // OR use async/await.
+  // So we make this an async function
+  // and 'await' the promise of Tour.create and save the result
+  //   of this PROMISE in the newTour variable
+  // For the data, pass in the req.body, which is the data that comes
+  //    with the POST REQUEST == req.body
+  // This will be stored in the Database.
+  const newTour = await Tour.create(req.body);
+
   res.status(201).json({
     status: 'success',
+
     // data: {
     //   tour: newTour
     // }
@@ -120,8 +140,8 @@ exports.updateTour = (req, res) => {
   res.status(200).json({
     status: 'success',
     data: {
-      tour: '<Updated tour here...>'
-    }
+      tour: '<Updated tour here...>',
+    },
   });
 };
 
@@ -140,6 +160,6 @@ exports.deleteTour = (req, res) => {
   // status 204 is No Content
   res.status(204).json({
     status: 'success',
-    data: null
+    data: null,
   });
 };

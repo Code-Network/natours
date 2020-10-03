@@ -91,7 +91,6 @@ exports.createTour = async (req, res) => {
 
     res.status(201).json({
       status: 'success',
-
       data: {
         tour: newTour,
       },
@@ -143,16 +142,24 @@ exports.updateTour = async (req, res) => {
 //
 
 // TODO:  e.  Delete Tour Handler / Controller
-exports.deleteTour = (req, res) => {
-  // This is just testing using API files
-  // status 204 = No Content, because as a result we usually
-  //     don't send any data back, maybe just null to show that
-  //     the tour no longer exists.
-  // Output on Postman doesn't even send the JSON we sent back.  Just 204.
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
 
-  // status 204 is No Content
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+    // This is just testing using API files
+    // status 204 = No Content, because as a result we usually
+    //     don't send any data back, maybe just null to show that
+    //     the tour no longer exists.
+    // Output on Postman doesn't even send the JSON we sent back.  Just 204.
+    // status 204 is No Content
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };

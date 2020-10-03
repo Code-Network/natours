@@ -7,7 +7,6 @@ const Tour = require('./../models/tourModel');
 // TODO: a.  GET ALL TOURS Handler / Controller --------------------
 exports.getAllTours = async (req, res) => {
   // Returns an Array of every document object in the Tour Collection
-
   try {
     const tours = await Tour.find();
     res.status(200).json({
@@ -31,25 +30,26 @@ exports.getAllTours = async (req, res) => {
  -- If we want an optional parameter:  '/api/v1/tours/:id/:x/:y?',
  then y would be undefined because it is now optional
  */
-exports.getTour = (req, res) => {
-  // req.params is the place where all of the variables that we define are stored
-  console.log(req.params);
+exports.getTour = async (req, res) => {
+  try {
+    // req.params is where are stored all of the parameters
+    //    as in tourRoutes.js, line 30, where we named the '/:id' route
+    //    so that we can find ex. localhost:3000/api/v1/tours/5f73ed16b967eb1a40fa8150
+    // Same as:  Tour.findOne({ _id: req.params.id })
+    const tour = await Tour.findById(req.params.id);
 
-  //  Turn the id into a number because req.params = { id: '5' } for example
-  const id = req.params.id * 1;
-
-  // Get the '5th' tour from tours-simple.json
-  // find() returns an array where the comparison el.id===id is true
-  // It will return
-  // const tour = tours.find(el => el.id === id);
-
-  res.status(200).json({
-    status: 'success',
-
-    // data: {
-    //   tour
-    // }
-  });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
 //

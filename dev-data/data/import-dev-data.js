@@ -45,3 +45,14 @@ const importData = async () => {
     console.log(e);
   }
 };
+
+// TODO:  Delete all data from Collection
+const deleteData = async () => {
+  try {
+    // Deletes all of the documents in the Tours Collection
+    await Tour.deleteMany();
+    console.log('Data successfully deleted!');
+  } catch (e) {
+    console.log(e);
+  }
+};

@@ -32,3 +32,6 @@ mongoose
   })
   // eslint-disable-next-line no-console
   .catch((err) => console.log('Connection ERROR', err));
+
+//  TODO:  Read the JSON file
+const tours = JSON.parse(fs.readFileSync('tours-simple.json', 'utf-8'));

@@ -35,7 +35,7 @@ mongoose
 
 //  TODO:  Read the JSON file
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
 );
 
 // TODO: Import data into Database

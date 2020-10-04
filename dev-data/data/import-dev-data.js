@@ -34,7 +34,7 @@ mongoose
   .catch((err) => console.log('Connection ERROR', err));
 
 //  TODO:  Read the JSON file
-const tours = JSON.parse(fs.readFileSync('tours-simple.json', 'utf-8'));
+const tours = JSON.parse(fs.readFileSync('./tours-simple.json', 'utf-8'));
 
 // TODO: Import data into Database
 const importData = async () => {
@@ -56,3 +56,6 @@ const deleteData = async () => {
     console.log(e);
   }
 };
+
+// Log process.argv to the console
+console.log(process.argv);

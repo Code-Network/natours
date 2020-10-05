@@ -47,13 +47,11 @@ const importData = async () => {
   try {
     await Tour.create(tours);
     console.log('Data successfully loaded!');
-
-    // await Tour.create(tours) will continue to run until you process.exit()
-    // This is an aggressive way of stopping an appli
     process.exit();
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.log(err);
   }
+  process.exit();
 };
 
 // TODO:  Delete all data from Collection
@@ -66,6 +64,7 @@ const deleteData = async () => {
   } catch (e) {
     console.log(e);
   }
+  process.exit();
 };
 
 // Log process.argv to the console
@@ -88,7 +87,7 @@ const deleteData = async () => {
 Note:  So, the option you choose will be process.argv[2]
 */
 
-if (process.env[2] === '--import') {
+if (process.argv[2] === '--import') {
   importData();
 } else if (process.argv[2] === '--delete') {
   deleteData();

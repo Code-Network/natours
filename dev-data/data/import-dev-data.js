@@ -35,6 +35,10 @@ mongoose
 
 //  TODO:  Read the JSON file
 const tours = JSON.parse(
+  /*
+   __dirname is:
+   /Users/kokodev/WebstormProjects/nodejonas2/4-natours/natours/dev-data/data
+   */
   fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
 );
 
@@ -43,6 +47,10 @@ const importData = async () => {
   try {
     await Tour.create(tours);
     console.log('Data successfully loaded!');
+
+    // await Tour.create(tours) will continue to run until you process.exit()
+    // This is an aggressive way of stopping an appli
+    process.exit();
   } catch (e) {
     console.log(e);
   }
@@ -54,10 +62,36 @@ const deleteData = async () => {
     // Deletes all of the documents in the Tours Collection
     await Tour.deleteMany();
     console.log('Data successfully deleted!');
+    process.exit();
   } catch (e) {
     console.log(e);
   }
 };
 
 // Log process.argv to the console
-console.log(process.argv);
+/*
+1.  process.argv is:
+ OP:
+[
+  '/usr/local/bin/node',
+  '/Users/kokodev/WebstormProjects/nodejonas2/4-natours/natours/dev-data/data/import-dev-data.js'
+]
+
+2.  node dev-data/data/import-dev-data.js --import
+ OP:
+[
+ '/usr/local/bin/node',
+ '/Users/kokodev/WebstormProjects/nodejonas2/4-natours/natours/dev-data/data/import-dev-data.js',
+ '--import'
+]
+
+Note:  So, the option you choose will be process.argv[2]
+*/
+
+if (process.env[2] === '--import') {
+  importData();
+} else if (process.argv[2] === '--delete') {
+  deleteData();
+}
+
+console.log('process.argv is:  \n', process.argv);

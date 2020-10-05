@@ -35,10 +35,8 @@ mongoose
 
 //  TODO:  Read the JSON file
 const tours = JSON.parse(
-  /*
-   __dirname is:
-   /Users/kokodev/WebstormProjects/nodejonas2/4-natours/natours/dev-data/data
-   */
+  // __dirname is:
+  // /Users/kokodev/WebstormProjects/nodejonas2/4-natours/natours/dev-data/data
   fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
 );
 
@@ -46,9 +44,10 @@ const tours = JSON.parse(
 const importData = async () => {
   try {
     await Tour.create(tours);
+    // eslint-disable-next-line no-console
     console.log('Data successfully loaded!');
-    process.exit();
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
   }
   process.exit();
@@ -60,7 +59,6 @@ const deleteData = async () => {
     // Deletes all of the documents in the Tours Collection
     await Tour.deleteMany();
     console.log('Data successfully deleted!');
-    process.exit();
   } catch (e) {
     console.log(e);
   }
@@ -93,4 +91,4 @@ if (process.argv[2] === '--import') {
   deleteData();
 }
 
-console.log('process.argv is:  \n', process.argv);
+// console.log('process.argv is:  \n', process.argv);

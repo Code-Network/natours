@@ -23,14 +23,14 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
-    useCreateIndex: true
+    useCreateIndex: true,
   })
   .then(() => {
     // eslint-disable-next-line no-console
     console.log('DB connection successful!');
   })
   // eslint-disable-next-line no-console
-  .catch(err => console.log('Connection ERROR', err));
+  .catch((err) => console.log('Connection ERROR', err));
 
 //
 // ------------------------------------------------------------------

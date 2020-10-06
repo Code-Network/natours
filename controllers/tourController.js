@@ -20,6 +20,7 @@ exports.getAllTours = async (req, res) => {
 
     // Todo:  The Mongoose Method of writing Database Queries
     //  2.  Mongoose Method
+    //   other methods:  .lte(), lt(), gte(), gt()
     const tours = await Tour.find()
       .where('duration')
       .equals(5)

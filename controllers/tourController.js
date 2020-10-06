@@ -11,6 +11,7 @@ exports.getAllTours = async (req, res) => {
 
   // Returns an Array of every document object in the Tour Collection
   try {
+    // TODO:  BUILD THE QUERY
     // TODO:  Create a shallow copy of req.query
     // We cannot do const queryObj = req.query because that will change req.query
     // We need a hard copy that does not affect req.query
@@ -30,8 +31,13 @@ exports.getAllTours = async (req, res) => {
     console.log('This is req.query', req.query);
 
     // TODO:  Two ways to run a database query
-    //  1.  Filter Object -- Hardcoding
-    const tours = await Tour.find(queryObj);
+    //  1.  Filter Object -- RETURNS A QUERY
+    //   -- If we await tours now then we can't await again and
+    //   there is still much we have to do, so let's get a copy
+    //   of tours at this point and await tours later
+    // const tours = await Tour.find(queryObj);
+
+    const query = Tour.find(queryObj);
 
     // TODO:  Exclude certain field names (keys) which we do not want the user to query
     //    First create a shallow copy of req.query above
@@ -39,13 +45,16 @@ exports.getAllTours = async (req, res) => {
     // todo:  The Mongoose Method of writing Database Queries
     //  2.  Mongoose Method
     //   other methods:  .lte(), lt(), gte(), gt()
-    // const tours = await Tour.find()
+    // const query = Tour.find()
     //   .where('duration')
     //   .equals(5)
     //   .where('difficulty')
     //   .equals('easy');
 
-    // console.log('these are the tours', tours);
+    // TODO:  EXECUTE THE QUERY
+    const tours = await query;
+
+    // TODO:  SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: tours.length,

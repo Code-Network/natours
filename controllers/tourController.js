@@ -31,7 +31,7 @@ exports.getAllTours = async (req, res) => {
 
     // TODO:  Two ways to run a database query
     //  1.  Filter Object -- Hardcoding
-    const tours = await Tour.find(req.query);
+    const tours = await Tour.find(queryObj);
 
     // TODO:  Exclude certain field names (keys) which we do not want the user to query
     //    First create a shallow copy of req.query above
@@ -45,7 +45,7 @@ exports.getAllTours = async (req, res) => {
     //   .where('difficulty')
     //   .equals('easy');
 
-    console.log('these are the tours', tours);
+    // console.log('these are the tours', tours);
     res.status(200).json({
       status: 'success',
       results: tours.length,

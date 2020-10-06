@@ -21,10 +21,10 @@ exports.getAllTours = async (req, res) => {
     const queryObj = { ...req.query };
 
     // TODO:  Now, create an Array of all of the fields we want to exclude
-    const excludedfields = ['page', 'sort', 'limit', 'fields'];
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
     // TODO: Now, remove all of these fields from our queryObj
-    excludedfields.forEach((el) => delete queryObj[el]);
+    excludedFields.forEach((el) => delete queryObj[el]);
 
     console.log('This is queryObj', queryObj);
     console.log('This is req.query', req.query);

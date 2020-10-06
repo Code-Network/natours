@@ -7,15 +7,36 @@ const Tour = require('./../models/tourModel');
 // TODO: a.  GET ALL TOURS Handler / Controller --------------------
 exports.getAllTours = async (req, res) => {
   // This returns the url query key/value pairs
-  console.log(req.query);
+  // console.log(req.query);
 
   // Returns an Array of every document object in the Tour Collection
   try {
-    // Todo:  Two ways to run a database query
+    // TODO:  Create a shallow copy of req.query
+    // We cannot do const queryObj = req.query because that will change req.query
+    // We need a hard copy that does not affect req.query
+    // In ES6, there is a very nice trick to doing this.
+    //    First use destructuring and make an object out of it
+    // The three dots (destructuring) will first take all of the fields out of the object
+    //   When we add the curly braces { }, we turn it into a new object
+    const queryObj = { ...req.query };
+
+    // TODO:  Now, create an Array of all of the fields we want to exclude
+    const excludedfields = ['page', 'sort', 'limit', 'fields'];
+
+    // TODO: Now, remove all of these fields from our queryObj
+    excludedfields.forEach((el) => delete queryObj[el]);
+
+    console.log('This is queryObj', queryObj);
+    console.log('This is req.query', req.query);
+
+    // TODO:  Two ways to run a database query
     //  1.  Filter Object -- Hardcoding
     const tours = await Tour.find(req.query);
 
-    // Todo:  The Mongoose Method of writing Database Queries
+    // TODO:  Exclude certain field names (keys) which we do not want the user to query
+    //    First create a shallow copy of req.query above
+
+    // todo:  The Mongoose Method of writing Database Queries
     //  2.  Mongoose Method
     //   other methods:  .lte(), lt(), gte(), gt()
     // const tours = await Tour.find()

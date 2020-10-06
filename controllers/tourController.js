@@ -6,6 +6,8 @@ const Tour = require('./../models/tourModel');
 
 // TODO: a.  GET ALL TOURS Handler / Controller --------------------
 exports.getAllTours = async (req, res) => {
+  console.log(req.query);
+
   // Returns an Array of every document object in the Tour Collection
   try {
     const tours = await Tour.find();

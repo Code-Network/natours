@@ -13,10 +13,7 @@ exports.getAllTours = async (req, res) => {
   try {
     // Todo:  Two ways to run a database query
     //  1.  Filter Object -- Hardcoding
-    const tours = await Tour.find({
-      duration: 5,
-      difficulty: 'easy',
-    });
+    const tours = await Tour.find(req.query);
 
     // Todo:  The Mongoose Method of writing Database Queries
     //  2.  Mongoose Method

@@ -77,6 +77,14 @@ exports.getAllTours = async (req, res) => {
       const sortBy = req.query.sort.split(',').join(' ');
       // console.log(sortBy); // price ratingsAverage
       query = query.sort(sortBy);
+
+      // Add a default in case the user does not specify
+      //    any sort field in the URL query string
+      //  i.e. localhost:3000/api/v1/tours
+      // We will then sort by createdAt in descending order
+      //    so that the newest ones will show up first
+    } else {
+      query = query.sort('-createdAt');
     }
 
     // TODO:  EXECUTE THE QUERY

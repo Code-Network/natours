@@ -39,12 +39,19 @@ exports.getAllTours = async (req, res) => {
 
     const query = Tour.find(queryObj);
 
-    // TODO:  Exclude certain field names (keys) which we do not want the user to query
-    //    First create a shallow copy of req.query above
+    // TODO:  Exclude certain field names (keys)
+    //   -- which we do not want the user to query
+    //  First create a shallow copy of req.query above
 
-    // todo:  The Mongoose Method of writing Database Queries
+    // TODO:  The Mongoose Method of writing Database Queries
     //  2.  Mongoose Method
-    //   other methods:  .lte(), lt(), gte(), gt()
+    //   other methods we can use:  .lte(), lt(), gte(), gt()
+
+    // Manually writing mongo to filter out duration >= 5
+    //  { difficulty: 'easy', duration: {$gte: 5} }
+    // In the URL with the query string, it would be written like this:
+    // 127.0.0.1:3000/api/v1/tours?duration[gte]=5&difficult=easy
+
     // const query = Tour.find()
     //   .where('duration')
     //   .equals(5)

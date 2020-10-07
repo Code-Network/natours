@@ -88,6 +88,30 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt');
     }
 
+    // TODO:  3) Field Limiting
+    // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+
+      // Selecting fields is called Projecting
+      /* OP:  {
+       "_id": "5f7b4a39f186f4214908ee40",
+       "name": "The Forest Hiker",
+       "duration": 5,
+       "price": 397
+       },*/
+      query = query.select('name duration price');
+
+      // Default in case user does not select any fields
+      // Mongoose uses the __v field and we don't send them to the client
+      // This is a good place to do that
+      //  the '-' excludes a field
+      // https://mongoosejs.com/docs/api/query.html#query_Query-select
+    } else {
+      // excluding only the __v field, including all other fields
+      query = query.select('-__v');
+    }
+
     // TODO:  EXECUTE THE QUERY
     const tours = await query;
 

@@ -14,6 +14,7 @@ exports.getAllTours = async (req, res) => {
     console.log('This is req.query', req.query);
 
     // TODO:  BUILD THE QUERY
+    // TODO:  1A)  Filtering
     // TODO:  Create a shallow copy of req.query - - Filtering
     // We cannot do const queryObj = req.query because that will change req.query
     // We need a hard copy that does not affect req.query
@@ -39,7 +40,7 @@ exports.getAllTours = async (req, res) => {
     //   of tours at this point and await tours later
     // const tours = await Tour.find(queryObj);
 
-    // TODO:  Advanced Filtering
+    // TODO:  1B) Advanced Filtering
     // { difficulty: 'easy', sort: '1', duration: { $gte: 5 } }
     // { difficulty: 'easy', sort: '1', duration: { gte: '5' } }
 
@@ -60,12 +61,15 @@ exports.getAllTours = async (req, res) => {
     console.log('queryStr is now', JSON.parse(queryStr));
 
     // const query = Tour.find(queryObj);
-    const query = Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));
 
-    // TODO:  Exclude certain field names (keys)
-    //   -- which we do not want the user to query
-    //  First create a shallow copy of req.query above
-
+    // TODO:  2) Sorting
+    // Use sort() to organize the queries by price values in ascending order
+    // Ex. localhost:3000/api/v1/tours?sort=price
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    }
+    // 3) Sorting
     // TODO:  EXECUTE THE QUERY
     const tours = await query;
 

@@ -75,6 +75,7 @@ exports.getAllTours = async (req, res) => {
     // Ex. localhost:3000/api/v1/tours?sort=price
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
+
       // console.log(sortBy); // price ratingsAverage
       query = query.sort(sortBy);
 

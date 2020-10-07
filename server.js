@@ -13,9 +13,9 @@ const DB = process.env.DATABASE.replace(
 );
 
 //
-// ------------------------------------------------------------------
-// TODO: --------- Connect Mongoose to a Remote Database -----------
-// ------------------------------------------------------------------
+// -------------------------------------------------------
+// TODO: ---- Connect Mongoose to a Remote Database ------
+// -------------------------------------------------------
 //
 // Connect method returns a PROMISE
 mongoose

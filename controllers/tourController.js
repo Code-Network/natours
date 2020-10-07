@@ -11,8 +11,10 @@ exports.getAllTours = async (req, res) => {
 
   // Returns an Array of every document object in the Tour Collection
   try {
+    console.log('This is req.query', req.query);
+
     // TODO:  BUILD THE QUERY
-    // TODO:  Create a shallow copy of req.query
+    // TODO:  Create a shallow copy of req.query - - Filtering
     // We cannot do const queryObj = req.query because that will change req.query
     // We need a hard copy that does not affect req.query
     // In ES6, there is a very nice trick to doing this.
@@ -27,8 +29,8 @@ exports.getAllTours = async (req, res) => {
     // TODO: Now, remove all of these fields from our queryObj
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    console.log('This is queryObj', queryObj);
-    console.log('This is req.query', req.query);
+    // console.log('This is queryObj', queryObj);
+    // console.log('This is req.query', req.query);
 
     // TODO:  Two ways to run a database query
     //  1.  Filter Object -- RETURNS A QUERY
@@ -37,29 +39,56 @@ exports.getAllTours = async (req, res) => {
     //   of tours at this point and await tours later
     // const tours = await Tour.find(queryObj);
 
-    const query = Tour.find(queryObj);
+    // TODO:  Advanced Filtering
+    // { difficulty: 'easy', sort: '1', duration: { $gte: 5 } }
+    // { difficulty: 'easy', sort: '1', duration: { gte: '5' } }
+
+    // Convert object to string so that we can replace any lte to $lte, etc
+    let queryStr = JSON.stringify(queryObj);
+
+    // Replace gte, gt, let, and lt with $gte, $gt, $lte, $lt
+    // The \b is for exact, | means OR, /.. /  opens a regex
+    //  The 'g' at the end means that it will happen multiple times.
+    //  Without the 'g', it would only replace the first occurrence.
+    // replace() gives an option for a callback.
+    // The match argument in the callback will be what actually matched
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    // To test to see if queryStr.replace() worked,
+    // we will turn it back into a JavaScript object
+    // OP EX.  queryStr is now { difficulty: 'easy', duration: { '$gte': '5' } }
+    console.log('queryStr is now', JSON.parse(queryStr));
+
+    // const query = Tour.find(queryObj);
+    const query = Tour.find(JSON.parse(queryStr));
 
     // TODO:  Exclude certain field names (keys)
     //   -- which we do not want the user to query
     //  First create a shallow copy of req.query above
 
-    // TODO:  The Mongoose Method of writing Database Queries
-    //  2.  Mongoose Method
-    //   other methods we can use:  .lte(), lt(), gte(), gt()
-
-    // Manually writing mongo to filter out duration >= 5
-    //  { difficulty: 'easy', duration: {$gte: 5} }
-    // In the URL with the query string, it would be written like this:
-    // 127.0.0.1:3000/api/v1/tours?duration[gte]=5&difficult=easy
-
-    // const query = Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
-
     // TODO:  EXECUTE THE QUERY
     const tours = await query;
+
+    // TODO:  NOTES
+    /*
+     TODO:  The Mongoose Method of writing Database Queries
+     2.  Mongoose Method
+     other methods we can use:  .lte(), lt(), gte(), gt()
+
+    Manually writing mongo to filter out duration >= 5
+     { difficulty: 'easy', duration: {$gte: 5} }
+    In the URL with the query string, it would be written like this:
+    127.0.0.1:3000/api/v1/tours?difficulty=easy&sort=1&duration[gte]=5
+    While the above would bring an error, when we log req.query to the
+     console, we get
+          { difficulty: 'easy', sort: '1', duration: { gte: '5' } }
+
+    const query = Tour.find()
+      .where('duration')
+      .equals(5)
+      .where('difficulty')
+      .equals('easy');
+  */
 
     // TODO:  SEND RESPONSE
     res.status(200).json({
@@ -77,7 +106,12 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
-/* TODO: b.  GET ONE TOUR Handler / Controller
+// -------------------------------------------
+// -------------------------------------------
+// TODO: b.  GET ONE TOUR Handler / Controller
+// -------------------------------------------
+// -------------------------------------------
+/*
  -- By running localhost:3000/api/v1/tours/5, and console.log(req.params)
  the output to the console will be {id: 5}
  -- If we want an optional parameter:  '/api/v1/tours/:id/:x/:y?',

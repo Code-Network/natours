@@ -94,13 +94,23 @@ exports.getAllTours = async (req, res) => {
       const fields = req.query.fields.split(',').join(' ');
 
       // Selecting fields is called Projecting
-      /* OP:  {
-       "_id": "5f7b4a39f186f4214908ee40",
-       "name": "The Forest Hiker",
-       "duration": 5,
-       "price": 397
-       },*/
-      query = query.select('name duration price');
+      /*
+      Example:
+      query = query.select('name duration price')
+      URL: localhost:3000/api/v1/tours?fields=name,duration,price
+      OP:
+        {
+           "_id": "5f7b4a39f186f4214908ee40",
+           "name": "The Forest Hiker",
+           "duration": 5,
+           "price": 397
+         }
+      */
+
+      // When client selects the fields via URL
+      // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price OR
+      // URL: localhost:3000/api/v1/tours?fields=-name,-duration
+      query = query.select(fields);
 
       // Default in case user does not select any fields
       // Mongoose uses the __v field and we don't send them to the client

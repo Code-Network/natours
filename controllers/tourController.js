@@ -65,9 +65,16 @@ exports.getAllTours = async (req, res) => {
 
     // TODO:  2) Sorting
     // Use sort() to organize the queries by price values in ascending order
+    // But if there is a tie in price, then we must sort them by a second criteria.
+    // In Mongoose: sort('price ratingAverage')
+    // Use a comma for second criteria: localhost:3000/api/v1/tours?sort=price,ratingsAverage
+    // We will then have to replace the comma with a space
     // Ex. localhost:3000/api/v1/tours?sort=price
     if (req.query.sort) {
-      query = query.sort(req.query.sort);
+      const sortBy = req.query.sort.split(',').join(' ');
+      console.log(sortBy); // price ratingsAverage
+      // query = query.sort(req.query.sort);
+      query = query.sort(sortBy);
     }
     // 3) Sorting
     // TODO:  EXECUTE THE QUERY

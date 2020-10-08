@@ -8,6 +8,33 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
+// TODO: Create a Class for getAllTours methods to create a reusable module
+// constructor arguments:
+//    1. Mongoose query object => query = Tour.find()
+//    2. Express queryString (coming from the route = req.query)
+
+class APIFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  filter() {
+    // 1A Filtering
+    const queryObj = { ...this.queryString };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    // 1B) Advanced Filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    this.query.find(JSON.parse(queryStr));
+
+    // let query = Tour.find(JSON.parse(queryStr));
+  }
+}
+
 // =================================================================
 // TODO: TOUR ROUTE HANDLERS / CONTROLLERS
 // ==========================================================
@@ -19,7 +46,7 @@ exports.getAllTours = async (req, res) => {
 
   // Returns an Array of every document object in the Tour Collection
   try {
-    console.log('This is req.query', req.query);
+    /*console.log('This is req.query', req.query);
 
     // TODO:  BUILD THE QUERY
 
@@ -46,7 +73,7 @@ exports.getAllTours = async (req, res) => {
     // console.log('This is req.query', req.query);
 
     // TODO:  Two ways to run a database query
-    //  1.  Filter Object -- RETURNS A QUERY
+    //  1A.  Filter Object -- RETURNS A QUERY
     //   -- If we await tours now then we can't await again and
     //   there is still much we have to do, so let's get a copy
     //   of tours at this point and await tours later
@@ -76,7 +103,7 @@ exports.getAllTours = async (req, res) => {
     console.log('queryStr is now', JSON.parse(queryStr));
 
     // const query = Tour.find(queryObj);
-    let query = Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));*/
 
     // ---------------------------------
     // ---------------------------------
@@ -172,7 +199,22 @@ exports.getAllTours = async (req, res) => {
     // ---------------------------------
     // ---------------------------------
     // TODO:  EXECUTE THE QUERY
-    const tours = await query;
+
+    // TODO:  Run code for the API filtering functionality
+    //    using the new class APIFeatures filter() method
+    // From constructor(query, queryString)
+    // Tour.find() is a query object ==> APIFeartures Mongooose query parameter
+    // req.query is APIFeatures Express queryString parameter
+    const features = new APIFeatures(Tour.find(), req.query).filter();
+
+    // TODO: NOTE: features.query
+    // features.query => query is not from APIFeatures param this.query = query
+    // In the APIFeatures filter() we have this.query.find(JSON.parse(queryStr));
+    //    so, this.query, or query, now has the entire Tour query
+    const tours = await features.query;
+
+    // No longer exists because we created a class with the filter() functionality
+    // const tours = await query;
 
     // ---------------------------------
     // ---------------------------------

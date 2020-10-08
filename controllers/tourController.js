@@ -149,6 +149,18 @@ exports.getAllTours = async (req, res) => {
     // Query:  ?page=2&limit=10, 1-10 = page 1, 11 - 20 = page 2
     query = query.skip(skip).limit(limit);
 
+    // If the number of documents that we skip is > the amount of documents
+    //  that exist, then that means the page DNE
+    // If we select a page
+    if (req.query.page) {
+      // Awaits the result of the amount of tours
+      const numTours = await Tour.countDocuments();
+
+      // We throw a new Error here because it will leave the try block
+      //   to the catch block and send back a 404
+      if (skip > numTours) throw new Error('This page does not exist');
+    }
+
     // ---------------------------------
     // ---------------------------------
     // TODO:  EXECUTE THE QUERY

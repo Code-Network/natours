@@ -14,7 +14,11 @@ exports.getAllTours = async (req, res) => {
     console.log('This is req.query', req.query);
 
     // TODO:  BUILD THE QUERY
+
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  1A)  Filtering
+    // ---------------------------------
     // TODO:  Create a shallow copy of req.query - - Filtering
     // We cannot do const queryObj = req.query because that will change req.query
     // We need a hard copy that does not affect req.query
@@ -40,7 +44,10 @@ exports.getAllTours = async (req, res) => {
     //   of tours at this point and await tours later
     // const tours = await Tour.find(queryObj);
 
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  1B) Advanced Filtering
+    // ---------------------------------
     // { difficulty: 'easy', sort: '1', duration: { $gte: 5 } }
     // { difficulty: 'easy', sort: '1', duration: { gte: '5' } }
 
@@ -63,7 +70,10 @@ exports.getAllTours = async (req, res) => {
     // const query = Tour.find(queryObj);
     let query = Tour.find(JSON.parse(queryStr));
 
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  2) Sorting
+    // ---------------------------------
     // Use sort() to organize the queries by price values in ascending order
     // But if there is a tie in price, then we must sort them by a second criteria.
     // In Mongoose: sort('price ratingAverage'),
@@ -88,7 +98,10 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt');
     }
 
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  3) Field Limiting
+    // ---------------------------------
     // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');
@@ -122,9 +135,27 @@ exports.getAllTours = async (req, res) => {
       query = query.select('-__v');
     }
 
+    // ---------------------------------
+    // ---------------------------------
+    // TODO: 4) Pagination
+    // ---------------------------------
+    // Default a limit to the amount of results the user can get
+    // By Default we want page #1
+    // req.query.page * 1 converts a string to a number
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    // Query:  ?page=2&limit=10, 1-10 = page 1, 11 - 20 = page 2
+    query = query.skip(skip).limit(limit);
+
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  EXECUTE THE QUERY
     const tours = await query;
 
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  NOTES
     /*
      TODO:  The Mongoose Method of writing Database Queries
@@ -146,6 +177,8 @@ exports.getAllTours = async (req, res) => {
       .equals('easy');
   */
 
+    // ---------------------------------
+    // ---------------------------------
     // TODO:  SEND RESPONSE
     res.status(200).json({
       status: 'success',
@@ -195,10 +228,8 @@ exports.getTour = async (req, res) => {
   }
 };
 
-//
-// ---------------------------
-//
-
+// ---------------------------------
+// ---------------------------------
 // TODO:  c.  POST Handler / Controller to CREATE NEW TOUR
 // With a post request, we can send data from the client to the server
 // -- req.body holds all the info about the request that was done.

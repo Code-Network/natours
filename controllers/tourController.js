@@ -158,7 +158,7 @@ exports.getAllTours = async (req, res) => {
 
       // We throw a new Error here because it will leave the try block
       //   to the catch block and send back a 404
-      if (skip > numTours) throw new Error('This page does not exist');
+      if (skip >= numTours) throw new Error('This page does not exist');
     }
 
     // ---------------------------------

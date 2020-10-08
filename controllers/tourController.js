@@ -31,7 +31,7 @@ class APIFeatures {
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    this.query.find(JSON.parse(queryStr));
+    this.query = this.query.find(JSON.parse(queryStr));
 
     // let query = Tour.find(JSON.parse(queryStr));
 
@@ -64,6 +64,40 @@ class APIFeatures {
     } else {
       this.query = this.query.sort('-createdAt');
     }
+
+    return this;
+  }
+
+  // TODO:  3) Field Limiting
+  // ---------------------------------
+  limitFields() {
+    // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ');
+
+      // When client selects the fields via URL
+      // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price OR
+      // URL: localhost:3000/api/v1/tours?fields=-name,-duration
+      this.query = this.query.select(fields);
+    } else {
+      // excluding only the __v field, including all other fields
+      this.query = this.query.select('-__v');
+    }
+    return this;
+  }
+
+  // TODO: 4) Pagination
+  // ---------------------------------
+  paginate() {
+    // Default a limit to the amount of results the user can get
+    // By Default we want page #1
+    // req.query.page * 1 converts a string to a number
+    const page = this.queryString.page * 1 || 1;
+    const limit = this.queryString.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    // Query:  ?page=2&limit=10, 1-10 = page 1, 11 - 20 = page 2
+    this.query = this.query.skip(skip).limit(limit);
 
     return this;
   }
@@ -169,14 +203,14 @@ exports.getAllTours = async (req, res) => {
 
     // ---------------------------------
     // ---------------------------------
-    // TODO:  3) Field Limiting
+    /*// TODO:  3) Field Limiting
     // ---------------------------------
     // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');
 
       // Selecting fields is called Projecting
-      /*
+      /!*
       Example:
       query = query.select('name duration price')
       URL: localhost:3000/api/v1/tours?fields=name,duration,price
@@ -187,7 +221,7 @@ exports.getAllTours = async (req, res) => {
            "duration": 5,
            "price": 397
          }
-      */
+      *!/
 
       // When client selects the fields via URL
       // URL: localhost:3000/api/v1/tours?fields=name,duration,difficulty,price OR
@@ -202,11 +236,11 @@ exports.getAllTours = async (req, res) => {
     } else {
       // excluding only the __v field, including all other fields
       query = query.select('-__v');
-    }
+    }*/
 
     // ---------------------------------
     // ---------------------------------
-    // TODO: 4) Pagination
+    /*// TODO: 4) Pagination
     // ---------------------------------
     // Default a limit to the amount of results the user can get
     // By Default we want page #1
@@ -229,7 +263,7 @@ exports.getAllTours = async (req, res) => {
       //   to the catch block and send back a 404
       if (skip >= numTours) throw new Error('This page does not exist');
     }
-
+*/
     // ---------------------------------
     // ---------------------------------
     // TODO:  EXECUTE THE QUERY
@@ -239,7 +273,11 @@ exports.getAllTours = async (req, res) => {
     // From constructor(query, queryString)
     // Tour.find() is a query object ==> APIFeartures Mongooose query parameter
     // req.query is APIFeatures Express queryString parameter
-    const features = new APIFeatures(Tour.find(), req.query).filter().sort();
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
 
     // TODO: NOTE: features.query
     // features.query => query is not from APIFeatures param this.query = query

@@ -3,6 +3,16 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
+// TODO: Create a Route for the top 5 cheapest tours
+// Middleware must be run before we get to the getAllTours handler
+// It is the middleware function - aliasTopTours()
+//    in tourController.js which manipulates the
+//    query object that's coming in.
+// Prefill some of the fields in the query string in
+router
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTours, tourController.getAllTours);
+
 //  Param Middleware
 //  Logs the saved param name ('id') and the value (6).
 /*

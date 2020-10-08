@@ -19,6 +19,8 @@ class APIFeatures {
     this.queryString = queryString;
   }
 
+  // TODO:  1) Filtering
+  // ---------------------------------
   filter() {
     // 1A Filtering
     const queryObj = { ...this.queryString };
@@ -32,6 +34,38 @@ class APIFeatures {
     this.query.find(JSON.parse(queryStr));
 
     // let query = Tour.find(JSON.parse(queryStr));
+
+    return this;
+  }
+
+  // TODO:  2) Sorting
+  // ---------------------------------
+  sort() {
+    // Use sort() to organize the queries by price values in ascending order
+    // But if there is a tie in price, then we must sort them by a second criteria.
+    // In Mongoose: sort('price ratingAverage'),
+    //    or sort('price -ratingAverage') for highest ratingsAverage first in a price tie
+    // Use a comma for second criteria:
+    //    localhost:3000/api/v1/tours?sort=price,ratingsAverage
+    //    localhost:3000/api/v1/tours?sort=price,-ratingsAverage
+    // We will then have to replace the comma with a space
+    // Ex. localhost:3000/api/v1/tours?sort=price
+    if (this.queryString.sort) {
+      const sortBy = this.queryString.sort.split(',').join(' ');
+
+      // console.log(sortBy); // price ratingsAverage
+      this.query = this.query.sort(sortBy);
+
+      // Add a default in case the user does not specify
+      //    any sort field in the URL query string
+      //  i.e. localhost:3000/api/v1/tours
+      // We will then sort by createdAt in descending order
+      //    so that the newest ones will show up first
+    } else {
+      this.query = this.query.sort('-createdAt');
+    }
+
+    return this;
   }
 }
 
@@ -107,7 +141,7 @@ exports.getAllTours = async (req, res) => {
 
     // ---------------------------------
     // ---------------------------------
-    // TODO:  2) Sorting
+    /*// TODO:  2) Sorting
     // ---------------------------------
     // Use sort() to organize the queries by price values in ascending order
     // But if there is a tie in price, then we must sort them by a second criteria.
@@ -131,7 +165,7 @@ exports.getAllTours = async (req, res) => {
       //    so that the newest ones will show up first
     } else {
       query = query.sort('-createdAt');
-    }
+    }*/
 
     // ---------------------------------
     // ---------------------------------
@@ -205,7 +239,7 @@ exports.getAllTours = async (req, res) => {
     // From constructor(query, queryString)
     // Tour.find() is a query object ==> APIFeartures Mongooose query parameter
     // req.query is APIFeatures Express queryString parameter
-    const features = new APIFeatures(Tour.find(), req.query).filter();
+    const features = new APIFeatures(Tour.find(), req.query).filter().sort();
 
     // TODO: NOTE: features.query
     // features.query => query is not from APIFeatures param this.query = query

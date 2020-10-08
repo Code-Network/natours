@@ -1,5 +1,13 @@
 const Tour = require('./../models/tourModel');
 
+// TODO:  Prefill the fields required for the /top-5-cheap route
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
+
 // =================================================================
 // TODO: TOUR ROUTE HANDLERS / CONTROLLERS
 // ==========================================================

@@ -13,6 +13,8 @@ router
   .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
+router.route('/tour-stats').get(tourController.getTourStats);
+
 //  Param Middleware
 //  Logs the saved param name ('id') and the value (6).
 /*

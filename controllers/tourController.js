@@ -242,3 +242,14 @@ exports.getTourStats = async (req, res) => {
     });
   }
 };
+
+exports.getMonthlyPlan = async (req, res) => {
+  try {
+    const year = req.params.year * 1;
+  } catch (e) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};

@@ -15,6 +15,8 @@ router
 
 router.route('/tour-stats').get(tourController.getTourStats);
 
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+
 //  Param Middleware
 //  Logs the saved param name ('id') and the value (6).
 /*

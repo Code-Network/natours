@@ -248,7 +248,7 @@ exports.getMonthlyPlan = async (req, res) => {
     const year = req.params.year * 1;
     const plan = await Tour.aggregate([
       {
-        // pass a field path operant or doc operant to unwind an array field
+        // pass a field path operand or doc operand to unwind an array field
         $unwind: '$startDates',
       },
       {

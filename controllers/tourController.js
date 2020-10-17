@@ -262,9 +262,11 @@ exports.getMonthlyPlan = async (req, res) => {
       {
         $group: {
           _id: { $month: '$startDates' },
+
+          // How many tours in the above month?
           numTourStarts: { $sum: 1 },
 
-          // $push creates an array of the field names of the tours
+          // $push creates an ARRAY of the field names of the tours
           // Answers the question: Which tours?
           tours: { $push: '$name' },
         },
@@ -282,6 +284,14 @@ exports.getMonthlyPlan = async (req, res) => {
            */
           _id: 0,
         },
+      },
+      {
+        /*
+         Sort by the number of tour starts.
+         value 1 is for ascending order and value -1 is for descending.
+         Highest to lowest.
+         */
+        $sort: { numTourStarts: -1 },
       },
     ]);
 

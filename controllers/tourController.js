@@ -272,6 +272,17 @@ exports.getMonthlyPlan = async (req, res) => {
       {
         $addFields: { month: '$_id' },
       },
+      {
+        $project: {
+          /*
+           We give each of the field names a 0 or a 1
+           0 =>  id no longer shows up,   1 => _id shows up
+           We remove the _id because we want $addFields: { month: '$_id' }
+           to calculate the month
+           */
+          _id: 0,
+        },
+      },
     ]);
 
     res.status(200).json({

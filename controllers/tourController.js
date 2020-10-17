@@ -295,7 +295,7 @@ exports.getMonthlyPlan = async (req, res) => {
       },
       {
         // Allows to display only 6 documents
-        $limit: 6,
+        $limit: 12,
       },
     ]);
 

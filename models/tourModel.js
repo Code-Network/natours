@@ -153,8 +153,23 @@ tourSchema.pre(/^find/, function (next) {
   // In postman, we created one set to true
   // TODO:  Only display queries where the secretTour is not true
   this.find({ secretTour: { $ne: true } });
+  this.start = Date.now();
   next();
-}); // Always use uppercase on Model Variables
+});
+
+// TODO:  Write a Post Hook Query for all /^find/
+// Here we get access to all docs that were returned from the
+//    query in param 'docs'
+tourSchema.post(/^find/, function (docs, next) {
+  // We can get access to 'this' from the pre hook above
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+
+  // The result will be only those docs where secretTour is false
+  console.log(docs.length);
+  next();
+});
+
+// Always use uppercase on Model Variables
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;

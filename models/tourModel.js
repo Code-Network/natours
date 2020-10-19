@@ -79,8 +79,9 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
-// TODO: DOCUMENT MIDDLEWARE: runs before .save() and .create(), but not
-//  insertMany() because insertMany will not trigger the 'save' middleware event.
+// TODO: DOCUMENT MIDDLEWARE: runs before .save() and .create() ONLY, not
+//  insertMany(), findByIdAndUpdate, etc because
+//     will not trigger the 'save' middleware event.
 // This is for pre-middleware that is going to run on an actual event
 //   And that event in this case is the save event.
 // Each Middleware function has access to next()

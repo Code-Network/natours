@@ -62,6 +62,10 @@ const tourSchema = new mongoose.Schema(
       select: false,
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     // Each time the data is outputted as JSON, we want virtuals to be true
@@ -118,7 +122,39 @@ tourSchema.pre('save', function (next) {
 //   next();
 // });
 
-// Always use uppercase on Model Variables
+// TODO:  QUERY MIDDLEWARE - 'find' hook --
+// -- NOTE: This will not run for findOne, findById, etc.. only .find(),
+//    so we will have to write query middleware to cover those use cases
+// pre-find hook:  a Middleware that is going to run before any find query
+//  is executed
+// Use Case:  Secret tours only offered to VIPs, not publicly.
+// Add secretTour of type Boolean with default set to false to Schema first.
+/*tourSchema.pre('find', function (next) {
+  //  'this' is a query object, so we can chain all methods for queries
+  // In postman, we created one set to true
+  // Only display queries where the secretTour is not true
+  this.find({ secretTour: { $ne: true } });
+  next();
+});*/
+
+/*tourSchema.pre('findOne', function (next) {
+  //  'this' is a query object, so we can chain all methods for queries
+  // In postman, we created one set to true
+  // Only display queries where the secretTour is not true
+  this.find({ secretTour: { $ne: true } });
+  next();
+});*/
+
+// TODO: Use RE to run a pre hook query function that would filter out
+//  all of the secret tours
+// /^find/ = middleware should execute for all commands that start with 'find'
+tourSchema.pre(/^find/, function (next) {
+  //  'this' is a query object, so we can chain all methods for queries
+  // In postman, we created one set to true
+  // TODO:  Only display queries where the secretTour is not true
+  this.find({ secretTour: { $ne: true } });
+  next();
+}); // Always use uppercase on Model Variables
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;

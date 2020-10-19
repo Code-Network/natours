@@ -79,7 +79,7 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
-// DOCUMENT MIDDLEWARE: runs before .save() and .create(), but not
+// TODO: DOCUMENT MIDDLEWARE: runs before .save() and .create(), but not
 //  insertMany() because insertMany will not trigger the 'save' middleware event.
 // This is for pre-middleware that is going to run on an actual event
 //   And that event in this case is the save event.
@@ -98,7 +98,22 @@ tourSchema.pre('save', function (next) {
   // 'slug' will not persist to the database.
   // i.e.     slug: String,
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
+// 'save' is a hook
+tourSchema.pre('save', function (next) {
+  console.log('Will save document');
+  next();
+});
+
+// POST MIDDLEWARE
+// Post middleware functions are executed after all the
+// pre middleware functions have completed.
+// In here we no longer have the 'this' keyword but we have the
+//  finished document in the 'doc' parameter
+tourSchema.post('save', function (doc, next) {
+  console.log(doc);
   next();
 });
 

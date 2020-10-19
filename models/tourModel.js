@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 //----------------------------------------------
 // TODO: --------- Create a Schema -------------
@@ -11,6 +12,7 @@ const tourSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    slug: String,
     duration: {
       type: Number,
       required: [true, 'A tour must have a duration'],
@@ -77,10 +79,28 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
-//
-// ------------------------------------------------------------------
-// TODO: ----------------- Create a Model ---------------------------
-// ------------------------------------------------------------------
+// DOCUMENT MIDDLEWARE: runs before .save() and .create(), but not
+//  insertMany() because insertMany will not trigger the 'save' middleware event.
+// This is for pre-middleware that is going to run on an actual event
+//   And that event in this case is the save event.
+// Each Middleware function has access to next()
+tourSchema.pre('save', function (next) {
+  // This callback function will be called before an actual
+  // document is saved to the database
+  // 'this' will point to the currently processed document
+  //  i.e. the document that is being saved
+  // 'this' is actually before we save the data to the Database
+  // console.log(this);
+
+  // Create a slug for each of these documents, a string will can put in url
+  // NOTE: This will not work unless you have a slug in your SCHEMA
+  // It may show up in POSTMAN but unless we put it in the SCHEMA,
+  // 'slug' will not persist to the database.
+  // i.e.     slug: String,
+  this.slug = slugify(this.name, { lower: true });
+
+  next();
+});
 
 // Always use uppercase on Model Variables
 const Tour = mongoose.model('Tour', tourSchema);

@@ -101,21 +101,21 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-// 'save' is a hook
-tourSchema.pre('save', function (next) {
-  console.log('Will save document');
-  next();
-});
+// Additional 'save' is a hook
+// tourSchema.pre('save', function (next) {
+//   console.log('Will save document');
+//   next();
+// });
 
 // POST MIDDLEWARE
 // Post middleware functions are executed after all the
 // pre middleware functions have completed.
 // In here we no longer have the 'this' keyword but we have the
 //  finished document in the 'doc' parameter
-tourSchema.post('save', function (doc, next) {
-  console.log(doc);
-  next();
-});
+// tourSchema.post('save', function (doc, next) {
+//   console.log(doc);
+//   next();
+// });
 
 // Always use uppercase on Model Variables
 const Tour = mongoose.model('Tour', tourSchema);

@@ -51,13 +51,14 @@ const tourSchema = new mongoose.Schema(
     },
     priceDiscount: {
       type: Number,
+
       // this function has access to the value that was input (val)
       validate: function (val) {
         console.log('This is val:  ', val);
 
         // Check that the Price Discount is lower than the price
         return val < this.price; // 100 < 200
-      }
+      },
     },
     summary: {
       type: String,

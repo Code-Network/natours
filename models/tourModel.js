@@ -52,12 +52,17 @@ const tourSchema = new mongoose.Schema(
     priceDiscount: {
       type: Number,
 
-      // this function has access to the value that was input (val)
-      validate: function (val) {
-        console.log('This is val:  ', val);
+      // this function has access to val = Price Discount value that was input
+      validate: {
+        validator: function (val) {
+          console.log('This is val:  ', val);
 
-        // Check that the Price Discount is lower than the price
-        return val < this.price; // 100 < 200
+          // Check that the Price Discount is lower than the price
+          return val < this.price; // 100 < 200
+        },
+
+        // ({VALUE}) = val = is internal to Mongoose => this Price Discount
+        message: 'Discount price ({VALUE}) should be below regular price',
       },
     },
     summary: {

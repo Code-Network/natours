@@ -54,6 +54,8 @@ const tourSchema = new mongoose.Schema(
 
       // this function has access to val = Price Discount value that was input
       validate: {
+        // NOTE: Inside a validator function, the 'this' keyword will only
+        //  point to current document when we are creating a new document
         validator: function (val) {
           console.log('This is val:  ', val);
 

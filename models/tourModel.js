@@ -169,6 +169,49 @@ tourSchema.post(/^find/, function (docs, next) {
   next();
 });
 
+// TODO: AGGREGATION MIDDLEWARE
+tourSchema.pre('aggregate', function (next) {
+  // An aggregate is an Array, so we want to remove from the Beginning of the array
+  //  where secretTours is true so that those Documents will not be counted
+  //    ( using unshift() at the beginning of the Array because it's an Array )
+  //  .shift() to add to End of Array; .unshift() to add to Beginning of Array
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+
+  /*
+   'this' points to the current aggregation object
+   OP => console.log(this);
+       Aggregate {
+       _pipeline: [
+           { '$match': [Object] },
+           { '$group': [Object] },
+           { '$sort': [Object] }
+       ],
+       _model: Model { Tour },
+       options: {}
+       }
+
+   OP => console.log(this.pipeline());
+       [
+         { '$match': { secretTour: [Object] } },
+         { '$match': { ratingsAverage: [Object] } },
+         {
+           '$group': {
+               _id: [Object],
+               numTours: [Object],
+               numRatings: [Object],
+               avgRating: [Object],
+               avgPrice: [Object],
+               minPrice: [Object],
+               maxPrice: [Object]
+           }
+         },
+         { '$sort': { avgPrice: 1 } }
+       ]
+   */
+  console.log(this.pipeline());
+  next();
+});
+
 // Always use uppercase on Model Variables
 const Tour = mongoose.model('Tour', tourSchema);
 

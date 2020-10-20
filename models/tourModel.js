@@ -173,7 +173,7 @@ tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
 
   // The result will be only those docs where secretTour is false
-  console.log(docs.length);
+  // console.log(docs.length);
   next();
 });
 
@@ -216,7 +216,7 @@ tourSchema.pre('aggregate', function (next) {
          { '$sort': { avgPrice: 1 } }
        ]
    */
-  console.log(this.pipeline());
+  // console.log(this.pipeline());
   next();
 });
 

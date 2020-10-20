@@ -171,7 +171,7 @@ tourSchema.post(/^find/, function (docs, next) {
 
 // TODO: AGGREGATION MIDDLEWARE
 tourSchema.pre('aggregate', function (next) {
-  // An aggregate is an Array, so we want to remove from the Beginning of the array
+  // An aggregate is an Array; we want to remove from the Beginning of the Array
   //  where secretTours is true so that those Documents will not be counted
   //    ( using unshift() at the beginning of the Array because it's an Array )
   //  .shift() to add to End of Array; .unshift() to add to Beginning of Array

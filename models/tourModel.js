@@ -56,6 +56,7 @@ const tourSchema = new mongoose.Schema(
       validate: {
         // NOTE: Inside a validator function, the 'this' keyword will only
         //  point to current document when we are creating a new document
+        //   i.e CreateTour, not updateTour
         validator: function (val) {
           console.log('This is val:  ', val);
 

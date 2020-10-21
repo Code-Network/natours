@@ -92,17 +92,19 @@ app.use('/api/v1/users', userRouter);
 // TODO:  4)  ERROR HANDLING
 // =================================================================
 //
+// OPERATIONAL ERROR
 // If URL has not been handled by the previous routers, it is a wrong
 //  or badly typed URL, so we have to do something about bad URL for
 //  all of the verbs (GET, DELETE, PATCH, etc )
 // .all() means all verbs/http methods (get, post, patch, etc)
-//  '*' means all the URLs/routes that were not handled before this.
+//  '*' means all the URLs/routes
 // req.originalUrl =>  the URL that was requested
 app.all('*', (req, res, next) => {
   res.status(404).json({
     status: 'fail',
     message: `Cannot find ${req.originalUrl} on this server`,
   });
+  next();
 });
 
 //

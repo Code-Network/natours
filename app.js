@@ -100,11 +100,24 @@ app.use('/api/v1/users', userRouter);
 //  '*' means all the URLs/routes
 // req.originalUrl =>  the URL that was requested
 app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Cannot find ${req.originalUrl} on this server`,
-  });
-  next();
+  // res.status(404).json({
+  //   status: 'fail',
+  //   message: `Cannot find ${req.originalUrl} on this server`,
+  // });
+  // next();
+
+  const err = new Error(`CANNOT FIND ${req.originalUrl} on this server`);
+  err.status = 'fail';
+  err.statusCode = 404;
+
+  /*
+   Any argument in next() is seen as an error by Express,
+   and it will then skip all middlewares in the middleware stack
+   and send the error that we passed in next() to our
+   global error handling middleware, which will then go to our
+   Error Handler [app.use((err, req, res, next) => {})] and be executed.
+   */
+  next(err);
 });
 
 // TODO:  Define an Error Handling Middleware

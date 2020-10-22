@@ -129,6 +129,11 @@ app.use(function (err, req, res, next) {
       but it will be 'error' by default if status is undefined.
   */
   err.status = err.status || 'error';
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
 });
 
 //

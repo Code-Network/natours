@@ -121,6 +121,14 @@ app.use(function (err, req, res, next) {
    -- But if it is not defined, our default will be 500.
    */
   err.statusCode = err.statusCode || 500;
+
+  /*
+      DEFINE THE STATUS PROPERTY (i.e. status: 'fail')
+      We also want to define the value of the status property:.
+      Again we want to read the status property ( ex. 'fail' ),
+      but it will be 'error' by default if status is undefined.
+  */
+  err.status = err.status || 'error';
 });
 
 //

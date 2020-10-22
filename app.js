@@ -107,6 +107,20 @@ app.all('*', (req, res, next) => {
   next();
 });
 
+// TODO:  Define an Error Handling Middleware
+app.use(function (err, req, res, next) {
+  /*
+   -- We want to read the err status code from the object itself.
+   -- When we create the status code on res.status,
+      we will define the status code on the status error.
+   -- Error Code 500 = Internal Server Error
+   -- We will define a default = err.statusCode because there
+      will be errors not coming from us, but from the
+      application, errors that we have not defined ourselves
+   */
+  err.statusCode = err.statusCode || 500;
+});
+
 //
 // =================================================================
 // TODO: 5)  START SERVER

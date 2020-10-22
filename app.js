@@ -109,14 +109,16 @@ app.all('*', (req, res, next) => {
 
 // TODO:  Define an Error Handling Middleware
 app.use(function (err, req, res, next) {
-  /*
+  /* DEFAULT STATUS CODE
    -- We want to read the err status code from the object itself.
    -- When we create the status code on res.status,
       we will define the status code on the status error.
    -- Error Code 500 = Internal Server Error
-   -- We will define a default = err.statusCode because there
-      will be errors not coming from us, but from the
-      application, errors that we have not defined ourselves
+   -- We will define a default (500)
+   -- Ideally, we want to read the Error Object err.statusCode,
+   because there will be errors not coming from us, but from the
+   application, errors that we have not defined ourselves.
+   -- But if it is not defined, our default will be 500.
    */
   err.statusCode = err.statusCode || 500;
 });

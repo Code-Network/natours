@@ -16,6 +16,10 @@ class AppError extends Error {
     // Capture the stack trace
     // this => The current object
     // this.constructor => The AppError class itself
+    // When a new object is created and the constructor function is called,
+    //  then that function call is not going to appear in the stack trace
+    //  and will not pollute it.
     Error.captureStackTrace(this, this.constructor);
   }
 }
+module.exports = AppError;

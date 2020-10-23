@@ -120,8 +120,12 @@ app.all('*', (req, res, next) => {
   next(err);
 });
 
-// TODO:  Define an Error Handling Middleware
+// TODO:  Define a GLOBAL Error Handling Middleware
 app.use((err, req, res, next) => {
+  // See what is on the stack trace
+  // The stack shows us where the error happened
+  console.log('This is the STACK TRACE', err.stack);
+
   /* DEFAULT STATUS CODE
    -- We want to read the err status code from the object itself.
    -- When we create the status code on res.status,

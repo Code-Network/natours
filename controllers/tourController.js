@@ -112,18 +112,7 @@ exports.createTour = catchAsync(async (req, res, next) => {
   });
 });
 
-// catch (err) {
-//   // Validation errors would be caught here (ex. missing a required field)
-//   // If you have a validation error, the PROMISE would be rejected
-//   // 400 stands for 'Bad Request'
-//   res.status(400).json({
-//     status: 'fail',
-//     message: err,
-//   });
-// }
-
 //
-// -----------------------------
 // -----------------------------
 //
 

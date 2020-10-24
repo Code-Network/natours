@@ -84,9 +84,19 @@ exports.getTour = async (req, res) => {
   }
 };
 
+// Catch Asynchronous Errors
+// fn function returns a PROMISE
+const catchAsync = (fn) => {
+  return (req, res, next) => {
+    // Call the fn function, which is the async function that was passed in
+    fn(req, res, next).catch((err) => next(err));
+  };
+};
+
 // ---------------------------------
 // ---------------------------------
 // TODO:  c.  POST Handler / Controller to CREATE NEW TOUR
+
 // With a post request, we can send data from the client to the server
 // -- req.body holds all the info about the request that was done.
 // And if the client sent some data, it will be on req var.
@@ -100,43 +110,43 @@ exports.getTour = async (req, res) => {
 // is added to var req object.
 //    data === req.body, so 'body' is added by this middleware
 // NOTE: With async/await, we need to check for errors using try/catch syntax
-exports.createTour = async (req, res) => {
-  try {
-    // We used to create a new tour this way, which returned a PROMISE
-    // This called the method on the new document directly
-    // const newTour = new Tour({some data});
-    // newTour.save();
+exports.createTour = catchAsync(async (req, res, next) => {
+  // We used to create a new tour this way, which returned a PROMISE
+  // This called the method on the new document directly
+  // const newTour = new Tour({some data});
+  // newTour.save();
 
-    // Alternatively we can call the method directly on the model itself => Tour
-    // The create() method also returns a PROMISE;
-    // You can use .then() to gain access to data in doc
-    // OR use async/await.
-    // So we make this an async function
-    // and 'await' the promise of Tour.create and save the result
-    //   of this PROMISE in the newTour variable
-    // For the data, pass in the req.body, which is the data that comes
-    //    with the POST REQUEST == req.body
-    // This will be stored in the Database.
-    const newTour = await Tour.create(req.body);
+  // Alternatively we can call the method directly on the model itself => Tour
+  // The create() method also returns a PROMISE;
+  // You can use .then() to gain access to data in doc
+  // OR use async/await.
+  // So we make this an async function
+  // and 'await' the promise of Tour.create and save the result
+  //   of this PROMISE in the newTour variable
+  // For the data, pass in the req.body, which is the data that comes
+  //    with the POST REQUEST == req.body
+  // This will be stored in the Database.
+  const newTour = await Tour.create(req.body);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      tour: newTour,
+    },
+  });
+});
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: newTour,
-      },
-    });
-  } catch (err) {
-    // Validation errors would be caught here (ex. missing a required field)
-    // If you have a validation error, the PROMISE would be rejected
-    // 400 stands for 'Bad Request'
-    res.status(400).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+// catch (err) {
+//   // Validation errors would be caught here (ex. missing a required field)
+//   // If you have a validation error, the PROMISE would be rejected
+//   // 400 stands for 'Bad Request'
+//   res.status(400).json({
+//     status: 'fail',
+//     message: err,
+//   });
+// }
 
 //
+// -----------------------------
 // -----------------------------
 //
 

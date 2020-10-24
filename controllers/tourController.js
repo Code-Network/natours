@@ -133,26 +133,19 @@ exports.createTour = catchAsync(async (req, res, next) => {
  - With PATCH, we only expect the properties that should actually
  be updated on the Object
  */
-exports.updateTour = async (req, res) => {
-  try {
-    // Query for the document we want to update (by ID) and then update
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+exports.updateTour = catchAsync(async (req, res) => {
+  // Query for the document we want to update (by ID) and then update
+  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
 
 //
 // -----------------------------

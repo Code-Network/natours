@@ -1,5 +1,6 @@
 const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
+const catchAsync = require('./../utils/catchAsync');
 
 // TODO:  Prefill the fields required for the /top-5-cheap route
 exports.aliasTopTours = (req, res, next) => {
@@ -82,15 +83,6 @@ exports.getTour = async (req, res) => {
       message: err,
     });
   }
-};
-
-// Catch Asynchronous Errors
-// fn function returns a PROMISE
-const catchAsync = (fn) => {
-  return (req, res, next) => {
-    // Call the fn function, which is the async function that was passed in
-    fn(req, res, next).catch((err) => next(err));
-  };
 };
 
 // ---------------------------------

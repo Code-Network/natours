@@ -15,7 +15,7 @@ exports.aliasTopTours = (req, res, next) => {
 // ==========================================================
 
 // TODO: a.  GET ALL TOURS Handler / Controller --------------------
-exports.getAllTours = catchAsync(async (req, res) => {
+exports.getAllTours = catchAsync(async (req, res, next) => {
   // TODO:  EXECUTE THE QUERY
   // TODO:  Run code for the API filtering functionality
   //    using the new class APIFeatures filter() method
@@ -55,7 +55,7 @@ exports.getAllTours = catchAsync(async (req, res) => {
  -- If we want an optional parameter:  '/api/v1/tours/:id/:x/:y?',
  then y would be undefined because it is now optional
  */
-exports.getTour = catchAsync(async (req, res) => {
+exports.getTour = catchAsync(async (req, res, next) => {
   // req.params is where are stored all of the parameters
   //    as in tourRoutes.js, line 30, where we named the '/:id' route
   //    so that we can find ex. localhost:3000/api/v1/tours/5f73ed16b967eb1a40fa8150
@@ -133,7 +133,7 @@ exports.createTour = catchAsync(async (req, res, next) => {
  - With PATCH, we only expect the properties that should actually
  be updated on the Object
  */
-exports.updateTour = catchAsync(async (req, res) => {
+exports.updateTour = catchAsync(async (req, res, next) => {
   // Query for the document we want to update (by ID) and then update
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -152,7 +152,7 @@ exports.updateTour = catchAsync(async (req, res) => {
 //
 
 // TODO:  e.  Delete Tour Handler / Controller
-exports.deleteTour = async (req, res) => {
+exports.deleteTour = async (req, res, next) => {
   try {
     await Tour.findByIdAndDelete(req.params.id);
 
@@ -179,7 +179,7 @@ exports.deleteTour = async (req, res) => {
 //
 
 // TODO:  f.  Get Tour Stats Handler / Controller
-exports.getTourStats = catchAsync(async (req, res) => {
+exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
     {
       $match: { ratingsAverage: { $gte: 4.5 } },
@@ -213,61 +213,64 @@ exports.getTourStats = catchAsync(async (req, res) => {
   });
 });
 
-exports.getMonthlyPlan = async (req, res) => {
-  try {
-    const year = req.params.year * 1;
-    const plan = await Tour.aggregate([
-      {
-        // pass a field path operand or doc operand to unwind an array field
-        $unwind: '$startDates',
-      },
-      {
-        $match: {
-          startDates: {
-            $gte: new Date(`${year}-01-01`),
-            $lte: new Date(`${year}-12-31`),
-          },
-        },
-      },
-      {
-        $group: {
-          _id: { $month: '$startDates' },
+//
+// -----------------------------
+//
 
-          // How many tours in the above month?
-          numTourStarts: { $sum: 1 },
+exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
+  const year = req.params.year * 1;
+  const plan = await Tour.aggregate([
+    {
+      // pass a field path operand or doc operand to unwind an array field
+      $unwind: '$startDates',
+    },
+    {
+      $match: {
+        startDates: {
+          $gte: new Date(`${year}-01-01`),
+          $lte: new Date(`${year}-12-31`),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { $month: '$startDates' },
 
-          // $push creates an ARRAY of the field names of the tours
-          // Answers the question: Which tours?
-          tours: { $push: '$name' },
-        },
+        // How many tours in the above month?
+        numTourStarts: { $sum: 1 },
+
+        // $push creates an ARRAY of the field names of the tours
+        // Answers the question: Which tours?
+        tours: { $push: '$name' },
       },
-      {
-        $addFields: { month: '$_id' },
-      },
-      {
-        $project: {
-          /*
-           We give each of the field names a 0 or a 1
-           0 =>  id no longer shows up,   1 => _id shows up
-           We remove the _id because we want $addFields: { month: '$_id' }
-           to calculate the month
-           */
-          _id: 0,
-        },
-      },
-      {
+    },
+    {
+      $addFields: { month: '$_id' },
+    },
+    {
+      $project: {
         /*
-         Sort by the number of tour starts.
-         value 1 is for ascending order and value -1 is for descending.
-         Highest to lowest.
+         We give each of the field names a 0 or a 1
+         0 =>  id no longer shows up,   1 => _id shows up
+         We remove the _id because we want $addFields: { month: '$_id' }
+         to calculate the month
          */
-        $sort: { numTourStarts: -1 },
+        _id: 0,
       },
-      {
-        // Allows to display only 6 documents
-        $limit: 12,
-      },
-    ]);
+    },
+    {
+      /*
+       Sort by the number of tour starts.
+       value 1 is for ascending order and value -1 is for descending.
+       Highest to lowest.
+       */
+      $sort: { numTourStarts: -1 },
+    },
+    {
+      // Allows to display only 6 documents
+      $limit: 12,
+    },
+  ]));
 
     res.status(200).json({
       status: 'success',
@@ -275,10 +278,4 @@ exports.getMonthlyPlan = async (req, res) => {
         plan,
       },
     });
-  } catch (e) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+}

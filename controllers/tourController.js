@@ -15,42 +15,34 @@ exports.aliasTopTours = (req, res, next) => {
 // ==========================================================
 
 // TODO: a.  GET ALL TOURS Handler / Controller --------------------
-exports.getAllTours = async (req, res) => {
-  try {
-    // TODO:  EXECUTE THE QUERY
-    // TODO:  Run code for the API filtering functionality
-    //    using the new class APIFeatures filter() method
-    // From constructor(query, queryString)
-    // Tour.find() is a query object ==> APIFeartures Mongooose query parameter
-    // req.query is APIFeatures Express queryString parameter
-    const features = new APIFeatures(Tour.find(), req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
+exports.getAllTours = catchAsync(async (req, res) => {
+  // TODO:  EXECUTE THE QUERY
+  // TODO:  Run code for the API filtering functionality
+  //    using the new class APIFeatures filter() method
+  // From constructor(query, queryString)
+  // Tour.find() is a query object ==> APIFeartures Mongooose query parameter
+  // req.query is APIFeatures Express queryString parameter
+  const features = new APIFeatures(Tour.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
 
-    // TODO: NOTE: features.query
-    // features.query => query is not from APIFeatures param this.query = query
-    // In the APIFeatures filter() we have this.query.find(JSON.parse(queryStr));
-    //    so, this.query, or query, now has the entire Tour query
-    const tours = await features.query;
+  // TODO: NOTE: features.query
+  // features.query => query is not from APIFeatures param this.query = query
+  // In the APIFeatures filter() we have this.query.find(JSON.parse(queryStr));
+  //    so, this.query, or query, now has the entire Tour query
+  const tours = await features.query;
 
-    // ---------------------------------
-    // TODO:  SEND RESPONSE
-    res.status(200).json({
-      status: 'success',
-      results: tours.length,
-      data: {
-        tours,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  // TODO:  SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours,
+    },
+  });
+});
 
 // -------------------------------------------
 // -------------------------------------------

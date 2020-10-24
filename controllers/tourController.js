@@ -259,12 +259,12 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
       // Allows to display only 6 documents
       $limit: 12,
     },
-  ]));
+  ]);
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        plan,
-      },
-    });
-}
+  res.status(200).json({
+    status: 'success',
+    data: {
+      plan,
+    },
+  });
+});

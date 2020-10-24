@@ -55,27 +55,20 @@ exports.getAllTours = catchAsync(async (req, res) => {
  -- If we want an optional parameter:  '/api/v1/tours/:id/:x/:y?',
  then y would be undefined because it is now optional
  */
-exports.getTour = async (req, res) => {
-  try {
-    // req.params is where are stored all of the parameters
-    //    as in tourRoutes.js, line 30, where we named the '/:id' route
-    //    so that we can find ex. localhost:3000/api/v1/tours/5f73ed16b967eb1a40fa8150
-    // Same as:  Tour.findOne({ _id: req.params.id })
-    const tour = await Tour.findById(req.params.id);
+exports.getTour = catchAsync(async (req, res) => {
+  // req.params is where are stored all of the parameters
+  //    as in tourRoutes.js, line 30, where we named the '/:id' route
+  //    so that we can find ex. localhost:3000/api/v1/tours/5f73ed16b967eb1a40fa8150
+  // Same as:  Tour.findOne({ _id: req.params.id })
+  const tour = await Tour.findById(req.params.id);
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
 
 // ---------------------------------
 // ---------------------------------

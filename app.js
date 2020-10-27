@@ -116,7 +116,7 @@ app.all('*', (req, res, next) => {
 
    -- from the AppError params => constructor(message, statusCode)
    */
-  next(new AppError(`CANNOT FIND ${req.originalUrl} on this server`), 404);
+  next(new AppError(`CANNOT FIND ${req.originalUrl} on this server`, 404));
 });
 
 // TODO:  Define a GLOBAL Error Handling Middleware

@@ -129,10 +129,19 @@ exports.createTour = catchAsync(async (req, res, next) => {
  */
 exports.updateTour = catchAsync(async (req, res, next) => {
   // Query for the document we want to update (by ID) and then update
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const tour = await Tour.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+    },
+    (err) => {
+      if (err) {
+        return next(new AppError('No tour found with that ID', 404));
+      }
+    }
+  );
   res.status(200).json({
     status: 'success',
     data: {
@@ -146,27 +155,24 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 //
 
 // TODO:  e.  Delete Tour Handler / Controller
-exports.deleteTour = async (req, res, next) => {
-  try {
-    await Tour.findByIdAndDelete(req.params.id);
+exports.deleteTour = catchAsync(async (req, res, next) => {
+  await Tour.findByIdAndDelete(req.params.id, (err) => {
+    if (err) {
+      return next(new AppError('No tour found with that ID', 404));
+    }
+  });
 
-    // This is just testing using API files
-    // status 204 = No Content, because as a result we usually
-    //     don't send any data back, maybe just null to show that
-    //     the tour no longer exists.
-    // Output on Postman doesn't even send the JSON we sent back.  Just 204.
-    // status 204 is No Content
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  // This is just testing using API files
+  // status 204 = No Content, because as a result we usually
+  //     don't send any data back, maybe just null to show that
+  //     the tour no longer exists.
+  // Output on Postman doesn't even send the JSON we sent back.  Just 204.
+  // status 204 is No Content
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
 
 //
 // -----------------------------

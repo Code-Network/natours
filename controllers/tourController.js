@@ -1,5 +1,6 @@
 const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
+const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
 
 // TODO:  Prefill the fields required for the /top-5-cheap route
@@ -60,7 +61,11 @@ exports.getTour = catchAsync(async (req, res, next) => {
   //    as in tourRoutes.js, line 30, where we named the '/:id' route
   //    so that we can find ex. localhost:3000/api/v1/tours/5f73ed16b967eb1a40fa8150
   // Same as:  Tour.findOne({ _id: req.params.id })
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id, (err) => {
+    if (err) {
+      return next(new AppError('No tour found with that ID', 404));
+    }
+  });
 
   res.status(200).json({
     status: 'success',

@@ -1,5 +1,14 @@
 // TODO:  Define a GLOBAL Error Handling Middleware
 
+const sendErrorDev = (err, res) => {
+  res.status(err.statusCode).json({
+    status: err.status,
+    error: err,
+    message: err.message,
+    stack: err.stack,
+  });
+};
+
 module.exports = (err, req, res, next) => {
   // See what is on the stack trace
   // The stack shows us where the error happened
@@ -29,12 +38,7 @@ module.exports = (err, req, res, next) => {
   // Distinguish between friendly errors sent in production and
   //    detailed errors sent during development
   if (process.env.NODE_ENV === 'development') {
-    res.status(err.statusCode).json({
-      status: err.status,
-      error: err,
-      message: err.message,
-      stack: err.stack,
-    });
+    sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     res.status(err.statusCode).json({
       status: err.status,

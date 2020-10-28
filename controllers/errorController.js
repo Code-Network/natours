@@ -26,8 +26,19 @@ module.exports = (err, req, res, next) => {
 	 */
   err.status = err.status || 'error';
 
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
+  // Distinguish between friendly errors sent in production and
+  //    detailed errors sent during development
+  if (process.env.NODE_ENV === 'development') {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack,
+    });
+  } else if (process.env.NODE_ENV === 'production') {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  }
 };

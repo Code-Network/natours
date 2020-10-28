@@ -1,5 +1,70 @@
 // TODO:  Define a GLOBAL Error Handling Middleware
+const AppError = require('./../utils/appError');
 
+// ------------------------------------
+// ------------------------------------
+// TODO: Function to Handle DB CastError
+// ------------------------------------
+// ------------------------------------
+const handleCastErrorDB = (err) => {
+  const message = `Invalid ${err.path}: ${err.value}.`;
+
+  /*
+	 Status Code 400 => Bad Request -
+	 The server cannot or will not process the request due to
+	 something that is perceived to be a client error
+	 (e.g., malformed request syntax, invalid request message
+	 framing, or deceptive request routing).
+	*/
+  return new AppError(message, 400);
+};
+
+// ------------------------------------
+// ------------------------------------
+// TODO: Function to Handle Duplicate DB Fields
+// ------------------------------------
+// ------------------------------------
+const handleDuplicateFieldsDB = (err) => {
+  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+  console.log(value);
+
+  const message = `Duplicate field value: ${value}. Please use another value!`;
+
+  /*
+		 Status Code 400 => Bad Request -
+		 The server cannot or will not process the request due to
+		 something that is perceived to be a client error
+		 (e.g., malformed request syntax, invalid request message
+		 framing, or deceptive request routing).
+ */
+  return new AppError(message, 400);
+};
+
+// ------------------------------------
+// ------------------------------------
+// TODO: Function to Handle DB Validation Errors
+// ------------------------------------
+// ------------------------------------
+const handleValidationErrorDB = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+
+  const message = `Invalid input data. ${errors.join('. ')}`;
+
+  /*
+	 Status Code 400 => Bad Request -
+			The server cannot or will not process the request due to
+			something that is perceived to be a client error
+			(e.g., malformed request syntax, invalid request message
+			framing, or deceptive request routing).
+	*/
+  return new AppError(message, 400);
+};
+
+// ------------------------------------
+// ------------------------------------
+// TODO: Function for Error Data in Development Only
+// ------------------------------------
+// ------------------------------------
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -9,6 +74,34 @@ const sendErrorDev = (err, res) => {
   });
 };
 
+// ------------------------------------
+// ------------------------------------
+// TODO: Function for Error Data in Production Only
+// ------------------------------------
+// ------------------------------------
+const sendErrorProd = (err, res) => {
+  if (err.isOperational) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  } else {
+    // 1) Log error
+    console.log('ERROR 💥💥💥', err);
+
+    // 2) Send generic message
+    res.status(500).json({
+      status: 'error',
+      message: 'Something went very wrong!',
+    });
+  }
+};
+
+// ------------------------------------
+// ------------------------------------
+// TODO: Module Exports Error Controller
+// ------------------------------------
+// ------------------------------------
 module.exports = (err, req, res, next) => {
   // See what is on the stack trace
   // The stack shows us where the error happened
@@ -40,9 +133,13 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
+    let error = { ...err };
+
+    if (error.name === 'CastError') error = handleCastErrorDB(error);
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (error.name === 'ValidationError')
+      error = handleValidationErrorDB(error);
+
+    sendErrorProd(error, res);
   }
 };

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const validator = require('validator');
+// const validator = require('validator');
 
 //----------------------------------------------
 // TODO: --------- Create a Schema -------------
@@ -12,9 +12,9 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a name'],
       unique: true,
       trim: true,
-      maxlength: [40, 'A tour must have less or equal then 40 characters'],
-      minlength: [10, 'A tour must have more or equal then 10 characters'],
-      // validate: [validator.isAlpha, 'Tour name must only contain characters'],
+      maxlength: [40, 'A tour name must have less or equal then 40 characters'],
+      minlength: [10, 'A tour name must have more or equal then 10 characters'],
+      // validate: [validator.isAlpha, 'Tour name must only contain characters']
     },
     slug: String,
     duration: {
@@ -60,8 +60,7 @@ const tourSchema = new mongoose.Schema(
         //  point to current document when we are creating a new document
         //   i.e CreateTour, not updateTour
         validator: function (val) {
-          console.log('This is val:  ', val);
-
+          // console.log('This is val:  ', val);
           // Check that the Price Discount is lower than the price
           return val < this.price; // 100 < 200
         },
@@ -236,7 +235,7 @@ tourSchema.pre('aggregate', function (next) {
          { '$sort': { avgPrice: 1 } }
        ]
    */
-  // console.log(this.pipeline());
+  console.log(this.pipeline());
   next();
 });
 

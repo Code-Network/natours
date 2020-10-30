@@ -56,16 +56,14 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
  -- If we want an optional parameter:  '/api/v1/tours/:id/:x/:y?',
  then y would be undefined because it is now optional
  */
+
 exports.getTour = catchAsync(async (req, res, next) => {
-  // req.params is where are stored all of the parameters
-  //    as in tourRoutes.js, line 30, where we named the '/:id' route
-  //    so that we can find ex. localhost:3000/api/v1/tours/5f73ed16b967eb1a40fa8150
-  // Same as:  Tour.findOne({ _id: req.params.id })
-  const tour = await Tour.findById(req.params.id, (err) => {
-    if (err) {
-      return next(new AppError('No tour found with that ID', 404));
-    }
-  });
+  const tour = await Tour.findById(req.params.id);
+  // Tour.findOne({ _id: req.params.id })
+
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
 
   res.status(200).json({
     status: 'success',
@@ -128,20 +126,15 @@ exports.createTour = catchAsync(async (req, res, next) => {
  be updated on the Object
  */
 exports.updateTour = catchAsync(async (req, res, next) => {
-  // Query for the document we want to update (by ID) and then update
-  const tour = await Tour.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    },
-    (err) => {
-      if (err) {
-        return next(new AppError('No tour found with that ID', 404));
-      }
-    }
-  );
+  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -156,18 +149,12 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 
 // TODO:  e.  Delete Tour Handler / Controller
 exports.deleteTour = catchAsync(async (req, res, next) => {
-  await Tour.findByIdAndDelete(req.params.id, (err) => {
-    if (err) {
-      return next(new AppError('No tour found with that ID', 404));
-    }
-  });
+  const tour = await Tour.findByIdAndDelete(req.params.id);
 
-  // This is just testing using API files
-  // status 204 = No Content, because as a result we usually
-  //     don't send any data back, maybe just null to show that
-  //     the tour no longer exists.
-  // Output on Postman doesn't even send the JSON we sent back.  Just 204.
-  // status 204 is No Content
+  if (!tour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+
   res.status(204).json({
     status: 'success',
     data: null,

@@ -1,7 +1,7 @@
 const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
-const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 // TODO:  Prefill the fields required for the /top-5-cheap route
 exports.aliasTopTours = (req, res, next) => {

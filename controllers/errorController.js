@@ -80,14 +80,19 @@ const sendErrorDev = (err, res) => {
 // ------------------------------------
 // ------------------------------------
 const sendErrorProd = (err, res) => {
+  // Operational, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
     });
+
+    // Programming or other unknown error:
+    //    don't want to leak error details to the client
   } else {
-    // 1) Log error
-    console.log('ERROR 💥💥💥', err);
+    // 1) Log this weird error to the console of
+    //    the hosting platform that we are using
+    console.error('ERROR 💥💥💥', err);
 
     // 2) Send generic message
     res.status(500).json({

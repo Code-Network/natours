@@ -29,14 +29,6 @@ const handleDuplicateFieldsDB = (err) => {
   console.log(value);
 
   const message = `Duplicate field value: ${value}. Please use another value!`;
-
-  /*
-		 Status Code 400 => Bad Request -
-		 The server cannot or will not process the request due to
-		 something that is perceived to be a client error
-		 (e.g., malformed request syntax, invalid request message
-		 framing, or deceptive request routing).
- */
   return new AppError(message, 400);
 };
 
@@ -49,14 +41,6 @@ const handleValidationErrorDB = (err) => {
   const errors = Object.values(err.errors).map((el) => el.message);
 
   const message = `Invalid input data. ${errors.join('. ')}`;
-
-  /*
-	 Status Code 400 => Bad Request -
-			The server cannot or will not process the request due to
-			something that is perceived to be a client error
-			(e.g., malformed request syntax, invalid request message
-			framing, or deceptive request routing).
-	*/
   return new AppError(message, 400);
 };
 
@@ -110,7 +94,7 @@ const sendErrorProd = (err, res) => {
 module.exports = (err, req, res, next) => {
   // See what is on the stack trace
   // The stack shows us where the error happened
-  console.log('This is the STACK TRACE', err.stack);
+  // console.log('This is the STACK TRACE', err.stack);
 
   /* DEFAULT STATUS CODE
 	 -- We want to read the err status code from the object itself.

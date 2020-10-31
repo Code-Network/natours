@@ -1,7 +1,11 @@
 const AppError = require('./../utils/appError');
 
 const handleCastErrorDB = err => {
+  // This is sent during prodcution
+  // A CastError is sent when URL is incorrect
   const message = `Invalid ${err.path}: ${err.value}.`;
+
+  // 400 Error == 'Bad Request'
   return new AppError(message, 400);
 };
 

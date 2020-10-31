@@ -9,7 +9,9 @@ const handleCastErrorDB = err => {
   return new AppError(message, 400);
 };
 
+// Triggered when we have a duplicate field
 const handleDuplicateFieldsDB = err => {
+  // This regex finds the text between quotes
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
   console.log(value);
 
@@ -68,6 +70,13 @@ module.exports = (err, req, res, next) => {
     // Mongoose sends a CastError when a wrong URL is sent i.e. /apple
     if (error.name === 'CastError') error = handleCastErrorDB(error);
 
+    // A duplicate field happens when a unique field is duplicated
+    //   i.e. creating a document with name: "The Forest Hunter"
+    //   when that document name already exists
+    // MongoDB declares error.name = "MongoError" when we have a duplicate field
+    // The Mongoose error, however is error.code = 11000 when there is a duplicate field
+    // When that happens, we send this error to handleDuplicateFieldsDB(error) which
+    //    will
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);

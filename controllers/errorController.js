@@ -11,11 +11,21 @@ const handleCastErrorDB = err => {
 
 // Triggered when we have a duplicate field
 const handleDuplicateFieldsDB = err => {
-  // This regex finds the text between quotes
+  // This regex finds the text between quotes.
+  // errmsg is a property created by Mongo which has the
+  //   error text.  We want to extract the text between the quotes.
+  //
+  // For example:
+  // "errmsg": "E11000 duplicate key error ... key: { name: \"The Sea Explorer\" }"
+  //
+  //  So, we need:  The Sea Explorer
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
-  console.log(value);
+
+  // console.log(value);  // ex.  "The Sea Explorer"
 
   const message = `Duplicate field value: ${value}. Please use another value!`;
+
+  // Status Code: 400 == Bad Request
   return new AppError(message, 400);
 };
 

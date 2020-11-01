@@ -1,0 +1,38 @@
+# Ignore Mac system files
+.DS_store
+
+# Ignore node_modules folder
+node_modules
+
+# Ignore all text files
+*.txt
+
+# Ignore files related to API keys
+.env
+
+# Ignore SASS config files
+.sass-cache
+
+# Ignore Pretty files
+.prettierrc
+
+# Ignore Pretty JSON file
+.prettierrc.json
+
+# Ignore eslint JSON file
+.eslintrc.jsonadd .
+
+
+# Ignore js notes
+app1.js
+
+#Ignore .idea/
+.idea/
+
+#Ignore .env files
+.env
+
+#Ignore config.env
+config.env
+
+

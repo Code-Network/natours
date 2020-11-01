@@ -30,6 +30,7 @@ const handleDuplicateFieldsDB = err => {
 };
 
 const handleValidationErrorDB = err => {
+  // extract the message of each error from errors => errors.message
   const errors = Object.values(err.errors).map(el => el.message);
 
   const message = `Invalid input data. ${errors.join('. ')}`;
@@ -88,6 +89,9 @@ module.exports = (err, req, res, next) => {
     // When that happens, we send this error to handleDuplicateFieldsDB(error) which
     //    will
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+
+    // ValidationError is created by Mongoose and happens when the value
+    // of a field does not meet the Schema requirements
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
 

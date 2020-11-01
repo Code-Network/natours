@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+// Listen for uncaughtExceptions event such as console
+//  logging a var that DNE i.e console.log( x )
+// Then gracefully shut down the server.
+// This listener is put at the top of our application
+//  because it is synchronous. If we put it on the bottom
+//  then it will not catch any uncaught exception errors which
+//  would came before it.  It will even catch errors in app.js.
 process.on('uncaughtException', err => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.log(err.name, err.message);
+
+  // We do not close the server gently here because we cannot
+  //  access the server before initialization
   process.exit(1);
 });
 

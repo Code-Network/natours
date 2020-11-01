@@ -55,6 +55,8 @@ const sendErrorProd = (err, res) => {
     });
 
     // Programming or other unknown error: don't leak error details
+    // This will handle unoperational errors within our middleware functions
+    //   during production mode
   } else {
     // 1) Log error
     console.error('ERROR 💥', err);

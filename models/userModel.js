@@ -69,8 +69,13 @@ userSchema.pre('save', async function(next) {
 
   // Delete the Confirm Password at this point because we only need the
   //   passwordConfirm during validation. We really do not want to persist
-  //   it to a database
+  //   it to a database.
+  // Setting this.passwordConfirm to undefined deletes it.  Although this property
+  //  is required in the userSchema, deleting it is fine because it is required that
+  //  we input it when created, but it is not required that it persists to the DB
+
   this.passwordConfirm = undefined;
+  next();
 });
 
 const User = mongoose.model('User', userSchema);

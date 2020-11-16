@@ -37,7 +37,8 @@ const userSchema = new mongoose.Schema({
       // It will not work on UPDATE, for example.
       validator: function(el) {
         return el === this.password; // abc === abc
-      }
+      },
+      message: 'Passwords are not the same'
     }
   }
 });

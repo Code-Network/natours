@@ -43,6 +43,16 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// -- Encrypt the Passwords using Mongoose Middleware
+//   between getting the data and saving the data
+userSchema.pre('save', function(next) {
+  // -- Only encrypt the password when the password field has been updated,
+  //  i.e.  when the password is created new or when it is updated
+  //  -- 'this' refers to the current user
+  // -- If the password has not been modified, call the next middleware
+  if (this.isModified('password')) return next();
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

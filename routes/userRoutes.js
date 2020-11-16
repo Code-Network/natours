@@ -4,6 +4,7 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
+// ex. localhost:3000/api/v1/users/signup
 router.post('/signup', authController.signup);
 
 router

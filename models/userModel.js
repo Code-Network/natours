@@ -50,7 +50,7 @@ userSchema.pre('save', function(next) {
   //  i.e.  when the password is created new or when it is updated
   //  -- 'this' refers to the current user
   // -- If the password has not been modified, call the next middleware
-  if (this.isModified('password')) return next();
+  if (!this.isModified('password')) return next();
 });
 
 const User = mongoose.model('User', userSchema);

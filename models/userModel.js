@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
 
 // -- Encrypt the Passwords using Mongoose Middleware
 //   between getting the data and saving the data - pre()
-userSchema.pre('save', function(next) {
+userSchema.pre('save', async function(next) {
   // -- Only encrypt the password when the password field has been updated,
   //  i.e.  when the password is created new or when it is updated
   //  -- 'this' refers to the current user
@@ -59,6 +59,13 @@ userSchema.pre('save', function(next) {
   // -- bcrypt first adds a salt to the password, which is a random string,
   // so that two passwords do not generate the same hash
   // -- then bcrypt hashes/encrypts the password+salt
+  // -- bcrypt.hash() is the async version
+  // -- hash parameters =>
+  //        - current password = this.password,
+  //        - cost (a random string or # for cpu intensive we want it to be)
+  //           - default is 10, but computers have gotten much faster
+  //
+  this.password = await bcrypt.hash(this.password, 12);
 });
 
 const User = mongoose.model('User', userSchema);

@@ -66,6 +66,11 @@ userSchema.pre('save', async function(next) {
   //           - default is 10, but computers have gotten much faster
   //
   this.password = await bcrypt.hash(this.password, 12);
+
+  // Delete the Confirm Password at this point because we only need the
+  //   passwordConfirm during validation. We really do not want to persist
+  //   it to a database
+  this.passwordConfirm = undefined;
 });
 
 const User = mongoose.model('User', userSchema);

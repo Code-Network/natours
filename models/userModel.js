@@ -44,13 +44,20 @@ const userSchema = new mongoose.Schema({
 });
 
 // -- Encrypt the Passwords using Mongoose Middleware
-//   between getting the data and saving the data
+//   between getting the data and saving the data - pre()
 userSchema.pre('save', function(next) {
   // -- Only encrypt the password when the password field has been updated,
   //  i.e.  when the password is created new or when it is updated
   //  -- 'this' refers to the current user
   // -- If the password has not been modified, call the next middleware
   if (!this.isModified('password')) return next();
+
+  // ENCRYPT / HASH using bcrypt algorithm -- npm bcryptjs
+  // If the password has been modified, hash/encrypt the password
+  // to protect against bruteforce attacks
+  // -- bcrypt first adds a salt to the password, which is a random string,
+  // so that two passwords do not generate the same hash
+  // -- then bcrypt hashes/encrypts the password+salt
 });
 
 const User = mongoose.model('User', userSchema);

@@ -47,12 +47,14 @@ const userSchema = new mongoose.Schema({
 // -- Encrypt the Passwords using Mongoose Middleware
 //   between getting the data and saving the data - pre()
 userSchema.pre('save', async function(next) {
+  // ONLY RUN THIS FUNCTION IF PASSWORD WAS NOT MODIFIED
   // -- Only encrypt the password when the password field has been updated,
   //  i.e.  when the password is created new or when it is updated
   //  -- 'this' refers to the current user
   // -- If the password has not been modified, call the next middleware
   if (!this.isModified('password')) return next();
 
+  // HASH THE PASSWORD WITH COST OF 12
   // ENCRYPT / HASH using bcrypt algorithm -- npm bcryptjs
   // If the password has been modified, hash/encrypt the password
   // to protect against bruteforce attacks
@@ -67,6 +69,7 @@ userSchema.pre('save', async function(next) {
   //
   this.password = await bcrypt.hash(this.password, 12);
 
+  // DELETE passwordConfirm FIELD
   // Delete the Confirm Password at this point because we only need the
   //   passwordConfirm during validation. We really do not want to persist
   //   it to a database.

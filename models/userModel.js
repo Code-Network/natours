@@ -27,7 +27,18 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
-    minlength: [8, 'A password must be at least 8 chars long']
+    // Custom Validator
+    // el will be the password the user puts in on password confirmation from
+    // the /signup POST request
+    // this.password must match el for the validator to return true
+    // This will only work on Save
+    validate: {
+      // This only works on SAVE and CREATE ( .create() or .save() )
+      // It will not work on UPDATE, for example.
+      validator: function(el) {
+        return el === this.password; // abc === abc
+      }
+    }
   }
 });
 

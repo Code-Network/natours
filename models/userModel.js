@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
+
     // Custom Validator
     // el will be the password the user puts in on password confirmation from
     // the /signup POST request

@@ -1,5 +1,5 @@
-const User = require('./../models/userModel');
 const jwt = require('jsonwebtoken');
+const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -17,7 +17,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 
   // TODO:  Log the newUser in as soon as they signup by signing a
-  //  JWT (JSON Web Token) and then send it back to the user
+  //  JWT (JSON Web Token) and then send it back to the client/user
   // In config.env, define JWT_SECRET and JWT_EXPIRES_IN
   // Note: In MongoDB, the id is _id
   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
@@ -26,6 +26,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success!',
+    token,
     data: {
       user: newUser
     }

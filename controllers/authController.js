@@ -15,6 +15,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm
   });
 
+  // TODO:  Log the newUser in as soon as they signup by signing a
+  //  JWT (JSON Web Token) and then send it back to the user
+
   res.status(201).json({
     status: 'success!',
     data: {

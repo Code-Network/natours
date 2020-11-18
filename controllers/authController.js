@@ -36,3 +36,29 @@ exports.signup = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.login = (req, res, next) => {
+  /*
+    TODO: Put user email and password in vars
+      -- Initially we begin with the following:
+        const email = req.body.email;
+        const password = req.body.password;
+
+      -- But it is recommended we use ES6 Destructuring
+        const { email } = req.body;
+        const { password } = req.body;
+
+      -- To further simplify it:
+        const { email, password } = req.body;
+
+      -- This is how the user is going to send in the
+            login credentials for us to verify/check
+   */
+  const { email, password } = req.body;
+
+  // TODO: 1)  Check if email and password exist
+
+  // TODO: 2)  Check if user exists && password is correct
+
+  // TODO: 3)  If everything is OK, send JWT back to the client
+};

@@ -65,6 +65,9 @@ exports.login = (req, res, next) => {
   }
 
   // TODO: 2)  Check if user exists && password is correct
+  // const user = User.findOne({ email: email });
+  // Since field and variable are the same:
+  const user = User.findOne({ email });
 
   // TODO: 3)  If everything is OK, send JWT back to the client
   // Test 1) by creating a fake token

@@ -69,7 +69,7 @@ exports.login = (req, res, next) => {
   // Test 1) by creating a fake token
   const token = '';
   res.status(200).json({
-    status: success,
+    status: 'success',
     token
   });
 };

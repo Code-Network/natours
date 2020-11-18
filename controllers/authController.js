@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 exports.signup = catchAsync(async (req, res, next) => {
   // Create a new document based on the model
@@ -57,6 +58,10 @@ exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   // TODO: 1)  Check if email and password exist
+  if (!email || !password) {
+    // Status code 400 === Bad Request
+    next(new AppError('Please provide email and password', 400));
+  }
 
   // TODO: 2)  Check if user exists && password is correct
 

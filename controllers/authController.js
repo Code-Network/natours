@@ -59,11 +59,17 @@ exports.login = (req, res, next) => {
 
   // TODO: 1)  Check if email and password exist
   if (!email || !password) {
-    // Status code 400 === Bad Request
+    // HTTP Error Code === statusCode === 400 === Bad Request
     next(new AppError('Please provide email and password', 400));
   }
 
   // TODO: 2)  Check if user exists && password is correct
 
   // TODO: 3)  If everything is OK, send JWT back to the client
+  // Test 1) by creating a fake token
+  const token = '';
+  res.status(200).json({
+    status: success,
+    token
+  });
 };

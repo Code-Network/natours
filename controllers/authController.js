@@ -60,7 +60,8 @@ exports.login = (req, res, next) => {
   // TODO: 1)  Check if email and password exist
   if (!email || !password) {
     // HTTP Error Code === statusCode === 400 === Bad Request
-    next(new AppError('Please provide email and password', 400));
+    // return next() to ensure the exports.login finishes right away
+    return next(new AppError('Please provide email and password', 400));
   }
 
   // TODO: 2)  Check if user exists && password is correct

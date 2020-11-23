@@ -83,6 +83,17 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// TODO:  Create an instance method available on all docs of User collection
+// this - document
+// We cannot use 'this' because password.select = false, so password not available
+//  So, we use bcrypt to compare the user's input password with the hashed password
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

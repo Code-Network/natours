@@ -38,8 +38,9 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.login = (req, res, next) => {
-  /*
+/*
+exports.login = catchAsync(async (req, res, next) => {
+  /!*
     TODO: Put user email and password in vars
       -- Initially we begin with the following:
         const email = req.body.email;
@@ -54,7 +55,7 @@ exports.login = (req, res, next) => {
 
       -- This is how the user is going to send in the
             login credentials for us to verify/check
-   */
+   *!/
   const { email, password } = req.body;
 
   // TODO: 1)  Check if email and password exist
@@ -66,8 +67,11 @@ exports.login = (req, res, next) => {
 
   // TODO: 2)  Check if user exists && password is correct
   // const user = User.findOne({ email: email });
-  // Since field and variable are the same:
-  const user = User.findOne({ email });
+  // Since field and variable are the same we only need { email }
+  // Use .select('+password') to put the password back into the user data
+  //    in order to verify that their password is correct
+  const user = await User.findOne({ email }).select('+password');
+  console.log(user);
 
   // TODO: 3)  If everything is OK, send JWT back to the client
   // Test 1) by creating a fake token
@@ -76,4 +80,24 @@ exports.login = (req, res, next) => {
     status: 'success',
     token
   });
-};
+});
+*/
+
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password!', 400));
+  }
+
+  const user = await User.findOne({ email }).select('+password');
+
+  console.log(user);
+
+  const token = '';
+
+  res.status(200).json({
+    status: 'success',
+    token
+  });
+});

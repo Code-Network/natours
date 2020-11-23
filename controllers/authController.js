@@ -3,6 +3,12 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
+const signToken = id => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   // Create a new document based on the model
   // The data is in req.body
@@ -24,10 +30,14 @@ exports.signup = catchAsync(async (req, res, next) => {
   // -- In config.env, define JWT_SECRET and JWT_EXPIRES_IN
   // Note: In MongoDB, the id is _id
   // -- When verifying the JWT token in the debugger at jwt.io,
-  //   remove the iat and exp fields from debugger payload to verify
-  const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN
-  });
+  //   remove the iat and exp fields from debugger payload to verify.
+  // Move to function signToken();
+
+  // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+  //   expiresIn: process.env.JWT_EXPIRES_IN
+  // });
+
+  const token = signToken(newUser._id);
 
   res.status(201).json({
     status: 'success!',
@@ -104,7 +114,9 @@ exports.login = catchAsync(async (req, res, next) => {
   console.log(user);
 
   // If everything ok, send token to client
-  const token = '';
+  // const token = '';
+  const token = signToken(user._id);
+
   res.status(200).json({
     status: 'success',
     token

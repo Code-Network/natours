@@ -18,6 +18,10 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+
+  // Use this middleware to log the headers to the console
+  // The ones that a client can send along with a request
+  console.log(req.headers);
   next();
 });
 

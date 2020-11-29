@@ -38,8 +38,8 @@ app.use((req, res, next) => {
       //   connection: 'keep-alive'
       // }
 */
+  // console.log(req.headers);
 
-  console.log(req.headers);
   next();
 });
 

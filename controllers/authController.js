@@ -126,6 +126,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
+  // var token must be a let and not a const because the if statement is scoped
+  //  and const token would not be available outside the if statement.
   let token;
 
   // This will work because in Postman/Users/GetAllUsers we add the header:

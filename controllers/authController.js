@@ -127,6 +127,23 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
   let token;
+
+  // This will work because in Postman/Users/GetAllUsers we add the header:
+  //  Authorization: Bearer iamthetoken
+  // From app.js middleware, we console log req.headers and receive in console:
+  // {
+  //   authorization: 'Bearer iamthetoken',
+  //     'user-agent': 'PostmanRuntime/7.26.8',
+  //   accept: '*/*',
+  //   'cache-control': 'no-cache',
+  //   'postman-token': 'b008bc5e-1a66-458f-9e6d-f852d80beb57',
+  //   host: 'localhost:3000',
+  //   'accept-encoding': 'gzip, deflate, br',
+  //   connection: 'keep-alive'
+  // }
+  //
+  // Here we check to see if the following header exists:
+  // Key: "Authorization" and Value" "Bearer tokenID" exists.
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')

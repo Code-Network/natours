@@ -125,7 +125,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  // 1) Getting token and check of it's there
+  // 1) Get token and check if it is there
   // var token must be a let and not a const because the if statement is scoped
   //  and const token would not be available outside the if statement.
   let token;
@@ -159,11 +159,15 @@ exports.protect = catchAsync(async (req, res, next) => {
   // Log the token to the console
   console.log(token);
 
-  // if (!token) {
-  //   return next(
-  //     new AppError('You are not logged in! Please log in to get access.', 401)
-  //   );
-  // }
+  // Check to see if a token exists
+  // If there is no token, return a new operational error
+  //  using global handling middleware with an error which stipulates
+  //  that the user is not logged in
+  if (!token) {
+    return next(
+      new AppError('You are not logged in! Please log in to get access.', 401)
+    );
+  }
 
   // 2) Validate the token - Verification token
   // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);

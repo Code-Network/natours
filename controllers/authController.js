@@ -162,7 +162,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // Check to see if a token exists
   // If there is no token, return a new operational error
   //  using global handling middleware with an error which stipulates
-  //  that the user is not logged in
+  //  that the user is not logged in and a statuscode 401 (Unauthorized Access)
   if (!token) {
     return next(
       new AppError('You are not logged in! Please log in to get access.', 401)

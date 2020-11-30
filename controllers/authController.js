@@ -158,7 +158,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // Log the token to the console
-  console.log(token);
+  // console.log(token);
 
   // Check to see if a token exists
   // If there is no token, return a new operational error
@@ -173,6 +173,21 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 2) Verification token -- Validate the token -- use jwt.verify()
   // Verifies if someone has manipulated the data (payload) or if
   //    the token has already expired
+  // verify() will verify token and then when done, will call callback we specify
+  /*  verify() Syntax
+      jwt.verify(
+          token: string,
+          secretOrPublicKey: string | Buffer,
+          options?: VerifyOptions): string \ object
+      Synchronously verify given token using a secret/public key
+      to get a decoded token (JWT string to verify
+      secretOrPublicKey - Either the secret from HMAC algo
+      or the PEM encoded public key for RSA and ECDSA
+  */
+  // TODO: -- use util.promisify to make it a PROMISE and use async/await
+  // jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log(decoded);
 
   // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   //

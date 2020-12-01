@@ -126,7 +126,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  // 1) Get token and check if it is there
+  // TODO: 1) Get token and check if it is there
   // var token must be a let and not a const because the if statement is scoped
   //  and const token would not be available outside the if statement.
   let token;
@@ -170,7 +170,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // 2) Verification token -- Validate the token -- use jwt.verify()
+  // TODO: 2) Verification token -- Validate the token -- use jwt.verify()
   // Verifies if someone has manipulated the data (payload) or if
   //    the token has already expired
   // verify() will verify token and then when done, will call callback we specify
@@ -184,12 +184,12 @@ exports.protect = catchAsync(async (req, res, next) => {
       secretOrPublicKey - Either the secret from HMAC algo
       or the PEM encoded public key for RSA and ECDSA
   */
-  // TODO: -- use util.promisify to make it a PROMISE and use async/await
+  // todo: -- use util.promisify to make it a PROMISE and use async/await
   // jwt.verify(token, process.env.JWT_SECRET);
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   console.log(decoded);
 
-  // 3) Check if user still exists
+  // TODO: 3) Check if user still exists
   // const currentUser = await User.findById(decoded.id);
   // if (!currentUser) {
   //   return next(
@@ -197,7 +197,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //   );
   // }
   //
-  // 4) Check if user changed password after the token/JWT was issued
+  // TODO: 4) Check if user changed password after the token/JWT was issued
   // if (currentUser.changedPasswordAfter(decoded.iat)) {
   //   return next(
   //     new AppError('User recently changed password!  Please log in again', 401)

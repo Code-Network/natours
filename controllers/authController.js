@@ -4,12 +4,20 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
+// ============================================================
+// ============================================================
+
+// TODO: I.  SIGN TOKEN
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
 
+// ============================================================
+// ============================================================
+
+// TODO: II.  SIGN UP
 exports.signup = catchAsync(async (req, res, next) => {
   // Create a new document based on the model
   // The data is in req.body
@@ -49,6 +57,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
 });
 
+// ============================================================
+// ============================================================
+
+// TODO: III-A LOG IN
 /*
 exports.login = catchAsync(async (req, res, next) => {
   /!*
@@ -94,6 +106,10 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 */
 
+// ============================================================
+// ============================================================
+
+// TODO:  III-B.  LOG IN
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -125,6 +141,10 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
+// ============================================================
+// ============================================================
+
+// TODO:  IV.  PROTECT ROUTES
 exports.protect = catchAsync(async (req, res, next) => {
   // TODO: 1) Get token and check if it is there
   // var token must be a let and not a const because the if statement is scoped

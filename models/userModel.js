@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords are not the same'
     }
-  }
+  },
+  passwordChangedAt: Date
 });
 
 // -- Encrypt the Passwords using Mongoose Middleware
@@ -92,6 +93,29 @@ userSchema.methods.correctPassword = async function(
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+// TODO:  In authController.js, exports.protect, we find the currentUser via id,
+//  at this point the currentUser has already been verified, their token passes
+//  all tests, but what if the user has changed their password after they
+//  have logged in (i.e. after the token was issued).
+//  This gives them a new token and their old token, still valid, SHOULD
+//  no longer be valid. Here we want to ensure that the old token is no longer
+//  valid for this currentUser or any user.
+// In order to do that, we have to call the JWT timestamp (iat).
+// The iat tells you when that token was issued. In the userSchema, we create
+// a new property called PasswordChangedAt which the user can only have in
+// their document if they actually did change their password
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  // Remember that in an instance method the keyword 'this' always
+  // points to the current document. Check to see if passwordChangedAt exists,
+  //   if it does, only then do we want to do the comparison
+  if (this.passwordChangedAt) {
+    console.log(this.passwordChangedAt, JWTTimestamp);
+  }
+  // By default we will return false stipulating that the currentUser
+  // from authController.exports.protect has not changed their password
+  return false;
 };
 
 const User = mongoose.model('User', userSchema);

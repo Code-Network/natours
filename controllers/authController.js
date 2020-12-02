@@ -225,11 +225,13 @@ exports.protect = catchAsync(async (req, res, next) => {
   //    to find a document by its _id.
   const currentUser = await User.findById(decoded.id);
 
-  // if (!currentUser) {
-  //   return next(
-  //     new AppError('The user belonging to this token no longer exists', 401)
-  //   );
-  // }
+  // If there is no valid currentUser, create an instance of AppError stating
+  //  that this user belonging to this token no longer exists
+  if (!currentUser) {
+    return next(
+      new AppError('The user belonging to this token no longer exists', 401)
+    );
+  }
   //
   // TODO: 4) Check if user changed password after the token/JWT was issued
   // if (currentUser.changedPasswordAfter(decoded.iat)) {

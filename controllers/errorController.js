@@ -55,7 +55,6 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   // Operational, trusted error: send message to client
-  console.log('This is err in production', err);
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -84,12 +83,8 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    // console.log('plain err:  ', err);
-    // let error = { ...err };
-
-    // Not getting the error message iin production in handleJWTError
-    //  with { ...err }.  But using Object.create(err) works great.
-    let error = Object.create(err);
+    // let error = Object.create(err)
+    let error = { ...err };
 
     // Mongoose sends a CastError when a wrong URL is sent i.e. /apple
     if (error.name === 'CastError') error = handleCastErrorDB(error);

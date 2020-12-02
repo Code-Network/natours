@@ -29,7 +29,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+    passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt
   });
 
   // TODO:  Log the newUser in as soon as they signup by signing a
@@ -232,8 +233,10 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError('The user belonging to this token no longer exists', 401)
     );
   }
-  //
+
   // TODO: 4) Check if user changed password after the token/JWT was issued
+  // Note:  Documents are instances of a model, so technically,
+  //    the user belongs to the User model and not to the Controller
   // if (currentUser.changedPasswordAfter(decoded.iat)) {
   //   return next(
   //     new AppError('User recently changed password!  Please log in again', 401)

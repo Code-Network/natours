@@ -207,10 +207,24 @@ exports.protect = catchAsync(async (req, res, next) => {
   // todo: -- use util.promisify to make it a PROMISE and use async/await
   // jwt.verify(token, process.env.JWT_SECRET);
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  /* Example output of var decoded is
+    {
+       _id: 5fc7a9ce1b2d680866d10ac9,
+       name: 'bree01',
+       email: 'bree01@jonas.io',
+       password: '$2a$12$pS.Na/ld.Q2m1mc3qCdSJeFDlAW7WYW4IvWPgQHZhLiZG1pYLrOWa',
+       __v: 0
+     }
+   */
   // console.log(decoded);
 
-  // TODO: 3) Check if user still exists
-  // const currentUser = await User.findById(decoded.id);
+  // TODO: 3) Check if user still exists - at this point, the user is already verified
+  //  This is a good reason to have the user's _id in the payload
+  // .findById() is a convenience method on the model that's provided by Mongoose
+  //    to find a document by its _id.
+  const currentUser = await User.findById(decoded.id);
+
   // if (!currentUser) {
   //   return next(
   //     new AppError('The user belonging to this token no longer exists', 401)

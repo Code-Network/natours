@@ -130,7 +130,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  console.log(user);
+  // console.log(user);
 
   // If everything ok, send token to client
   // const token = '';
@@ -223,7 +223,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // TODO: 3) Check if user still exists - at this point, the user is already verified
   //  This is a good reason to have the user's _id in the payload
   // .findById() is a convenience method on the model that's provided by Mongoose
-  //    to find a document by its _id.
+  //    to find a document by its _id. -- decoded.id is iat=issuedAt
   const currentUser = await User.findById(decoded.id);
 
   // If there is no valid currentUser, create an instance of AppError stating
@@ -237,13 +237,20 @@ exports.protect = catchAsync(async (req, res, next) => {
   // TODO: 4) Check if user changed password after the token/JWT was issued
   // Note:  Documents are instances of a model, so technically,
   //    the user belongs to the User model and not to the Controller
-  // if (currentUser.changedPasswordAfter(decoded.iat)) {
-  //   return next(
-  //     new AppError('User recently changed password!  Please log in again', 401)
-  //   );
-  // }
-  //
+  //   -- Each document (currentUser) is an instance of userSchema
+  //   -- and each document (currentUser) has access to userSchema.methods
+  //  -- iat is 'issued at' JWT payload
+  //  -- userSchema.methods.changedPasswordAfter(JWTTimestamp) called from userModel.js
+  // todo: if the password was changed (true), then password changed and user
+  //  must log in again
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError('User recently changed password!  Please log in again', 401)
+    );
+  }
+
   // // GRANT ACCESS TO PROTECTED ROUTE
-  // req.user = currentUser;
+  // Put the entire user data on the request (req)
+  req.user = currentUser;
   next();
 });

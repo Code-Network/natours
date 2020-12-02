@@ -37,7 +37,7 @@ const handleValidationErrorDB = err => {
   return new AppError(message, 400);
 };
 
-// JWT Error
+// JWT Error - 401 - Unauthorized
 const handleJWTError = err =>
   new AppError('Invalid token. Please log in again!', 401);
 

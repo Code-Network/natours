@@ -207,7 +207,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // todo: -- use util.promisify to make it a PROMISE and use async/await
   // jwt.verify(token, process.env.JWT_SECRET);
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+  // console.log(decoded);
 
   // TODO: 3) Check if user still exists
   // const currentUser = await User.findById(decoded.id);

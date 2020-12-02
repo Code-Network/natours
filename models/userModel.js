@@ -105,16 +105,39 @@ userSchema.methods.correctPassword = async function(
 // In order to do that, we have to call the JWT timestamp (iat).
 // The iat tells you when that token was issued. In the userSchema, we create
 // a new property called PasswordChangedAt which the user can only have in
-// their document if they actually did change their password
+// their document if they actually did change their password.
+// Note: This method will be called in authController exports.protect()
+//    i.e. 4) Check if user changed password after the token/JWT was issued
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   // Remember that in an instance method the keyword 'this' always
   // points to the current document. Check to see if passwordChangedAt exists,
   //   if it does, only then do we want to do the comparison
+  // todo: 1) Check to see if passwordChangedAt exists
   if (this.passwordChangedAt) {
-    console.log(this.passwordChangedAt, JWTTimestamp);
+    // Convert passwordChangedAt Date format 2020-04-10T00:00:00.000Z to
+    // JWTTimestamp millisecond format 1606937467
+    // console.log(this.passwordChangedAt, JWTTimestamp);
+    // .getTime() => seconds. Convert to milliseconds => seconds/1000
+    // parseInt(number, base)
+    // todo: Convert passworldChangedAt to milliseconds, base 10
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    // console.log(changedTimestamp, JWTTimestamp);
+
+    // If JWTTimestamp (time token issued) is less than
+    // changedTimestamp (time we changed our password) then password changed.
+    // EX. password issued at time 100, then we change password at time 200 =>
+    // TRUE:  Password changed after token was issued.
+    // So, TRUE means Changed, FALSE means NOT Changed
+    // todo: Return true if password changed, false if not changed
+    return JWTTimestamp < changedTimestamp;
   }
+
   // By default we will return false stipulating that the currentUser
   // from authController.exports.protect has not changed their password
+  // todo: Return the default => FALSE MEANS PASSWORD NOT CHANGED
   return false;
 };
 

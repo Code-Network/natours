@@ -37,6 +37,13 @@ const handleValidationErrorDB = err => {
   return new AppError(message, 400);
 };
 
+// JWT Error
+const handleJWTError = err =>
+  new AppError('Invalid token. Please log in again!', 401);
+
+// const handleJWTExpiredError = () =>
+//   new AppError('Your token has expired! Please log in again.', 401);
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -48,6 +55,7 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   // Operational, trusted error: send message to client
+  console.log('This is err in production', err);
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -55,8 +63,6 @@ const sendErrorProd = (err, res) => {
     });
 
     // Programming or other unknown error: don't leak error details
-    // This will handle unoperational errors within our middleware functions
-    //   during production mode
   } else {
     // 1) Log error
     console.error('ERROR 💥', err);
@@ -78,12 +84,17 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = { ...err };
+    // console.log('plain err:  ', err);
+    // let error = { ...err };
+
+    // Not getting the error message iin production in handleJWTError
+    //  with { ...err }.  But using Object.create(err) works great.
+    let error = Object.create(err);
 
     // Mongoose sends a CastError when a wrong URL is sent i.e. /apple
     if (error.name === 'CastError') error = handleCastErrorDB(error);
 
-    // A duplicate field happens when a unique field is duplicated
+    // A duplicategit field happens when a unique field is duplicated
     //   i.e. creating a document with name: "The Forest Hunter"
     //   when that document name already exists
     // MongoDB declares error.name = "MongoError" when we have a duplicate field
@@ -96,6 +107,9 @@ module.exports = (err, req, res, next) => {
     // of a field does not meet the Schema requirements
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
+
+    if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
+    // if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
     sendErrorProd(error, res);
   }

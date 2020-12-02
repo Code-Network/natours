@@ -61,12 +61,16 @@ const sendErrorProd = (err, res) => {
       message: err.message
     });
 
-    // Programming or other unknown error: don't leak error details
+    // todo: Programming or other unknown error:
+    //  don't leak error details
   } else {
     // 1) Log error
+    // An error may occur if a token is expired
     console.error('ERROR 💥', err);
 
     // 2) Send generic message
+    // Note: Verified that the following is received in
+    //  production mode when a token is expired - TokenExpiredError
     res.status(500).json({
       status: 'error',
       message: 'Something went very wrong!'

@@ -39,7 +39,7 @@ const handleValidationErrorDB = err => {
 
 // JWT Error - 401 - Unauthorized
 // On incorrect token or missing token we get JsonWebTokenError
-const handleJWTError = err =>
+const handleJWTError = () =>
   new AppError('Invalid token. Please log in again!', 401);
 
 // When a JWT is expired we get TokenExpiredError
@@ -110,9 +110,8 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'ValidationError')
       error = handleValidationErrorDB(error);
 
-    if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
-    if (error.name === 'TokenExpiredError')
-      error = handleJWTExpiredError(error);
+    if (error.name === 'JsonWebTokenError') error = handleJWTError();
+    if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
     sendErrorProd(error, res);
   }

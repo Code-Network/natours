@@ -252,6 +252,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // // GRANT ACCESS TO PROTECTED ROUTE
   // Put the entire user data on the request (req)
+  // i.e. Store currentUser in req.user for global access
   req.user = currentUser;
   next();
 });
@@ -259,3 +260,22 @@ exports.protect = catchAsync(async (req, res, next) => {
 // =========================================================================
 // =========================================================================
 // TODO:  V.  Authentication: Setting User Roles and Permissions
+// We can't pass arguments into a Middleware function
+// but in this case we really do want to; we want to pass in the roles who are
+// allowed to access the resource ('admin', 'lead-guide').  So we need a way of
+// passing an argument into a Middleware function (a workaround).
+// How: We create a wrapper function which returns the Middleware function that
+// we actually want to create.
+// (...roles) = rest parameter = Array ['admin', 'lead-guide'] from tourRoutes.js
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // By default, role = 'user'
+    // (...roles) = ['admin', 'lead-guide']
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+};

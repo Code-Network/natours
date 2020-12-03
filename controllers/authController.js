@@ -279,3 +279,27 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+// =========================================================================
+// =========================================================================
+// TODO:  VI.  Forgot Password
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  // todo:  1) Get user based on POSTed email
+  const user = await User.findOne({ email: req.body.email });
+
+  // Verify the user exists
+  if (!user) {
+    return next(new AppError('There is no user with email address'), 404);
+  }
+
+  // todo:  2) Generate Random Token
+  // Create an instant method on the user because this has to to with the user itself
+  // Put the function in userModel.js
+
+  // todo:  3) Send Random Token to user's email
+});
+
+// =========================================================================
+// =========================================================================
+// TODO:  VII.  Reset Password
+exports.resetPassword = (req, res, next) => {};

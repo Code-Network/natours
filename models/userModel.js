@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -49,7 +50,9 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same'
     }
   },
-  passwordChangedAt: Date
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date
 });
 
 // -- Encrypt the Passwords using Mongoose Middleware
@@ -144,6 +147,33 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   // from authController.exports.protect has not changed their password
   // todo: Return the default => FALSE MEANS PASSWORD NOT CHANGED
   return false;
+};
+
+// Generate a random token, not a JSON web token for a password reset
+userSchema.methods.createPasswordResetToken = function() {
+  // should be a random string but doesn't have to be as cryptic
+  // Import built-in Nodejs crypto module
+  // Generate token, size 32 and convert to a hexidecimal string
+  // This is essentially a temporary password.
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  //  If a hacker gets access to this token/password, they can
+  //  reset password and control the account.
+  //  NEVER STORE a plain reset token IN THE DATABASE --
+  //  ENCRYPT it lightly with built-in crypto first
+  //  Create a new field in the userSchema (passwordResetToken) to store the
+  //  encrypted random token
+  this.createPasswordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // Create a 10-min expiration for the reset token and store in new
+  // userSchema field 'passwordResetExpires'
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  // Return the UNENCRYPTED reset token that we need to send via email
+  return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);

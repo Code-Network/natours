@@ -8,6 +8,13 @@ const router = express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
+// Forgot Password only receives the enail address
+router.post('/forgotPassword', authController.forgotPassword);
+
+// Reset Password receives a random token, not JSON web token
+// as well as the new password to reset password
+router.post('/resetPassword', authController.resetPassword);
+
 router
   .route('/')
   .get(userController.getAllUsers)

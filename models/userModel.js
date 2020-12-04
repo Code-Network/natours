@@ -169,11 +169,13 @@ userSchema.methods.createPasswordResetToken = function() {
     .update(resetToken)
     .digest('hex');
 
+  console.log({ resetToken }, this.passwordResetToken);
+
   // Create a 10-min expiration for the reset token and store in new
   // userSchema field 'passwordResetExpires'
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
-  // Return the UNENCRYPTED reset token that we need to send via email
+  // Return the UNENCRYPTED plain text reset token (this goes to the user)
   return resetToken;
 };
 

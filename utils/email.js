@@ -12,6 +12,13 @@ const sendEmail = options => {
   });
 
   // 2) Define the email options
+  const mailOptions = {
+    from: 'Bree Lorenz admin@jonas.io',
+    to: options.email,
+    subject: options.subject,
+    text: options.message
+    // html:
 
-  // 3) Actually send the email with nodemailer
+    // 3) Actually send the email with nodemailer
+  };
 };

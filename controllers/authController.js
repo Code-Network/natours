@@ -284,7 +284,7 @@ exports.restrictTo = (...roles) => {
 // =========================================================================
 // TODO:  VI.  Forgot Password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  // todo:  1) Get user based on POSTed email
+  // todo: 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
 
   // Verify the user exists
@@ -295,6 +295,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // todo:  2) Generate Random Token
   // Create an instant method on the user because this has to to with the user itself
   // Put the function in userModel.js
+  const resetToken = user.createPasswordResetToken();
+
+  // Now save it. If we save it without validateBeforeSave set to false, it will
+  //   throw an error requesting the user's email address
+  await user.save({ validateBeforeSave: false });
 
   // todo:  3) Send Random Token to user's email
 });

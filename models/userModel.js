@@ -155,7 +155,7 @@ userSchema.methods.createPasswordResetToken = function() {
   // should be a random string but doesn't have to be as cryptic
   // Import built-in Nodejs crypto module
   // Generate token, size 32 and convert to a hexidecimal string
-  // This is essentially a temporary password.
+  // This is essentially a temp password we send to the user on password reset.
   const resetToken = crypto.randomBytes(32).toString('hex');
 
   //  If a hacker gets access to this token/password, they can
@@ -164,7 +164,7 @@ userSchema.methods.createPasswordResetToken = function() {
   //  ENCRYPT it lightly with built-in crypto first
   //  Create a new field in the userSchema (passwordResetToken) to store the
   //  encrypted random token
-  this.createPasswordResetToken = crypto
+  this.passwordResetToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');

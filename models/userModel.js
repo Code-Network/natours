@@ -169,10 +169,16 @@ userSchema.methods.createPasswordResetToken = function() {
     .update(resetToken)
     .digest('hex');
 
+  // console log resetToken as an object so that it will give variable name
+  // along with its value.
+  // resetToken is the plain token/password and will be sent to user email
+  // this.passwordResetToken is the encrypted resetToken we will store in DB
   console.log({ resetToken }, this.passwordResetToken);
 
   // Create a 10-min expiration for the reset token and store in new
   // userSchema field 'passwordResetExpires'
+  // This does not update/save the value in the user document; it simply modifies it;
+  // this.passwordResetExpires will be saved/set in authController.forgotPassword
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   // Return the UNENCRYPTED plain text reset token (this goes to the user)

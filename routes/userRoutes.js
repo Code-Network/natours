@@ -13,7 +13,7 @@ router.post('/forgotPassword', authController.forgotPassword);
 
 // Reset Password receives a random token, not JSON web token
 // as well as the new password to reset password
-router.post('/resetPassword', authController.resetPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
 
 router
   .route('/')

@@ -296,6 +296,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // Create an instant method on the user because this has to to with the user itself
   // Put the function in userModel.js
   const resetToken = user.createPasswordResetToken();
+  // console.log('This is the resetToken from authController', resetToken);
 
   // Now save it. If we save it without validateBeforeSave set to false, it will
   //   throw an error requesting the user's email address

@@ -290,14 +290,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // Verify the user exists
   if (!user) {
-    return next(new AppError('There is no user with email address'), 404);
+    return next(new AppError('There is no user with email address', 404));
   }
 
   // todo:  2) Generate Random Token
   // Create an instant method on the user because this has to to with the user itself
   // Put the function in userModel.js
   const resetToken = user.createPasswordResetToken();
-  // console.log('This is the resetToken from authController', resetToken);
 
   // Now save it. If we save it without validateBeforeSave set to false, it will
   //   throw an error requesting the user's email address
@@ -312,9 +311,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   )}/api/v1/users/resetPassword/${resetToken}
   `;
 
-  console.log(resetURL);
-
-  const message = `Forgot your password?  Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}\nIf you didn't forget your password, please ignore this email.`;
+  const message = `Forgot your password?  Submit a PATCH request with your 
+  new password and passwordConfirm to: ${resetURL}\nIf you didn't forget your 
+  password, please ignore this email.`;
 
   try {
     // sendEmail returns a promise, so await it

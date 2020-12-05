@@ -294,7 +294,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   // todo:  2) Generate Random Token
-  // Create an instant method on the user because this has to to with the user itself
+  // Create an instance method on the user because this has to to with the user itself
   // Put the function in userModel.js
   const resetToken = user.createPasswordResetToken();
 

@@ -376,7 +376,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // Delete the Reset Token (passwordResetToken) and the passwordResetExpires
   //   and save to the database
-  user.password.passwordResetToken = undefined;
+  user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
 
   // Save the the database and don't turn off the validators because in
@@ -385,5 +385,12 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // todo: 3) Update changedPasswordAt property for current user
+
   // todo: 4) Log user in: send JWT to the web client
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    token
+  });
 });

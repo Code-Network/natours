@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
@@ -344,4 +345,21 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 // =========================================================================
 // =========================================================================
 // TODO:  VII.  Reset Password
-exports.resetPassword = (req, res, next) => {};
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // todo: 1) Get user based on the token
+  // Since the pwd stored in DB is encrypted and in userModel, the return is unencrypted
+  // we have to encrypt it again before we compare; must use built-in crypto to decode
+  // The token is in the URL => from userRoutes.js => '/resetPassword/:token'
+  //   so we get it from req.params.token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  // Get the user based on this token; this is the only thing that can id user
+  const user = await User.findOne({ passwordResetToken: hashedToken });
+
+  // todo: 2) If token has not expired, and there is a user, set new password
+  // todo: 3) Update changedPasswordAt property for current user
+  // todo: 4) Log user in: send JWT to the web client
+});

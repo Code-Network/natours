@@ -369,6 +369,11 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError('Token is invalid or has expired', 400));
   }
 
+  // Set the Password because we would have sent the Password
+  //    and passwordConfirm via the body
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+
   // todo: 3) Update changedPasswordAt property for current user
   // todo: 4) Log user in: send JWT to the web client
 });

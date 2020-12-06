@@ -357,9 +357,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .digest('hex');
 
   // Get the user based on this token; this is the only thing that can id user
-  const user = await User.findOne({ passwordResetToken: hashedToken });
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() }
+  });
 
   // todo: 2) If token has not expired, and there is a user, set new password
+  //
   // todo: 3) Update changedPasswordAt property for current user
   // todo: 4) Log user in: send JWT to the web client
 });

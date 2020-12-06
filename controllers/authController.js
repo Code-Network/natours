@@ -374,6 +374,16 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
 
+  // Delete the Reset Token (passwordResetToken) and the passwordResetExpires
+  //   and save to the database
+  user.password.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  // Save the the database and don't turn off the validators because in
+  //   this case we want the validator to confirm password and passwordConfirm
+  //   are the same
+  await user.save();
+
   // todo: 3) Update changedPasswordAt property for current user
   // todo: 4) Log user in: send JWT to the web client
 });

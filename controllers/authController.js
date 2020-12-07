@@ -395,3 +395,19 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     token
   });
 });
+
+// TODO: Allow a Logged in User to Update Password
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // -- As a security measure, we ask the user for the current password
+  //      before updating their password
+  // -- The Use Case argument for validation is when a user is logged in,
+  //      walks away from their computer and someone else comes along
+  //      and changes their password.
+  // todo: 1) Get user from collection
+  const user = await findbyId(req.user.id).select('+password');
+
+  // todo: 2) Check if POSTed current password is correct
+
+  // todo: 3) If password is correct, update password
+  // todo: 4) Log user in with new password that was just updated
+});

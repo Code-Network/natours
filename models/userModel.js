@@ -55,6 +55,33 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date
 });
 
+// TODO:  From authController.resetPassword's 3)
+//  Update changedPasswordAt property for current user
+// This will run right before a new document is actually saved.
+// We want to set the changedPasswordAt property to Date.now()
+//    when we have modified the password.
+// This is perfect place for specifying this property.
+// We could have done it in the authController.resetPassword, but
+//   we really want this to happen automatically.
+userSchema.pre('save', function(next) {
+  // Mongoose Documentation for isModified/isNew
+  // We want to just skip on out to the next Middleware if the password has NOT
+  // been modified OR if we are creating a NEW document.
+  if (!this.isModified('password') || this.isNew('password')) return next();
+
+  // Modify the passwordChangedAt property
+  // In theory this should work, but sometimes saving to DB is a lot slower than
+  //   getting the JWT, making the update of the changedPasswordAt property set
+  //   a bit after the JSON Web Token has been created.  Sometimes that causes
+  //   the user to not be able to sign in because the reason this timestamp even
+  //   exists is so that we can compare it with the timestamp on the JSON Web Token.
+  // The FIX would be to subtract 1 second from the passwordChangedAt property.
+  // This puts passwordChangedAt property one second in the past.
+  // This ensures that the token is created after the password has been changed.
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 // -- Encrypt the Passwords using Mongoose Middleware
 //   between getting the data and saving the data - pre()
 userSchema.pre('save', async function(next) {

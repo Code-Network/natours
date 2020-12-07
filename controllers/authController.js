@@ -404,7 +404,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   //      walks away from their computer and someone else comes along
   //      and changes their password.
   // todo: 1) Get user from collection
-  const user = await findbyId(req.user.id).select('+password');
+  const user = await User.findById(req.user.id).select('+password');
 
   // todo: 2) Check if POSTed current password is correct
 

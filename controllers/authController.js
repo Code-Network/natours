@@ -18,6 +18,21 @@ const signToken = id => {
 
 // ============================================================
 // ============================================================
+// TODO:  Create Send Token
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user
+    }
+  });
+};
+
+// ============================================================
+// ============================================================
 
 // TODO: II.  SIGN UP
 exports.signup = catchAsync(async (req, res, next) => {
@@ -49,8 +64,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
   //   expiresIn: process.env.JWT_EXPIRES_IN
   // });
-
-  const token = signToken(newUser._id);
+  /*const token = signToken(newUser._id);
 
   res.status(201).json({
     status: 'success!',
@@ -58,7 +72,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     data: {
       user: newUser
     }
-  });
+  });*/
+
+  createSendToken(newUser, 201, res);
 });
 
 // ============================================================
@@ -135,14 +151,15 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // console.log(user);
 
-  // If everything ok, send token to client
+  // 3) If everything ok, send token to client
   // const token = '';
-  const token = signToken(user._id);
+  /*const token = signToken(user._id);
 
   res.status(200).json({
     status: 'success',
     token
-  });
+  });*/
+  createSendToken(user, 200, res);
 });
 
 // ============================================================
@@ -388,12 +405,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // Do this in userModel.js by creating a new middleware
 
   // todo: 4) Log user in: send JWT to the web client
-  const token = signToken(user._id);
+  /*const token = signToken(user._id);
 
   res.status(200).json({
     status: 'success',
     token
-  });
+  });*/
+  createSendToken(user, 200, res);
 });
 
 // TODO: Allow a Logged in User to Update Password
@@ -403,11 +421,34 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // -- The Use Case argument for validation is when a user is logged in,
   //      walks away from their computer and someone else comes along
   //      and changes their password.
-  // todo: 1) Get user from collection
+  // todo: 1) Get logged in user from collection by id and add DB encrypted password
+  // Explicitly ask for the password because it is not included in the output.
+  // This was defined on the userSchema: select: false
   const user = await User.findById(req.user.id).select('+password');
+  console.log(user);
 
   // todo: 2) Check if POSTed current password is correct
+  // Error if password is not correct; 401 = UnAuthorized
+  // Compare passwords using correctPassword() from userModel.js
+  // Because correctPassword() is async, we must await
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('Your current password is wrong', 401));
+  }
 
   // todo: 3) If password is correct, update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+
+  // In order to implement validation from the userSchema, we must save
+  // We do not turn off validation here because we want to check that
+  //  password and passwordConfirm are the same
+  // DO NOT USE findByIdAndUpdate() because Mongoose does not keep
+  // validator in schema (where el === this.password) in memory
+  // It only works on create() and save(), not on update()
+  // DO NOT USE UPDATE ON ANYTHING RELATING TO PASSWORDS also because the
+  // userschema.pre('save',..) middlewares won't work on update()
+  await user.save();
+
   // todo: 4) Log user in with new password that was just updated
+  createSendToken(user, 200, res);
 });

@@ -67,7 +67,7 @@ userSchema.pre('save', function(next) {
   // Mongoose Documentation for isModified/isNew
   // We want to just skip on out to the next Middleware if the password has NOT
   // been modified OR if we are creating a NEW document.
-  if (!this.isModified('password') || this.isNew('password')) return next();
+  if (!this.isModified('password')) return next();
 
   // Modify the passwordChangedAt property
   // In theory this should work, but sometimes saving to DB is a lot slower than

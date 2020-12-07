@@ -379,12 +379,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
 
-  // Save the the database and don't turn off the validators because in
+  // Save to the database and don't turn off the validators because in
   //   this case we want the validator to confirm password and passwordConfirm
-  //   are the same
+  //   are the same and we want the tokens to be encrypted
   await user.save();
 
   // todo: 3) Update changedPasswordAt property for current user
+  // Do this in userModel.js by creating a new middleware
 
   // todo: 4) Log user in: send JWT to the web client
   const token = signToken(user._id);

@@ -97,7 +97,7 @@ userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
   // todo: Hash the Password with Cost of 12
-  //  - Encrypt the changed or new password using npm bcrypjs
+  //  - Encrypt the changed or new password using npm bcryptjs
   // ENCRYPT / HASH using bcrypt algorithm -- npm bcryptjs
   // If the password has been modified, hash/encrypt the password
   // to protect against bruteforce attacks

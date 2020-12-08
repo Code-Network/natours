@@ -82,39 +82,47 @@ userSchema.pre('save', function(next) {
   next();
 });
 
-// -- Encrypt the Passwords using Mongoose Middleware
-//   between getting the data and saving the data - pre()
+// TODO:  Encrypt the Password -- Use pre-save hook - Document Middleware
+// todo: Only run this function if password was actually modified
+// -- Encrypt the Passwords using Mongoose Document Middleware, pre-save hook,
+// between the moment we receive data (password) and the moment it is
+//    persisted it to the database,
+//    i.e. between getting the data and saving the data - pre('save')
 userSchema.pre('save', async function(next) {
-  // ONLY RUN THIS FUNCTION IF PASSWORD WAS NOT MODIFIED
-  // -- Only encrypt the password when the password field has been updated,
-  //  i.e.  when the password is created new or when it is updated
+  // todo: If the password has not been modified, call the next middleware
+  // -- Only encrypt the password when the PASSWORD FIELD has been updated,
+  //  i.e.  when the password is created new or when it is updated,
+  //  don't re-encrypt the password when there is an email change for instance.
   //  -- 'this' refers to the current user
-  // -- If the password has not been modified, call the next middleware
   if (!this.isModified('password')) return next();
 
-  // HASH THE PASSWORD WITH COST OF 12
+  // todo: Hash the Password with Cost of 12
+  //  - Encrypt the changed or new password using npm bcrypjs
   // ENCRYPT / HASH using bcrypt algorithm -- npm bcryptjs
   // If the password has been modified, hash/encrypt the password
   // to protect against bruteforce attacks
   // -- bcrypt first adds a salt to the password, which is a random string,
   // so that two passwords do not generate the same hash
   // -- then bcrypt hashes/encrypts the password+salt
-  // -- bcrypt.hash() is the async version
+  // -- bcrypt.hash() is the async version, so we must await
   // -- hash parameters =>
   //        - current password = this.password,
-  //        - cost (a random string or # for cpu intensive we want it to be)
+  //        - cost - a random string or # for cpu intensive and better encrypted
   //           - default is 10, but computers have gotten much faster
+  //           - We will use cost instead of the salt
   //
   this.password = await bcrypt.hash(this.password, 12);
 
-  // DELETE passwordConfirm FIELD
+  // todo: DELETE passwordConfirm password
   // Delete the Confirm Password at this point because we only need the
   //   passwordConfirm during validation. We really do not want to persist
   //   it to a database.
   // Setting this.passwordConfirm to undefined deletes it.  Although this property
   //  is required in the userSchema, deleting it is fine because it is required that
   //  we input it when created, but it is not required that it persists to the DB
-
+  // Setting this.passwordConfirm to undefined works to delete
+  //    because it was set to required;
+  //    required inputs are not required to be persisted in DB
   this.passwordConfirm = undefined;
   next();
 });

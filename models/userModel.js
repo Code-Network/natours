@@ -113,7 +113,7 @@ userSchema.pre('save', async function(next) {
   //
   this.password = await bcrypt.hash(this.password, 12);
 
-  // todo: DELETE passwordConfirm password
+  // todo: DELETE the entire passwordConfirm field (don't want to save to DB)
   // Delete the Confirm Password at this point because we only need the
   //   passwordConfirm during validation. We really do not want to persist
   //   it to a database.

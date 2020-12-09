@@ -53,9 +53,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   // TODO:  Log the newUser in as soon as they signup by signing a
   //  JWT (JSON Web Token) and then send it back to the client/user
+  // npm install jsonwebtoken - https://github.com/auth0/node-jsonwebtoken
   // NOTE: Logging in a user just means to sign a
   //    JSON Web Token (JWT) and send it back to the user.
-  // -- In config.env, define JWT_SECRET and JWT_EXPIRES_IN
+  // -- In config, define JWT_SECRET and JWT_EXPIRES_IN
   // Note: In MongoDB, the id is _id
   // -- When verifying the JWT token in the debugger at jwt.io,
   //   remove the iat and exp fields from debugger payload to verify.

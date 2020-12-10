@@ -127,7 +127,7 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// TODO:  Create an instance method available on all docs of User collection
+// TODO:  Create an instance method available on all docs in User collection
 // this - document
 // We cannot use 'this' because password.select = false, so password not available
 //  So, we use bcrypt to compare the user's input password with the hashed password

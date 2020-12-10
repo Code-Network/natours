@@ -22,6 +22,9 @@ router.patch(
   authController.updatePassword
 );
 
+// User updates their data, all but their password
+router.patch('/updateMe', authController.protect, userController.updateMe);
+
 router
   .route('/')
   .get(userController.getAllUsers)

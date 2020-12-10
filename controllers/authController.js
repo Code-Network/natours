@@ -81,69 +81,28 @@ exports.signup = catchAsync(async (req, res, next) => {
 // ============================================================
 // ============================================================
 
-// TODO: III-A LOG IN
-/*
-exports.login = catchAsync(async (req, res, next) => {
-  /!*
-    TODO: Put user email and password in vars
-      -- Initially we begin with the following:
-        const email = req.body.email;
-        const password = req.body.password;
-
-      -- But it is recommended we use ES6 Destructuring
-        const { email } = req.body;
-        const { password } = req.body;
-
-      -- To further simplify it:
-        const { email, password } = req.body;
-
-      -- This is how the user is going to send in the
-            login credentials for us to verify/check
-   *!/
-  const { email, password } = req.body;
-
-  // TODO: 1)  Check if email and password exist
-  if (!email || !password) {
-    // HTTP Error Code === statusCode === 400 === Bad Request
-    // return next() to ensure the exports.login finishes right away
-    return next(new AppError('Please provide email and password', 400));
-  }
-
-  // TODO: 2)  Check if user exists && password is correct
-  // const user = User.findOne({ email: email });
-  // Since field and variable are the same we only need { email }
-  // Use .select('+password') to put the password back into the user data
-  //    in order to verify that their password is correct
-  const user = await User.findOne({ email }).select('+password');
-  console.log(user);
-
-  // TODO: 3)  If everything is OK, send JWT back to the client
-  // Test 1) by creating a fake token
-  const token = '';
-  res.status(200).json({
-    status: 'success',
-    token
-  });
-});
-*/
-
-// ============================================================
-// ============================================================
-
 // TODO:  III-B.  LOG IN
 exports.login = catchAsync(async (req, res, next) => {
+  // todo: 0) Read the email and password from the request body object - req.body
   const { email, password } = req.body;
 
-  // 1) Check if email and password exist
+  // todo: 1) Check if email and password exist
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
   }
 
-  // 2) Check if user exists && password is correct
+  // todo: 2) Check if user exists && password is correct
   const user = await User.findOne({ email }).select('+password');
 
+  // correctPassword() is an async function implemented in userModel.js
   // const correct = await user.correctPassword(password, user.password);
-
+  // if (!user || !correct) {
+  // Put code for var correct in the second part of conditional because
+  //   if user does not exist, then the conditional will fail and second
+  //   part will not be implemented; if user does exist, only then will it
+  //   implement code on left conditional;
+  //   whereas if you have var correct on its own, if user DNE,
+  //   then it will throw an error
   if (!user || !(await user.correctPassword(password, user.password))) {
     // 401 => Unauthorized
     // Attacker will not know if email or password is incorrect

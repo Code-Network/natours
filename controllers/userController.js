@@ -15,6 +15,24 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+// TODO:  UPDATE CURRENTLY AUTHENTICATED USER
+exports.updateMe = catchAsync(async (req, res, next) => {
+  // todo: 1) Create Error if user POSTs password data
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for password updates. Please use /updateMyPassword',
+        400
+      )
+    );
+  }
+
+  // todo: 2) Update user document
+  res.status(200).json({
+    status: 'success'
+  });
+});
+
 // This error message fires here:
 //  localhost:3000/api/v1/signup
 exports.getUser = (req, res) => {

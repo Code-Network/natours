@@ -42,9 +42,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
 
-  // todo: 2) Update user document
+  // todo: Filter out unwanted field names that are not allowed to be updated
   // Filter req.body so that it only contains name and email
   const filteredBody = filterObj(req.body, 'name', 'email');
+
+  // todo: 3) Update user document
 
   // filteredBody => data (must only contain name and email for now)
   // We use x instead of req.body because we don't want to update all in the body
@@ -56,7 +58,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    user: updatedUser
   });
 });
 

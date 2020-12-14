@@ -25,6 +25,10 @@ router.patch(
 // User updates their data, name and email only (for now)
 router.patch('/updateMe', authController.protect, userController.updateMe);
 
+// Even though we do not delete the user data, we render it no longer accessible
+// Since data is no longer accessible, we can use the DELETE method
+router.delete('/deleteMe', authController.protect, userController.deleteMe);
+
 router
   .route('/')
   .get(userController.getAllUsers)

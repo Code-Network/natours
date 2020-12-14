@@ -2,6 +2,18 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
+// param obj = req.body
+// param ...allowedFields will be an array containing 'name' and 'email' so far
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+
+  // Object.keys(obj) is an Array containing all the keys of param obj = req.body
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
@@ -31,7 +43,17 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // todo: 2) Update user document
-  const user = await User.findById(req.user.id);
+  // Filter req.body so that it only contains name and email
+  const filteredBody = filterObj(req.body, 'name', 'email');
+
+  // filteredBody => data (must only contain name and email for now)
+  // We use x instead of req.body because we don't want to update all in the body
+  //    We want to prevent user from updating role field, for instance
+  //    User could have set req.body.role: 'admin' for instance
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+    runValidators: true
+  });
 
   res.status(200).json({
     status: 'success'

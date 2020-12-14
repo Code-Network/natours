@@ -126,6 +126,7 @@ exports.login = catchAsync(async (req, res, next) => {
 // ============================================================
 
 // TODO:  IV.  PROTECT ROUTES
+// The goal is to make the user's ID safe
 exports.protect = catchAsync(async (req, res, next) => {
   // TODO: 1) Get token and check if it is there
   // var token must be a let and not a const because the if statement is scoped
@@ -171,7 +172,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // TODO: 2) Verification token -- Validate the token -- use jwt.verify()
+  // todo: 2) Verification token -- Validate the token -- use jwt.verify()
   // Verifies if someone has manipulated the data (payload) or if
   //    the token has already expired
   // verify() will verify token and then when done, will call callback we specify
@@ -200,7 +201,7 @@ exports.protect = catchAsync(async (req, res, next) => {
    */
   // console.log(decoded);
 
-  // TODO: 3) Check if user still exists - at this point, the user is already verified
+  // todo: 3) Check if user still exists - at this point, the user is already verified
   //  This is a good reason to have the user's _id in the payload
   // .findById() is a convenience method on the model that's provided by Mongoose
   //    to find a document by its _id. -- decoded.id is iat=issuedAt
@@ -214,7 +215,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // TODO: 4) Check if user changed password after the token/JWT was issued
+  // todo: 4) Check if user changed password after the token/JWT was issued
   // Note:  Documents are instances of a model, so technically,
   //    the user belongs to the User model and not to the Controller
   //   -- Each document (currentUser) is an instance of userSchema

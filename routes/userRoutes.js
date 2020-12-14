@@ -22,7 +22,7 @@ router.patch(
   authController.updatePassword
 );
 
-// User updates their data, all but their password
+// User updates their data, name and email only (for now)
 router.patch('/updateMe', authController.protect, userController.updateMe);
 
 router

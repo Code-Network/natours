@@ -115,7 +115,7 @@ userSchema.pre('save', async function(next) {
   //        - cost - a random string or # for cpu intensive and better encrypted
   //           - default is 10, but computers have gotten much faster
   //           - We will use cost instead of the salt
-  //
+
   this.password = await bcrypt.hash(this.password, 12);
 
   // todo: DELETE the entire passwordConfirm field (don't want to save to DB)
@@ -129,6 +129,16 @@ userSchema.pre('save', async function(next) {
   //    because it was set to required;
   //    required inputs are not required to be persisted in DB
   this.passwordConfirm = undefined;
+  next();
+});
+
+// TODO:  Add Query Middleware to remove Inactive Users from getAllUsers
+userSchema.pre(/^find/, function(next) {
+  // this points to current query
+  // 'In every type of find query extract all users where the active property
+  //      is not equal to false'
+  // This will remove inactive users from the output for getAllUsers
+  this.find({ active: { $ne: false } });
   next();
 });
 

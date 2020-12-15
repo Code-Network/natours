@@ -47,9 +47,15 @@ const createSendToken = (user, statusCode, res) => {
   //  i.e secure:true only in production
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  // todo: Create and send a cookie
-
+  // todo: Create and send an httpOnly cookie
+  // Cookie will be sent on signup
   res.cookie('jwt', token, cookieOptions);
+
+  // todo: Remove the password from the output
+  // On SIGNUP, the password displays in the output even though we have
+  //   userSchema password.select:false to not display password
+  //   This comes when we create a new document (signup).
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',

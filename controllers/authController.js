@@ -22,6 +22,34 @@ const signToken = id => {
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
+  /*
+   todo: cookie options
+   -- The expires property must be converted into milliseconds
+   Total milliseconds =  now + expiration * hours * min * sec * 1000
+   -- Setting secure:true property sends Cookie only on an encrypted connection
+   i.e. only via HTTPS (which it has not been set to yet)
+   So, in development, the cookie would not be created or sent to client.
+   Set secure:true in production only.
+   -- Property httpOnly: true => Makes it so that the Cookie cannot be accessed
+   or modified in any way by the Browser.
+   This prevents cross-site scripting attacks. So all the Browser is going
+   to do when we set httpOnly:true is to basically receive the cookie,
+   store it, and then send it automatically along with every request
+   */
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    )
+  };
+
+  // todo: Only set cookie option property secure:true in production
+  //  i.e secure:true only in production
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  // todo: Create and send a cookie
+
+  res.cookie('jwt', token, cookieOptions);
+
   res.status(statusCode).json({
     status: 'success',
     token,

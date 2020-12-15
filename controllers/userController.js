@@ -49,7 +49,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // todo: 3) Update user document
 
   // filteredBody => data (must only contain name and email for now)
-  // We use x instead of req.body because we don't want to update all in the body
+  // We use filteredBody instead of req.body because we don't want to update all in the body
   //    We want to prevent user from updating role field, for instance
   //    User could have set req.body.role: 'admin' for instance
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
@@ -60,6 +60,20 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     user: updatedUser
+  });
+});
+
+// TODO:  Give the User the Capability of deleting their account
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  // The data we want to update is the active property in the userSchema in userModel.js
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  // status code 204 => Deleted
+  // set data to null because they want to delete their account and we do not
+  //   want to return their data to them
+  res.status(204).json({
+    status: 'success',
+    data: null
   });
 });
 

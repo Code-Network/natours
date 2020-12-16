@@ -10,37 +10,36 @@ const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
-// ============================================================================
-// ============================================================================
+// 1) GLOBAL MIDDLEWARES
 
-// 1) MIDDLEWARES
+// ===========================================================================
+// ===========================================================================
+// TODO: Set Security HTTP headers
+app.use(helmet());
+
+// ============================================================================
+// ============================================================================
+// Development Logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
 // ============================================================================
 // ============================================================================
-
-// TODO:  Create a Limiter to limit the amount of requests per IP over a certain time
-//  100 requests per hour ( in milliseconds )
+// TODO: Limit requests from same API
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 60 minutes
   max: 100,
   message: 'Too many requests from this IP, please try again in an hour!'
 });
 
-// Todo: Create a middleware function which limits access to '/api' route
 app.use('/api', limiter);
 
-// ===========================================================================
 // ============================================================================
-
-app.use(helmet());
-
-// ===========================================================================
 // ============================================================================
-
-app.use(express.json());
+// TODO: Body parser, reading data from body into req.body
+// Limit the amount of data passed into the body to 10 killibytes (for Security)
+app.use(express.json({ limit: '10kb' }));
 app.use(express.static(`${__dirname}/public`));
 
 // ============================================================================

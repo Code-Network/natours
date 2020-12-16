@@ -40,11 +40,22 @@ app.use('/api', limiter);
 // TODO: Body parser, reading data from body into req.body
 // Limit the amount of data passed into the body to 10 killibytes (for Security)
 app.use(express.json({ limit: '10kb' }));
+
+// ============================================================================
+// ============================================================================
+// TODO: Data Sanitization -- protect against two attacks
+// Data Sanitization against NoSQL query injection
+
+// Data Sanitization against XSS attacks ( Cross Scripting )
+
+// ============================================================================
+// ============================================================================
+// TODO: Serving static files
 app.use(express.static(`${__dirname}/public`));
 
 // ============================================================================
 // ============================================================================
-
+// TODO: Middleware for testing only
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
 

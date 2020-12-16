@@ -48,7 +48,7 @@ app.use(express.json({ limit: '10kb' }));
 // Data Sanitization against NoSQL query injection
 // Install npm express-mongo-sanitize package
 // This will look at the req.body, req.query, and req.params to filter out all
-//   of the dollar signs ( $ ) and dots ( . ) becaue that is how
+//   of the dollar signs ( $ ) and dots ( . ) because that is how
 //   MongoDB Operators are written
 app.use(mongoSanitize());
 

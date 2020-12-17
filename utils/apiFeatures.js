@@ -19,14 +19,20 @@ class APIFeatures {
   }
 
   /*
-   Bad request: querying sort twice will cause error
-   this.queryString.sort becomes an Array when:
+   -- Bad request: querying sort twice will cause
+   this.queryString.sort to become an Array when it should be a string
    ex. localhost:3000/api/v1/tours?sort=duration&sort=price
    this.queryString.sort = [ 'duration', 'price' ]
-   So, we cannot split because split only works on strings. Error
+   So, we cannot split because split only works on strings. Error.
+
+   -- This is called an HTTP Parameter Polution Attack
+
    Note: Usually it works correctly and returns a string, as in:
     localhost:3000/api/v1/tours?sort=duration,price returns 'duration,price'
       - a String
+
+   To prevent this sort of attack we install, require and call npm hpp in app.js.
+   HPP will cause it to only use the last item in the Array as a string.
   */
   sort() {
     if (this.queryString.sort) {

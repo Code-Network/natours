@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -61,6 +62,13 @@ app.use(mongoSanitize());
  *      -- data in req.body, req.query, and req.params
  * You can also access the API directly if you don't want to use as middleware.*/
 app.use(xss());
+
+// Prevent Parameter Pollution
+// HPP is Express middleware to protect against HTTP Parameter Pollution attacks
+// HPP puts array parameters in req.query and/or req.body aside and just selects
+//    the last parameter value.
+// You add the middleware after parsing and you are done
+app.use(hpp());
 
 // ============================================================================
 // ============================================================================

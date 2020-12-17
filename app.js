@@ -68,7 +68,18 @@ app.use(xss());
 // HPP puts array parameters in req.query and/or req.body aside and just selects
 //    the last parameter value.
 // You add the middleware after parsing and you are done
-app.use(hpp());
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'ratingsAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price'
+    ]
+  })
+);
 
 // ============================================================================
 // ============================================================================

@@ -18,8 +18,19 @@ class APIFeatures {
     return this;
   }
 
+  /*
+   Bad request: querying sort twice will cause error
+   this.queryString.sort becomes an Array when:
+   ex. localhost:3000/api/v1/tours?sort=duration&sort=price
+   this.queryString.sort = [ 'duration', 'price' ]
+   So, we cannot split because split only works on strings. Error
+   Note: Usually it works correctly and returns a string, as in:
+    localhost:3000/api/v1/tours?sort=duration,price returns 'duration,price'
+      - a String
+  */
   sort() {
     if (this.queryString.sort) {
+      console.log(this.queryString.sort);
       const sortBy = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {

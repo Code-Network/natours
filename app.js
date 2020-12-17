@@ -68,6 +68,7 @@ app.use(xss());
 // HPP puts array parameters in req.query and/or req.body aside and just selects
 //    the last parameter value.
 // You add the middleware after parsing and you are done
+// We use the whitelist option to specify the fields we do not want hpp to touch
 app.use(
   hpp({
     whitelist: [

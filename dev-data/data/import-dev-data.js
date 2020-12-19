@@ -44,6 +44,14 @@ const deleteData = async () => {
   process.exit();
 };
 
+/*  TODO:  When we change const tours from reading the tours-simple.json file
+     to reading the tour.json file, remember to run the following commands:
+
+      First run:  node ./dev-data/data/import-dev-data.js --delete
+        - This will return 'Data successfully deleted!'
+      Then run:  node ./dev-data/data/import-dev-data.js --import
+        - This will return 'Data successfully loaded!'
+ */
 if (process.argv[2] === '--import') {
   importData();
 } else if (process.argv[2] === '--delete') {

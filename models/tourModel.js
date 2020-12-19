@@ -78,6 +78,22 @@ const tourSchema = new mongoose.Schema(
     secretTour: {
       type: Boolean,
       default: false
+    },
+    startLocation: {
+      // MongoDB uses a special data formal called GeoJSON
+      //  in order to specify GeoSpatial Data
+      type: {
+        type: String,
+        default: 'Point',
+        enum: [
+          'Point'
+        ] /* specifies the only possible options this field can take */
+      },
+      coordinates: [
+        Number
+      ] /* Specify an array of numbers with longitude first and latitude last */,
+      address: String,
+      description: String
     }
   },
   {

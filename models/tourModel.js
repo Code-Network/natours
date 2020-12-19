@@ -94,7 +94,20 @@ const tourSchema = new mongoose.Schema(
       ] /* Specify an array of numbers with longitude first and latitude last */,
       address: String,
       description: String
-    }
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point']
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number /* Users go to tour location on this day */
+      }
+    ]
   },
   {
     toJSON: { virtuals: true },

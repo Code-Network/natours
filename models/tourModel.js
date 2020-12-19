@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 
 // const validator = require('validator');
 const tourSchema = new mongoose.Schema(
@@ -89,9 +90,10 @@ const tourSchema = new mongoose.Schema(
           'Point'
         ] /* specifies the only possible options this field can take */
       },
-      coordinates: [
-        Number
-      ] /* Specify an array of numbers with longitude first and latitude last */,
+      coordinates: {
+        type: [Number],
+        default: [0, 0]
+      },
       address: String,
       description: String
     },
@@ -107,7 +109,8 @@ const tourSchema = new mongoose.Schema(
         description: String,
         day: Number /* Users go to tour location on this day */
       }
-    ]
+    ],
+    guides: Array
   },
   {
     toJSON: { virtuals: true },
@@ -141,6 +144,21 @@ tourSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
 
   this.start = Date.now();
+  next();
+});
+
+//
+tourSchema.pre('save', async function(next) {
+  // this.guides is an Array of user IDs
+  // loop through Users to get the current ID of each user
+  // This will be an Array of User Documents from the IDs in the guides array
+  const guidesPromises = this.guides.map(async id => await User.findById(id));
+
+  // Because guidesPromises is an Array of Promises, we need to run the
+  //    Promises at the same time using Promise.all
+  //  Reassign those new values to this.guides.
+  // NOTE:  This will override the Array of IDs to an Array of User Documents
+  this.guides = await Promise.all(guidesPromises);
   next();
 });
 

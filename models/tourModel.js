@@ -147,8 +147,11 @@ tourSchema.pre(/^find/, function(next) {
   next();
 });
 
-//
-tourSchema.pre('save', async function(next) {
+// TODO: From the Array of User ids from the guides property,
+//  create an Array of User Documents. Note, this only creates, it does not save
+// This is for Embedding/ DeNormalizing;
+// i.e.  This works when tourSchema.guides: Array
+/*tourSchema.pre('save', async function(next) {
   // this.guides is an Array of user IDs
   // loop through Users to get the current ID of each user
   // This will be an Array of User Documents from the IDs in the guides array
@@ -158,9 +161,10 @@ tourSchema.pre('save', async function(next) {
   //    Promises at the same time using Promise.all
   //  Reassign those new values to this.guides.
   // NOTE:  This will override the Array of IDs to an Array of User Documents
+  // NOTE 2:  This CREATES new documents, it does not save them
   this.guides = await Promise.all(guidesPromises);
   next();
-});
+});*/
 
 tourSchema.post(/^find/, function(docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);

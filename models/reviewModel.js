@@ -28,7 +28,7 @@ const reviewSchema = new mongoose.Schema(
   },
   {
     /* This is so that a field not stored in the DB shows up in the OP
-     * i.e. createdAt */
+     * i.e. Average time a Review for a specific tour is createdAt  */
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
   }

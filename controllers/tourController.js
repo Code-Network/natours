@@ -37,7 +37,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
   //      tour model which always happens in a Query
   // const tour = await Tour.findById(req.params.id).populate('guides');
   // -------
-  // Get rid of unnecessary fields in populate options
+  // Get rid of unnecessary fields in populate options.
+  // Note that populate is a query and may affect performance slightly on small
+  //    applications and moreso on bigger ones
   const tour = await Tour.findById(req.params.id).populate({
     path: 'guides',
     select: '-__v -passwordChangedAt'

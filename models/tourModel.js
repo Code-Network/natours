@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
+// const User = require('./userModel');
 
 // const validator = require('validator');
 const tourSchema = new mongoose.Schema(
@@ -110,7 +110,15 @@ const tourSchema = new mongoose.Schema(
         day: Number /* Users go to tour location on this day */
       }
     ],
-    guides: Array
+    guides: [
+      {
+        // Establish references between different datasets in Mongoose
+        // We do not need to import User => './userModel'
+        // Here we specify that an ObjectId is exactly what we expect
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
+    ] /* Using referencing */
   },
   {
     toJSON: { virtuals: true },
@@ -151,6 +159,7 @@ tourSchema.pre(/^find/, function(next) {
 //  create an Array of User Documents. Note, this only creates, it does not save
 // This is for Embedding/ DeNormalizing;
 // i.e.  This works when tourSchema.guides: Array
+// We must import User  from './userModel' in order for this to work
 /*tourSchema.pre('save', async function(next) {
   // this.guides is an Array of user IDs
   // loop through Users to get the current ID of each user

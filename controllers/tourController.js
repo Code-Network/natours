@@ -30,10 +30,18 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 exports.getTour = catchAsync(async (req, res, next) => {
   // Using Mongoose => const tour = await Tour.findById(req.params.id);
+  // -------
   // In MongoDB => Tour.findOne({ _id: req.params.id })
-  // Adding the Population process to fill up the guides fielf from the tour model
-  //      , which always happens in a Query
-  const tour = await Tour.findById(req.params.id).populate('guides');
+  // -------
+  // Adding the Population process to fill up the guides field from the
+  //      tour model which always happens in a Query
+  // const tour = await Tour.findById(req.params.id).populate('guides');
+  // -------
+  // Get rid of unnecessary fields in populate options
+  const tour = await Tour.findById(req.params.id).populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt'
+  });
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));

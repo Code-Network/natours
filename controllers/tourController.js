@@ -29,8 +29,11 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id);
-  // Tour.findOne({ _id: req.params.id })
+  // Using Mongoose => const tour = await Tour.findById(req.params.id);
+  // In MongoDB => Tour.findOne({ _id: req.params.id })
+  // Adding the Population process to fill up the guides fielf from the tour model
+  //      , which always happens in a Query
+  const tour = await Tour.findById(req.params.id).populate('guides');
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));

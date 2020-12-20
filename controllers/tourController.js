@@ -40,10 +40,13 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // Get rid of unnecessary fields in populate options.
   // Note that populate is a query and may affect performance slightly on small
   //    applications and moreso on bigger ones
-  const tour = await Tour.findById(req.params.id).populate({
-    path: 'guides',
-    select: '-__v -passwordChangedAt'
-  });
+  // Because we would need to use this in multiple request and it is not
+  // populating in getAllTours, for instance, we will pre /^find/ on tourModel.js
+  // const tour = await Tour.findById(req.params.id).populate({
+  //   path: 'guides',
+  //   select: '-__v -passwordChangedAt'
+  // });
+  const tour = await Tour.findById(req.params.id);
 
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));

@@ -41,17 +41,23 @@ const reviewSchema = new mongoose.Schema(
 // TODO:  Populate the tour and user fields -
 //  NOTE: We turn this off because of redundancy, i.e When requesting
 //  a single tour, the tour field is unnecessarily populated
-// reviewSchema.pre(/^find/, function(next) {
-//   this.populate({
-//     path: 'tour',
-//     select: 'name'
-//   }).populate({
-//     path: 'user',
-//     select: 'name photo'
-//   });
-//
-//   next();
-// });
+reviewSchema.pre(/^find/, function(next) {
+  //   this.populate({
+  //     path: 'tour',
+  //     select: 'name'
+  //   }).populate({
+  //     path: 'user',
+  //     select: 'name photo'
+  //   });
+
+  // Only populate the user field
+  this.populate({
+    path: 'user',
+    select: 'name photo'
+  });
+
+  next();
+});
 
 const Review = mongoose.model('Review', reviewSchema);
 

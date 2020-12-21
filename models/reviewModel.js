@@ -16,11 +16,15 @@ const reviewSchema = new mongoose.Schema(
       default: Date.now
     },
     tour: {
+      // This is parent referencing; the Tour does not know about its children
+      // This links to Tours; Tours does not link to this
       type: mongoose.Schema.ObjectId,
       ref: 'Tour',
       required: [true, 'Review must belong to a tour']
     },
     user: {
+      // This is parent referencing; the User does not know about its users
+      // This links to Users; Users does not link to this
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: [true, 'Review must belong to a user']

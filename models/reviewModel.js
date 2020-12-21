@@ -38,17 +38,20 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.pre(/^find/, function(next) {
-  this.populate({
-    path: 'tour',
-    select: 'name'
-  }).populate({
-    path: 'user',
-    select: 'name photo'
-  });
-
-  next();
-});
+// TODO:  Populate the tour and user fields -
+//  NOTE: We turn this off because of redundancy, i.e When requesting
+//  a single tour, the tour field is unnecessarily populated
+// reviewSchema.pre(/^find/, function(next) {
+//   this.populate({
+//     path: 'tour',
+//     select: 'name'
+//   }).populate({
+//     path: 'user',
+//     select: 'name photo'
+//   });
+//
+//   next();
+// });
 
 const Review = mongoose.model('Review', reviewSchema);
 

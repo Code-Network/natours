@@ -29,4 +29,14 @@ router
     tourController.deleteTour
   );
 
+// POST /tour/26544/reviews
+// GET /tour/26544/reviews
+// GET /tour/26544/reviews/98745552
+
+router('/:tourId/reviews').post(
+  authController.protect,
+  authController.restrictTo('users'),
+  reviewController.createReview
+);
+
 module.exports = router;

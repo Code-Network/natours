@@ -118,7 +118,21 @@ const tourSchema = new mongoose.Schema(
         type: mongoose.Schema.ObjectId,
         ref: 'User'
       }
-    ] /* Using referencing */
+    ] /* Using referencing.
+
+    Note:  If we wanted to implement Child Referencing on the Reviews we would
+    do this:
+     reviews: [
+       {
+       type: mongoose.Schema.ObjectId,
+       ref: 'Review'
+       }
+     ]
+
+     BUT, that is not what we want to do because it would be too cumbersome
+     to persist endless reviews on each tour. Instead, we will use Mongoose's
+     Virtual Populate.
+    */
   },
   {
     toJSON: { virtuals: true },
@@ -128,6 +142,19 @@ const tourSchema = new mongoose.Schema(
 
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
+});
+
+// TODO: Virtual Populate Reviews from Tours
+// 'reviews' is what we want to call the virtual fields
+tourSchema.virtual('reviews', {
+  ref: 'Review' /* Name of model we want to reference */,
+  foreignField:
+    'tour' /* Name of fields from Reviews in order to connect the two datasets.
+    It's the reference in the Reviews Model where the ref to Tour Model is stored
+    tourSchema is stored in reviewSchema.tours (The id of the tour is there)  */,
+  localField:
+    '_id' /* Where the id is stored in this current Tour Model
+    (The id of the tour in tourModel.js is stored here = _id ) */
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()

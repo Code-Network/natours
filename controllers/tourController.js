@@ -124,6 +124,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     {
       $sort: { avgPrice: 1 }
     }
+
     // {
     //   $match: { _id: { $ne: 'EASY' } }
     // }

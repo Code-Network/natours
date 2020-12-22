@@ -1,6 +1,7 @@
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 
 // param obj = req.body
 // param ...allowedFields will be an array containing 'name' and 'email' so far
@@ -64,18 +65,20 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 // TODO:  Give the User the Capability of deleting their account
-exports.deleteMe = catchAsync(async (req, res, next) => {
-  // The data we want to update is the active property in the userSchema in userModel.js
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+// exports.deleteMe = catchAsync(async (req, res, next) => {
+//   // The data we want to update is the active property in the userSchema in userModel.js
+//   await User.findByIdAndUpdate(req.user.id, { active: false });
+//
+//   // status code 204 => Deleted
+//   // set data to null because they want to delete their account and we do not
+//   //   want to return their data to them
+//   res.status(204).json({
+//     status: 'success',
+//     data: null
+//   });
+// });
 
-  // status code 204 => Deleted
-  // set data to null because they want to delete their account and we do not
-  //   want to return their data to them
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
-});
+exports.deleteMe = factory.deleteOne(User);
 
 // This error message fires here:
 //  localhost:3000/api/v1/signup
@@ -99,9 +102,12 @@ exports.updateUser = (req, res) => {
     message: 'This route is not yet defined!'
   });
 };
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  });
-};
+
+// exports.deleteUser = (req, res) => {
+//   res.status(500).json({
+//     status: 'error',
+//     message: 'This route is not yet defined!'
+//   });
+// };
+
+exports.deleteUser = factory.deleteOne(User);

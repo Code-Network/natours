@@ -45,3 +45,27 @@ exports.createOne = Model =>
       }
     });
   });
+
+// TODO:  Getting/Reading Documents
+// This is a bit trickier because we have a populate() in the getTour handler
+// We will handle this by allowing a populate option into our getOne function
+exports.getOne = (Model, popOptions) =>
+  catchAsync(async (req, res, next) => {
+    // const doc = await Model.findById(req.params.id).populate('reviews');
+
+    let query = Model.findById(req.params.id);
+    if (popOptions) query = query.populate(popOptions);
+
+    const doc = await query;
+
+    if (!doc) {
+      return next(new AppError('No tour found with that ID', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        data: doc
+      }
+    });
+  });

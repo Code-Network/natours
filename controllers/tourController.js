@@ -29,6 +29,21 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
+/* Note:  Because getTour previously used populate() we set options:
+  Just a reminder of a function we used reviewModel.js at one point;
+   here is the syntax which lets us get away with using path/select:
+     reviewSchema.pre(/^find/, function(next) {
+       this.populate({
+         path: 'tour',
+         select: 'name'
+       }).populate({
+         path: 'user',
+         select: 'name photo'
+       });
+*/
+exports.getTour = factory.getOne(Tour, { path: 'reviews', select: '-__v' });
+
+/*
 exports.getTour = catchAsync(async (req, res, next) => {
   // Using Mongoose => const tour = await Tour.findById(req.params.id);
   // -------
@@ -60,6 +75,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     }
   });
 });
+*/
 
 exports.createTour = factory.createOne(Tour);
 

@@ -19,6 +19,10 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+// TODO: DeCouple from exports.createReview to set tour and user ids on the
+//  body and add this function in reviewRoutes.js before
+//  reviewController.createReview to ensure we get the ids
 exports.setTourUserIds = (req, res, next) => {
   // TODO: Allow Nested Routes
   // This will make it so that the user can manually specify tour and user ID.
@@ -38,7 +42,7 @@ exports.setTourUserIds = (req, res, next) => {
 exports.createReview = factory.createOne(Review);
 
 /*exports.createReview = catchAsync(async (req, res, next) => {
-  // TODO: Allow Nested Routes
+  // Allow Nested Routes
   // This will make it so that the user can manually specify tour and user ID.
   // Define tour and user when they are not specified in the Request Body.
   // We just created the route for /tour/:tourId/reviews so we have to

@@ -80,18 +80,22 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 exports.deleteMe = factory.deleteOne(User);
 
+exports.getUser = factory.getOne(User);
+
 // This error message fires here:
 //  localhost:3000/api/v1/signup
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined - wrong endpoint!'
-  });
-};
+// exports.getUser = (req, res) => {
+//   res.status(500).json({
+//     status: 'error',
+//     message: 'This route is not yet defined - wrong endpoint!'
+//   });
+// };
+
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'This route is not yet defined!'
+    message:
+      'This route is not defined and never will be! Please use /signup instead'
   });
 };
 

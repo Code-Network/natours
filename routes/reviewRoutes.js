@@ -8,11 +8,13 @@ const authController = require('./../controllers/authController');
 //    to the tour router's tourId param
 const router = express.Router({ mergeParams: true });
 
+// Every reviews route must be authenticated
+router.use(authController.protect);
+
 router
   .route('/')
   .get(reviewController.getAllReviews)
   .post(
-    authController.protect,
     authController.restrictTo('user'),
     reviewController.setTourUserIds,
     reviewController.createReview

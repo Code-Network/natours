@@ -4,6 +4,17 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
+// TODO: Create a '/me' route for the user
+//  to getUser based on current logged on UserId and not the URL params
+// -- A bit of a hack
+// .protect() gives access to current user id == req.user.id
+router.get(
+  '/me',
+  authController.protect,
+  userController.getMe,
+  userController.getUser
+);
+
 // ex. localhost:3000/api/v1/users/signup POST Request
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);

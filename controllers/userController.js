@@ -15,6 +15,16 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+// TODO:  Middleware for '/me' route which gets current user ID
+// Route /me => this will be similar to factoryHandler's getOne()
+// except that getMe() will Get the document based on User id
+// from .protect() and pass it on to getUser() in userModel.js
+// Gets data from (currently logged in User) and not URL params
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 // TODO: User UPDATES CURRENTLY AUTHENTICATED SELF - '/updateMe'
 //  Logged in User gains ability to update their own data here.
 // Note: Currently, the user only update their name and email address
@@ -36,7 +46,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(req.body, 'name', 'email');
 
   // todo: 3) Update user document
-
   // filteredBody => data (must only contain name and email for now)
   // We use filteredBody instead of req.body because we don't want to update all in the body
   //    We want to prevent user from updating role field, for instance

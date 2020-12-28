@@ -23,7 +23,10 @@ router
 router
   .route('/:id')
   .get(reviewController.getReview)
-  .delete(reviewController.deleteReview)
+  .delete(
+    authController.restrictTo('user', 'admin'),
+    reviewController.deleteReview
+  )
   .patch(
     authController.restrictTo('user', 'admin'),
     reviewController.updateReview

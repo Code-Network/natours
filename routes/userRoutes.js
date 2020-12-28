@@ -23,6 +23,7 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 // REQUIRES AUTHENTICATION
 
 // Protect all of the routes that come after this point
+// It will only call the next middleware if the user is authenticated
 router.use(authController.protect);
 
 // Update Password of Logged in user

@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema({
 // This is perfect place for specifying this property.
 // We could have done it in the authController.resetPassword, but
 //   we really want this to happen automatically.
-userSchema.pre('save', function(next) {
+/*userSchema.pre('save', function(next) {
   // Mongoose Documentation for isModified/isNew
   // We want to just skip on out to the next Middleware if the password has NOT
   // been modified OR if we are creating a NEW document.
@@ -85,7 +85,7 @@ userSchema.pre('save', function(next) {
   // This ensures that the token is created after the password has been changed.
   this.passwordChangedAt = Date.now() - 1000;
   next();
-});
+});*/
 
 // TODO:  Encrypt the Password -- Use pre-save hook - Document Middleware
 // todo: Only run this function if password was actually modified
@@ -93,7 +93,7 @@ userSchema.pre('save', function(next) {
 // between the moment we receive data (password) and the moment it is
 //    persisted it to the database,
 //    i.e. between getting the data and saving the data - pre('save')
-userSchema.pre('save', async function(next) {
+/*userSchema.pre('save', async function(next) {
   // todo: If the password has not been modified, call the next middleware
   // -- Only encrypt the password when the PASSWORD FIELD has been updated,
   //  i.e.  when the password is created new or when it is updated,
@@ -130,7 +130,7 @@ userSchema.pre('save', async function(next) {
   //    required inputs are not required to be persisted in DB
   this.passwordConfirm = undefined;
   next();
-});
+});*/
 
 // TODO:  Add Query Middleware to remove Inactive Users from getAllUsers
 userSchema.pre(/^find/, function(next) {

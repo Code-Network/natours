@@ -43,7 +43,7 @@ router.patch('/updateMe', userController.updateMe);
 router.delete('/deleteMe', userController.deleteMe);
 
 // Only allow role: 'admin' to have access to every route after this point
-app.use(authController.restrictTo('admin'));
+router.use(authController.restrictTo('admin'));
 
 router
   .route('/')

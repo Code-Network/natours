@@ -27,29 +27,20 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 router.use(authController.protect);
 
 // Update Password of Logged in user
-router.patch(
-  '/updateMyPassword',
-  authController.protect,
-  authController.updatePassword
-);
+router.patch('/updateMyPassword', authController.updatePassword);
 
 // Create a '/me' route for the user
 //  to getUser based on current logged on UserId and not the URL params
 // -- A bit of a hack
 // .protect() gives access to current user id == req.user.id
-router.get(
-  '/me',
-  authController.protect,
-  userController.getMe,
-  userController.getUser
-);
+router.get('/me', userController.getMe, userController.getUser);
 
 // User updates their data, name and email only (for now)
-router.patch('/updateMe', authController.protect, userController.updateMe);
+router.patch('/updateMe', userController.updateMe);
 
 // Even though we do not delete the user data, we render it no longer accessible
 // Since data is no longer accessible, we can use the DELETE method
-router.delete('/deleteMe', authController.protect, userController.deleteMe);
+router.delete('/deleteMe', userController.deleteMe);
 
 router
   .route('/')

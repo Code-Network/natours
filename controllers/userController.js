@@ -15,19 +15,6 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: {
-      users
-    }
-  });
-});
-
 // TODO: User UPDATES CURRENTLY AUTHENTICATED SELF - '/updateMe'
 //  Logged in User gains ability to update their own data here.
 // Note: Currently, the user only update their name and email address
@@ -43,7 +30,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
 
-  // todo: Filter out unwanted field names that are not allowed to be updated
+  // TODO: Filter out unwanted field names that are not allowed
+  //  to be updated
   // Filter req.body so that it only contains name and email
   const filteredBody = filterObj(req.body, 'name', 'email');
 
@@ -64,6 +52,39 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message:
+      'This route is not defined and never will be! Please use /signup instead'
+  });
+};
+
+// Admins Only:  to update user
+// NOTE: Do NOT update passwords with this!
+exports.updateUser = factory.updateOne(User);
+
+exports.deleteMe = factory.deleteOne(User);
+exports.getUser = factory.getOne(User);
+exports.deleteUser = factory.deleteOne(User);
+exports.getAllUsers = factory.getAll(User);
+
+// LEGACY CODE BELOW
+/*
+ exports.getAllUsers = catchAsync(async (req, res, next) => {
+ const users = await User.find();
+
+ // SEND RESPONSE
+ res.status(200).json({
+ status: 'success',
+ results: users.length,
+ data: {
+ users
+ }
+ });
+ });
+ */
+
 // TODO:  Give the User the Capability of deleting their account
 // exports.deleteMe = catchAsync(async (req, res, next) => {
 //   // The data we want to update is the active property in the userSchema in userModel.js
@@ -78,10 +99,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 //   });
 // });
 
-exports.deleteMe = factory.deleteOne(User);
-
-exports.getUser = factory.getOne(User);
-
 // This error message fires here:
 //  localhost:3000/api/v1/signup
 // exports.getUser = (req, res) => {
@@ -90,18 +107,6 @@ exports.getUser = factory.getOne(User);
 //     message: 'This route is not yet defined - wrong endpoint!'
 //   });
 // };
-
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message:
-      'This route is not defined and never will be! Please use /signup instead'
-  });
-};
-
-// Admins Only:  to update user
-// NOTE: Do NOT update passwords with this!
-exports.updateUser = factory.updateOne(User);
 
 // exports.updateUser = (req, res) => {
 //   res.status(500).json({
@@ -116,5 +121,3 @@ exports.updateUser = factory.updateOne(User);
 //     message: 'This route is not yet defined!'
 //   });
 // };
-
-exports.deleteUser = factory.deleteOne(User);

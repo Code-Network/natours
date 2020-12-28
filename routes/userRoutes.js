@@ -4,17 +4,9 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-// TODO: Create a '/me' route for the user
-//  to getUser based on current logged on UserId and not the URL params
-// -- A bit of a hack
-// .protect() gives access to current user id == req.user.id
-router.get(
-  '/me',
-  authController.protect,
-  userController.getMe,
-  userController.getUser
-);
-
+// -----------------------
+// -----------------------
+// ROUTES WHERE YOU DO NOT NEED TO BE LOGGED IN INITIALLY
 // ex. localhost:3000/api/v1/users/signup POST Request
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
@@ -26,11 +18,29 @@ router.post('/forgotPassword', authController.forgotPassword);
 // as well as the new password to reset password
 router.patch('/resetPassword/:token', authController.resetPassword);
 
+// -----------------------
+// -----------------------
+// REQUIRES AUTHENTICATION
+
+// Protect all of the routes that come after this point
+router.use(authController.protect);
+
 // Update Password of Logged in user
 router.patch(
   '/updateMyPassword',
   authController.protect,
   authController.updatePassword
+);
+
+// Create a '/me' route for the user
+//  to getUser based on current logged on UserId and not the URL params
+// -- A bit of a hack
+// .protect() gives access to current user id == req.user.id
+router.get(
+  '/me',
+  authController.protect,
+  userController.getMe,
+  userController.getUser
 );
 
 // User updates their data, name and email only (for now)

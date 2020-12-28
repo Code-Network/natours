@@ -22,7 +22,7 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 // -----------------------
 // REQUIRES AUTHENTICATION
 
-// Protect all of the routes that come after this point
+// Protect all of the routes that come after this middleware
 // It will only call the next middleware if the user is authenticated
 router.use(authController.protect);
 
@@ -41,6 +41,9 @@ router.patch('/updateMe', userController.updateMe);
 // Even though we do not delete the user data, we render it no longer accessible
 // Since data is no longer accessible, we can use the DELETE method
 router.delete('/deleteMe', userController.deleteMe);
+
+// Only allow role: 'admin' to have access to every route after this point
+app.use(authController.restrictTo('admin'));
 
 router
   .route('/')

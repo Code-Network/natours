@@ -149,6 +149,9 @@ const tourSchema = new mongoose.Schema(
 // TODO:  Set our own Index on price (Ascending) and ratingsAverage (Descending)
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 
+// Create an index for slugs because we will use unique slugs to query tours
+tourSchema.index({ slug: 1 });
+
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });

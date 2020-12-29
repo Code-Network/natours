@@ -140,6 +140,12 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// TODO: Set our own Index on fields that we query often (i.e. price)
+// This makes queries for price much faster for queries for price
+// price: 1 => price in ascending order
+// price: -1 => price in descending order
+tourSchema.index({ price: 1 });
+
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });

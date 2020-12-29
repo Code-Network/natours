@@ -144,7 +144,10 @@ const tourSchema = new mongoose.Schema(
 // This makes queries for price much faster for queries for price
 // price: 1 => price in ascending order
 // price: -1 => price in descending order
-tourSchema.index({ price: 1 });
+// tourSchema.index({ price: 1 });
+
+// TODO:  Set our own Index on price (Ascending) and ratingsAverage (Descending)
+tourSchema.index({ price: 1, ratingsAverage: -1 });
 
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;

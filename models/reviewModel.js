@@ -94,7 +94,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     }
   ]);
 
-  console.log(stats);
+  console.log('stats === ', stats);
 
   /*
      - Require the Tour Model in order to Persist nRating and avgRating
@@ -137,6 +137,55 @@ reviewSchema.post('save', function() {
   // this = current Review Document
   // constructor = the model who created the Review Document
   this.constructor.calcAverageRatings(this.tour);
+});
+
+// TODO: Implement a pre-middleware for these hooks/events:
+//  findByIdAndUpdate() and findByIdAndDelete()
+// findByIdAndUpdate() is a shorthand for findOneAndUpdate() with current ID
+// findByIdAndDelete() is a shorthand for fineOneAndDelete() with current ID
+// Note: Those hooks don't give us access to documents, only to
+//  query middleware, so we can't just extract Model data from them
+//  like we did with aggregate in statics().   We have to get around that.
+//  because we want to be able to modify nRating and ratingAverage when a user
+//  edits/update or deletes their tour review
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+  /*
+   -- The Goal is to gain access to the Current Review Document.
+   -- 'this' is the Current Review Query, not the Current Review Document.
+   -- NOTE: If we Execute the Query, that will give us access to the
+          Current Review Document that is being processed.
+   -- To execute the Query => this.findOne
+   -- Then all we need to do is to async/await this.findOne()
+          and save it somewhere, i.e. save it to a var
+   -- NOTE 2: the updated review did not persist to the console log but
+        it did persist to the database. Jonas did not look at DB to confirm
+        but explains that findOne() gets its data from DB and I am assuming
+        the the Review Update Data cannot be accessed in PRE middleware,
+    -- BUT the point is to get the tourID because that is what we will
+          need to calculate the averageRatings and nRating with the
+          UPDATED data, so we can't use this old rating in calcAverageRatings()
+          -- AND we can't change PRE to POST because we no longer have access
+          to the Query after execution.  OOPS!  We need another hack.
+  OP/
+   r ===  {
+       _id: 5fecdbd83045ab82b6467dfa,
+       rating: 4,
+       review: 'MAX is in the House!!!',
+       tour: 5fecdb653045ab82b6467df9, // This is tour ID
+       user: {
+       _id: 5c8a23de2f8fb814b56fa18e,
+       name: 'Max Smith',
+       photo: 'user-15.jpg'
+   },
+     createdAt: 2020-12-30T19:58:16.040Z,
+     __v: 0,
+     id: '5fecdbd83045ab82b6467dfa'
+   }
+   */
+
+  const r = await this.findOne();
+  console.log('r === ', r);
+  next();
 });
 
 const Review = mongoose.model('Review', reviewSchema);

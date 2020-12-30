@@ -96,8 +96,31 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
 
   console.log(stats);
 
-  // Require the Tour Model in order to Persist nRating and avgRating
-  //    to the Database (Tour Collection)
+  /*
+     - Require the Tour Model in order to Persist nRating and avgRating
+     to the Database (Tour Collection)
+     - Find the current tour using findByIdAndUpdate() - (returns a Promise) -
+     with options to include the fields we would like to update and their
+     values from the const stats output:
+   ex. const stats may return:
+   [
+      {
+          _id: 5fecbf09c88f5f7fca115e22,
+          nRating: 2,
+          avgRating: 4.05
+      }
+   ]
+
+   stats[0].nRating = 2
+   stats[0].avgRating = 4.05
+
+   Note:  There is no need to store this is a variable because all we are
+          looking to do is to update these fields.
+   */
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].avgRating
+  });
 };
 
 // TODO:  Use calcAverageRatings() each time a new Review is created

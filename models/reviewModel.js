@@ -74,6 +74,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   // User Aggregation Pipeline
   // Pass in an Array of all the Reviews that belong to current tour in
   //    stages in .aggregate()
+  // .aggregate() returns a Promise, so we must async/await
   const stats = await this.aggregate([
     {
       $match: { tour: tourId } /* Only select the tour that we want to update */

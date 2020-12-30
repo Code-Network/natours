@@ -89,6 +89,22 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   console.log(stats);
 };
 
+// TODO:  Use calcAverageRatings() each time a new Review is created
+reviewSchema.pre('save', function(next) {
+  // 'this' points to the doc that is currently being saved = current review
+  // So, 'this' is the current Review and in this.tour, tour is current tourId
+  // Problem:  We want to call Review.calcAverageRatings(this.tour),
+  //  but we can't do it that way because the Review is not yet defined.
+  //  We can't put it after const Review because then the aggregation would not
+  //  have taken place before the model was created.
+  // Solution:  HACK ==> Use this.constructor
+  // this.constructor is the model who created that document
+  // this = current Review Document
+  // constructor = the model who created the Review Document
+  this.constructor.calcAverageRatings(this.tour);
+  next();
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

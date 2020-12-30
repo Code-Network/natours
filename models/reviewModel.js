@@ -94,7 +94,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     }
   ]);
 
-  console.log('stats === ', stats);
+  // console.log('stats === ', stats);
 
   /*
      - Require the Tour Model in order to Persist nRating and avgRating
@@ -117,6 +117,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
    Note:  There is no need to store this is a variable because all we are
           looking to do is to update these fields.
    */
+  console.log('stats === ', stats);
   await Tour.findByIdAndUpdate(tourId, {
     ratingsQuantity: stats[0].nRating,
     ratingsAverage: stats[0].avgRating
@@ -192,12 +193,16 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
 // TODO:  Solution to getting nRating and averageRating on Editted Reviews
 //  after we know the new tourId but the new updates (i.e. rating) data
 //  has not persisted to the console
-reviewSchema.post(/^fineOne/, function() {
+reviewSchema.post(/^fineOneAnd/, async function() {
   // After query has finished and new data updated to console and DB,
   //   we can now use reviewSchema.statics.calcAverageRatings(tourId).
   //  But we have to use a trick to gain access to the current tourId!
   //Solution:We have to pass data from the pre-middleware to the post-middleware
   // by changing const r = await this.findOne() to this.r = await this.findOne()
+  // Note: this.r == the current review
+  // calcAverageRatings must be called on the model - this.constructor
+  // await this.findOne() does NOT work here, query already executed
+  await this.constructor.calcAverageRatings(this.r.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);

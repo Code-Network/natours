@@ -59,6 +59,36 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
+// Statics are pretty much the same as methods but allow for defining functions
+//      that exist directly on your Model.
+// i.e.  Review.calcAverageRatings
+// tourId will be the ID to which the current review belongs to
+reviewSchema.statics.calcAverageRatings = async function(tourId) {
+  // 'this' points to the current model and we need to call .aggregate on a model
+  // User Aggregation Pipeline
+  // Pass in an Array of all the Reviews that belong to current tour in
+  //    stages in .aggregate()
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId } /* Only select the tour that we want to update */
+    },
+    {
+      $group: {
+        _id:
+          '$tour' /* _id first field: $tour = field that all docs have in common;
+         i.e. We are grouping all of the tours together by tour  */,
+        nRating: {
+          $sum: 1
+        } /* Number of ratings = add one for each
+         tour matched in previous step */,
+        avgRating: { $avg: '$rating' } /*Average is calculated in rating field*/
+      }
+    }
+  ]);
+
+  console.log(stats);
+};
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

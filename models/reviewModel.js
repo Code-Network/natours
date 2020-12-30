@@ -59,6 +59,7 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
+// TODO: Storing a summary of a related dataset on the main dataset
 // Statics are pretty much the same as methods but allow for defining functions
 //      that exist directly on your Model.
 // i.e.  Review.calcAverageRatings

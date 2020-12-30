@@ -166,6 +166,7 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
           UPDATED data, so we can't use this old rating in calcAverageRatings()
           -- AND we can't change PRE to POST because we no longer have access
           to the Query after execution.  OOPS!  We need another hack.
+          -- Solution: Create another post /^findOne/ middleware
   OP/
    r ===  {
        _id: 5fecdbd83045ab82b6467dfa,
@@ -183,9 +184,20 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
    }
    */
 
-  const r = await this.findOne();
+  this.r = await this.findOne();
   console.log('r === ', r);
   next();
+});
+
+// TODO:  Solution to getting nRating and averageRating on Editted Reviews
+//  after we know the new tourId but the new updates (i.e. rating) data
+//  has not persisted to the console
+reviewSchema.post(/^fineOne/, function() {
+  // After query has finished and new data updated to console and DB,
+  //   we can now use reviewSchema.statics.calcAverageRatings(tourId).
+  //  But we have to use a trick to gain access to the current tourId!
+  //Solution:We have to pass data from the pre-middleware to the post-middleware
+  // by changing const r = await this.findOne() to this.r = await this.findOne()
 });
 
 const Review = mongoose.model('Review', reviewSchema);

@@ -94,8 +94,6 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     }
   ]);
 
-  // console.log('stats === ', stats);
-
   /*
      - Require the Tour Model in order to Persist nRating and avgRating
      to the Database (Tour Collection)
@@ -117,7 +115,6 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
    Note:  There is no need to store this is a variable because all we are
           looking to do is to update these fields.
    */
-  console.log('stats === ', stats);
   if (stats.length > 0) {
     await Tour.findByIdAndUpdate(tourId, {
       ratingsQuantity: stats[0].nRating,
@@ -193,7 +190,6 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
    */
 
   this.r = await this.findOne();
-  console.log('r === ', this.r);
   next();
 });
 

@@ -118,10 +118,12 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
           looking to do is to update these fields.
    */
   console.log('stats === ', stats);
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].avgRating
-  });
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating
+    });
+  }
 };
 
 // TODO:  Use calcAverageRatings() each time a new Review is created

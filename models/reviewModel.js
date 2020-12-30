@@ -59,11 +59,16 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
-// TODO: Storing a summary of a related dataset on the main dataset
+// TODO: Storing a summary of a related dataset on the main dataset; Store the
+//  average rating and the number of ratings on each tour so that we don't
+//  have to query the reviews and calculate that average each time that we
+//  query for all the tours; useful for a tour overview page in our frontend
+//  where we really do not want to display all of the reviews but would like
+//  to show a summary of these reviews (i.e. number of ratings and the average)
 // Statics are pretty much the same as methods but allow for defining functions
 //      that exist directly on your Model.
 // i.e.  Review.calcAverageRatings
-// tourId will be the ID to which the current review belongs to
+// tourId = the tour ID to which the current review belongs to
 reviewSchema.statics.calcAverageRatings = async function(tourId) {
   // 'this' points to the current model and we need to call .aggregate on a model
   // User Aggregation Pipeline

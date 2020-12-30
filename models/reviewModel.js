@@ -185,7 +185,7 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
    */
 
   this.r = await this.findOne();
-  console.log('r === ', r);
+  console.log('r === ', this.r);
   next();
 });
 

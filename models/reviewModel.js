@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Tour = require('./../models/tourModel');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -93,8 +94,10 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     }
   ]);
 
-  // FIXME: At some point we must update the tour document with these stats
   console.log(stats);
+
+  // Require the Tour Model in order to Persist nRating and avgRating
+  //    to the Database (Tour Collection)
 };
 
 // TODO:  Use calcAverageRatings() each time a new Review is created

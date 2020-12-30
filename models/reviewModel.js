@@ -93,6 +93,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
     }
   ]);
 
+  // FIXME: At some point we must update the tour document with these stats
   console.log(stats);
 };
 

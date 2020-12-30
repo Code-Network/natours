@@ -89,6 +89,7 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   console.log(stats);
 };
 
+// git test
 // TODO:  Use calcAverageRatings() each time a new Review is created
 // Use post save because in pre save the new review is not saved in DB yet
 reviewSchema.post('save', function() {

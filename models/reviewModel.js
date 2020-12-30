@@ -90,7 +90,8 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
 };
 
 // TODO:  Use calcAverageRatings() each time a new Review is created
-reviewSchema.pre('save', function(next) {
+// Use post save because in pre save the new review is not saved in DB yet
+reviewSchema.post('save', function() {
   // 'this' points to the doc that is currently being saved = current review
   // So, 'this' is the current Review and in this.tour, tour is current tourId
   // Problem:  We want to call Review.calcAverageRatings(this.tour),
@@ -102,7 +103,6 @@ reviewSchema.pre('save', function(next) {
   // this = current Review Document
   // constructor = the model who created the Review Document
   this.constructor.calcAverageRatings(this.tour);
-  next();
 });
 
 const Review = mongoose.model('Review', reviewSchema);

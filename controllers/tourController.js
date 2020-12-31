@@ -214,10 +214,11 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   // Use destructuring to get  all route parameter data at once
   const { distance, latlng, unit } = req.params;
 
-  // Get coordinates latlng and put in a variable
+  // TODO: Get coordinates latlng (string) and put in their own variables
   // latlng is a string separating latitude and longitude
   // Use split() with comma as separator to create an Array
   // Use destructuring to save each into their own variables
+  // lat and lng are strings
   const [lat, lng] = latlng.split(',');
 
   // Check to see if lat/lng is defined, because if they are not then that
@@ -233,6 +234,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   }
 
   console.log('distance is: ', distance);
+  console.log('The unit is: ', unit);
   console.log('lat is: ', lat);
   console.log('lng is: ', lng);
 

@@ -3,7 +3,7 @@ const Tour = require('./../models/tourModel');
 // const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 
-// const AppError = require('./../utils/appError');
+const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.aliasTopTours = (req, res, next) => {
@@ -205,5 +205,38 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
     data: {
       plan
     }
+  });
+});
+
+// '/tours-within/:distance/center/:latlng/unit/:unit'
+// '/tours-within/233/center/34.073880,118.201625/unit/mi'
+exports.getToursWithin = catchAsync(async (req, res, next) => {
+  // Use destructuring to get  all route parameter data at once
+  const { distance, latlng, unit } = req.params;
+
+  // Get coordinates latlng and put in a variable
+  // latlng is a string separating latitude and longitude
+  // Use split() with comma as separator to create an Array
+  // Use destructuring to save each into their own variables
+  const [lat, lng] = latlng.split(',');
+
+  // Check to see if lat/lng is defined, because if they are not then that
+  // means they may not have been specified in correct format
+  // If not, throw an Error with status code 400 for Bad Request
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat, lng',
+        400
+      )
+    );
+  }
+
+  console.log('distance is: ', distance);
+  console.log('lat is: ', lat);
+  console.log('lng is: ', lng);
+
+  res.status(200).json({
+    status: 'success'
   });
 });

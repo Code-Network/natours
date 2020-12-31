@@ -263,14 +263,16 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   //   Valid latitude values are between -90 and 90, both inclusive.
 
   const tours = await Tour.find({
-    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+    startLocation: {
+      $geoWithin: { $centerSphere: [[lng, lat], radius] }
+    }
   });
 
   // console.log('distance is: ', distance);
   // console.log('The unit is: ', unit);
-  console.log('lat is: ', lat);
-  console.log('lng is: ', lng);
-  console.log(tours);
+  // console.log('lat is: ', lat);
+  // console.log('lng is: ', lng);
+  // console.log(tours);
 
   res.status(200).json({
     status: 'success',

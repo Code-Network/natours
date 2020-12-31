@@ -153,6 +153,25 @@ tourSchema.index({ price: 1, ratingsAverage: -1 });
 // Create an index for slugs because we will use unique slugs to query tours
 tourSchema.index({ slug: 1 });
 
+/*
+    TODO: Add an index for startLocation
+In order to do geospatial queries we need to first attribute an
+   index (in tourModel.js) to the field where the geospatial data
+   that we are searching for is stored.
+This time we are not going to set option to 1 or -1 because it is a
+   different type of index.  For GeoSpatial data, this index needs
+   to be a 2D sphere index if the data describes real points
+   on an Earth-like Sphere. Or instead, we can also use a 2d index if
+   we are using just fictional points on a simple two dimensional plane.
+   - In this case we are talking about real points on the Earth's surface,
+   so we are going to use a 2dsphere Index here.
+
+ https://docs.mongodb.com/manual/tutorial/calculate-distances-using-spherical-geometry-with-2d-geospatial-indexes/
+*/
+// Tells MongoDB that this startLocation should be indexed to a 2dsphere.
+// So, an Earth-like sphere where all of our data are located.
+tourSchema.index({ startLocation: '2dsphere' });
+
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });

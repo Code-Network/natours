@@ -46,6 +46,15 @@ router
     tourController.getMonthlyPlan
   );
 
+// TODO:  Create a route for GeoSpatial Querying
+// We could have done this using query strings like this:
+// '/tours-distance?distance=233&center=-40,45&unit=mi'
+// But this is more standard now: '/tours-within/233/center/-40,45/unit/mi
+router.route(
+  '/tours-within/:distance/center/:latlng/unit/:unit',
+  tourController.getToursWithin
+);
+
 router
   .route('/')
   .get(tourController.getAllTours)

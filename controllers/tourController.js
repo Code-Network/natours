@@ -210,6 +210,8 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 
 // '/tours-within/:distance/center/:latlng/unit/:unit'
 // '/tours-within/233/center/34.073880,118.201625/unit/mi'
+// Use the following URL in POSTMAN for testing:
+// {{URL}}api/v1/tours/tours-within/400/center/34.111745,-118.11349/unit/mi
 exports.getToursWithin = catchAsync(async (req, res, next) => {
   // Use destructuring to get  all route parameter data at once
   const { distance, latlng, unit } = req.params;

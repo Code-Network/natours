@@ -39,6 +39,15 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+// TODO: Make it so that a user can only write one review per tour
+// We want the combination of user and tour to be unique so that
+//   each user can submit only one review per tour.
+// We do this by setting an index for tour and for user with an options
+//    setting unique:true
+// With this code, each combination of tour and user must always be unique.
+// Note: Reboot MongoDB Compass to see the compound indices in Index tab.
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 // TODO:  Populate the tour and user fields -
 //  NOTE: We turn this off because of redundancy, i.e When requesting
 //  a single tour, the tour field is unnecessarily populated

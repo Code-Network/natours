@@ -221,6 +221,20 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   // lat and lng are strings
   const [lat, lng] = latlng.split(',');
 
+  // TODO: Convert units to radians (divide distance by radius of the earth)
+  // Note: In order to do geospatial queries we need to first attribute an
+  //    index (in tourModel.js) to the field where the geospatial data
+  //    that we are searching for is stored.
+  //    -- So, in this case, we need to add an index to startLocation
+  //        in the tourModel.js file
+  // ---------
+  // MongoDB expects radius of sphere to be in radians.
+  // For miles to radians ==> radians = x miles / 9365.2 miles;
+  // For kilometers to radians ==> radians = x km / 6378.1 km
+  // Tutorial:  https://docs.mongodb.com/manual/tutorial/geospatial-tutorial/
+
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
   // Check to see if lat/lng is defined, because if they are not then that
   // means they may not have been specified in correct format
   // If not, throw an Error with status code 400 for Bad Request
@@ -233,12 +247,36 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log('distance is: ', distance);
-  console.log('The unit is: ', unit);
+  // TODO:  Write the Geospatial Query
+  // Geospatial queries are similar to regular queries
+  // Specify the filter object in find( { filter object } )
+  // In the filter object we want to query for 'startLocation' because the
+  //   startLocation field is what holds the geospatial point where each tour
+  //   starts
+  // ----------
+  // NOTE
+  //
+  // If specifying latitude and longitude coordinates, list the longitude
+  //    first and then latitude:
+  //
+  //   Valid longitude values are between -180 and 180, both inclusive.
+  //   Valid latitude values are between -90 and 90, both inclusive.
+
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+  });
+
+  // console.log('distance is: ', distance);
+  // console.log('The unit is: ', unit);
   console.log('lat is: ', lat);
   console.log('lng is: ', lng);
+  console.log(tours);
 
   res.status(200).json({
-    status: 'success'
+    status: 'success',
+    results: tours.length,
+    data: {
+      data: tours
+    }
   });
 });

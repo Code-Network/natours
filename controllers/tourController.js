@@ -328,6 +328,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
        or the resetting of values of existing fields.
       1 = true to include, 0 = false, to exclude
   - In $geoNear, add the distanceMultiplier property to convert meters to km
+      - Multiplyiing by 0.001 is the same as dividing by 1,000
    */
   const distances = await Tour.aggregate([
     {

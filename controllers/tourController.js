@@ -284,3 +284,11 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+// TODO: Create a function which calculates the distances of
+//  tours in our collection from a certain point using the
+//  Geospatial Aggregation pipeline
+exports.getDistances = catchAsync(async (req, res, next) => {
+  // Get all route parameter data
+  const { distance, latlng, unit } = req.params;
+});

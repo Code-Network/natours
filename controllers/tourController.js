@@ -290,14 +290,11 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
 //  Geospatial Aggregation pipeline
 exports.getDistances = catchAsync(async (req, res, next) => {
   // Get all route parameter data
-  const { distance, latlng, unit } = req.params;
+  const { latlng, unit } = req.params;
 
   // Separate latitude and longitude into their own variables within an Array
   //   -- Remember that these numbers are Strings
   const [lat, lng] = latlng.split(',');
-
-  // Calculate the radius in radians for units in miles and in kilometers
-  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
 
   // Throw an AppError with a status code of 400 for Bad Request if a
   // latitude or a longitude is undefined or in a format we do not recognize

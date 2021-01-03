@@ -292,6 +292,11 @@ exports.getDistances = catchAsync(async (req, res, next) => {
   // Get all route parameter data
   const { latlng, unit } = req.params;
 
+  // Conversion from meters to miles
+  // Set the multiplier to 0.000621371 if unit = mi or 0.001 if unit = km
+  // 1 meter = 0.000621371 miles; 1 meter = 0.001 kilometers
+  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+
   // Separate latitude and longitude into their own variables within an Array
   //   -- Remember that these numbers are Strings
   const [lat, lng] = latlng.split(',');
@@ -335,7 +340,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
       $geoNear: {
         near: { type: 'Point', coordinates: [lng * 1, lat * 1] },
         distanceField: 'distance',
-        distanceMultiplier: 0.001
+        distanceMultiplier: multiplier
       }
     },
     {

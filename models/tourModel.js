@@ -250,8 +250,18 @@ tourSchema.post(/^find/, function(docs, next) {
 });
 
 // AGGREGATION MIDDLEWARE
+// This interfered with tourController.getDistances $geoNear because $geoNear
+//   must be the First Stage in aggregation; it isn't because this
+//   pre-aggregate has a $match stage which comes before $geoNear, so we
+//   get an error on the /distances/34.111745,-118.11349/unit/mi
+//   endpoint.
 tourSchema.pre('aggregate', function(next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  // this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+
+  const things = this.pipeline()[0];
+  if (Object.keys(things)[0] !== '$geoNear') {
+    this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  }
 
   console.log(this.pipeline());
   next();

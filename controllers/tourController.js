@@ -325,9 +325,9 @@ exports.getDistances = catchAsync(async (req, res, next) => {
   const distances = await Tour.aggregate([
     {
       $geoNear: {
-        near: { type: 'Point', coordinates: [lng * 1, lat * 1] }
-      },
-      distanceField: 'distance'
+        near: { type: 'Point', coordinates: [lng * 1, lat * 1] },
+        distanceField: 'distance'
+      }
     }
   ]);
 

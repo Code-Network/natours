@@ -324,12 +324,21 @@ exports.getDistances = catchAsync(async (req, res, next) => {
         - This will add a distance field with total distance in meters
         from latlng to each tour
   - Ex. Endpoint: {{URL}}api/v1/tours/distances/34.111745,-118.11349/unit/mi
+  - $project specifies the inclusion, addition, computed, or excluded fields,
+       or the resetting of values of existing fields.
+      1 = true to include, 0 = false, to exclude
    */
   const distances = await Tour.aggregate([
     {
       $geoNear: {
         near: { type: 'Point', coordinates: [lng * 1, lat * 1] },
         distanceField: 'distance'
+      }
+    },
+    {
+      $project: {
+        distance: 1 /* 1 = true, specifies inclusion of distance field*/,
+        name: 1 /* 1 = true, specifies inclusion of name field */
       }
     }
   ]);

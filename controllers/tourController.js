@@ -307,22 +307,27 @@ exports.getDistances = catchAsync(async (req, res, next) => {
     );
   }
 
-  // Calculate the distance of the tours from a coordinate using the
-  // Aggregation pipeline which in called on the Model itself.
-  // - $geoNear is the first stage in the pipeline; it outputs documents
-  //   in order of nearest to farthest from a specified point.
-  // - Specify all distances in the same units s those of the processed
-  //    documents' coordinate system
-  // $geoNear requires that at least one of the fields contain a GeoSpatial Index
-  // - In tourModel.js, we have tourSchema.index({startLocation: '2dsphere'}).
-  // - If there is only one field with a GeoSpatial index, then $geoNear stage
-  //    will automatically use that index to perform calculation.
-  //   { $geoNear: { <geoNear options> } }
+  /*
+   TODO:  Calculate the distance of the tours from a coordinate
+    using the Aggregation pipeline which in called on the Model itself.
+   - $geoNear is the first stage in the pipeline; it outputs documents
+      in order of nearest to farthest from a specified point.
+   - Specify all distances in the same units s those of the processed
+      documents' coordinate system
+   - $geoNear requires that at least one of the fields contain
+      a GeoSpatial Index
+   - In tourModel.js, we have tourSchema.index({startLocation: '2dsphere'}).
+   - If there is only one field with a GeoSpatial index, then $geoNear stage
+       will automatically use that index to perform calculation.
+   - distanceField is the name of the field that will be created
+      and where all of the calculated distances will be stored
+   */
   const distances = await Tour.aggregate([
     {
       $geoNear: {
         near: { type: 'Point', coordinates: [lng * 1, lat * 1] }
-      }
+      },
+      distanceField: 'distance'
     }
   ]);
 });

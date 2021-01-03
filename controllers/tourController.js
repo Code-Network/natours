@@ -291,4 +291,8 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
 exports.getDistances = catchAsync(async (req, res, next) => {
   // Get all route parameter data
   const { distance, latlng, unit } = req.params;
+
+  // Separate latitude and longitude into their own variables within an Array
+  //   -- Remember that these numbers are Strings
+  const [lat, lng] = latlng.split(',');
 });

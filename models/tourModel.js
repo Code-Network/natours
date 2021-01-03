@@ -263,6 +263,8 @@ tourSchema.pre('aggregate', function(next) {
     this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
   }
 
+  // OP when $geoNear is called:
+  // [ { '$geoNear': { near: [Object], distanceField: 'distance' } } ]
   console.log(this.pipeline());
   next();
 });

@@ -54,6 +54,10 @@ router
   .route('/tours-within/:distance/center/:latlng/unit/:unit')
   .get(tourController.getToursWithin);
 
+// TODO: Create a route to be used for calculating distances from a certain
+//  point to all of the tours that we have in our tour database collection
+router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances);
+
 router
   .route('/')
   .get(tourController.getAllTours)

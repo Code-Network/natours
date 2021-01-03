@@ -330,4 +330,11 @@ exports.getDistances = catchAsync(async (req, res, next) => {
       distanceField: 'distance'
     }
   ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances
+    }
+  });
 });

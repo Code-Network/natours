@@ -298,4 +298,15 @@ exports.getDistances = catchAsync(async (req, res, next) => {
 
   // Calculate the radius in radians for units in miles and in kilometers
   const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+  // Throw an AppError with a status code of 400 for Bad Request if a
+  // latitude or a longitude is undefined or in a format we do not recognize
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat, lng',
+        400
+      )
+    );
+  }
 });

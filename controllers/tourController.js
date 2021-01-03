@@ -327,12 +327,14 @@ exports.getDistances = catchAsync(async (req, res, next) => {
   - $project specifies the inclusion, addition, computed, or excluded fields,
        or the resetting of values of existing fields.
       1 = true to include, 0 = false, to exclude
+  - In $geoNear, add the distanceMultiplier property to convert meters to km
    */
   const distances = await Tour.aggregate([
     {
       $geoNear: {
         near: { type: 'Point', coordinates: [lng * 1, lat * 1] },
-        distanceField: 'distance'
+        distanceField: 'distance',
+        distanceMultiplier: 0.001
       }
     },
     {

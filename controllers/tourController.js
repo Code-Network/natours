@@ -321,6 +321,9 @@ exports.getDistances = catchAsync(async (req, res, next) => {
        will automatically use that index to perform calculation.
    - distanceField is the name of the field that will be created
       and where all of the calculated distances will be stored
+        - This will add a distance field with total distance in meters
+        from latlng to each tour
+  - Ex. Endpoint: {{URL}}api/v1/tours/distances/34.111745,-118.11349/unit/mi
    */
   const distances = await Tour.aggregate([
     {

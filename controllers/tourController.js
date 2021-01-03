@@ -295,4 +295,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
   // Separate latitude and longitude into their own variables within an Array
   //   -- Remember that these numbers are Strings
   const [lat, lng] = latlng.split(',');
+
+  // Calculate the radius in radians for units in miles and in kilometers
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
 });

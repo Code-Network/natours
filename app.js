@@ -15,11 +15,14 @@ const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
+// TODO:  Set up the Pug Engine
+// a) Inform express what engine we want to use.
 // Template View Engine is Pug
 // Express supports pug, no need to install or require
 // Pug templates are called views in Express
 app.set('view engine', 'pug');
 
+// b) Point to the folder where we will have our Pug files.
 // The path we provide is always relative to the directory from where
 // we launched the Node Application - server.js in root project folder
 // -- Don't do this:  app.set('views', './views');

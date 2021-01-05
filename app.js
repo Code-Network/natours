@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -18,6 +19,15 @@ const app = express();
 // Express supports pug, no need to install or require
 // Pug templates are called views in Express
 app.set('view engine', 'pug');
+
+// The path we provide is always relative to the directory from where
+// we launched the Node Application - server.js in root project folder
+// -- Don't do this:  app.set('views', './views');
+// A trick we can use with Node is to use the path module to tell
+//   express where the views folder is.
+//   - path is a built-in node module.. require path
+// This will, behind the scenes, join the directory name 'views'
+app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
 

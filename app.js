@@ -14,6 +14,11 @@ const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
+// Template View Engine is Pug
+// Express supports pug, no need to install or require
+// Pug templates are called views in Express
+app.set('view engine', 'pug');
+
 // 1) GLOBAL MIDDLEWARES
 
 // ===========================================================================

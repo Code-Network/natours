@@ -27,6 +27,8 @@ app.set('view engine', 'pug');
 //   express where the views folder is.
 //   - path is a built-in node module.. require path
 // This will, behind the scenes, join the directory name 'views'
+// We use this trick because Node will create a correct path with __dirname
+// and we won't have to worry about whether or not we need a slash.
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES

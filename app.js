@@ -148,7 +148,11 @@ app.use((req, res, next) => {
 // Handler function is (req, res) => {}
 app.get('/', (req, res) => {
   // Set status to 200 and render base pug; no need to specify .pug
-  res.status(200).render('base');
+  // tour and user are locals in the pug file
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    user: 'Jonas'
+  });
 });
 
 app.use('/api/v1/tours', tourRouter);

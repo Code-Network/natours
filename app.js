@@ -141,6 +141,16 @@ app.use((req, res, next) => {
 // ============================================================================
 
 // 3) ROUTES
+
+// Create a route from which we will access the base.pug template
+// We generally use app.get() when rendering pages in the browser.
+// URL is the route we will use, which will be the root of our website => '/'
+// Handler function is (req, res) => {}
+app.get('/', (req, res) => {
+  // Set status to 200 and render base pug; no need to specify .pug
+  res.status(200).render('base');
+});
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

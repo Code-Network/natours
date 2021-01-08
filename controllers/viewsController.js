@@ -1,7 +1,7 @@
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 
-exports.getOverview = (req, res) => {
+exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get tour data from collection
 
   // Build template
@@ -11,7 +11,9 @@ exports.getOverview = (req, res) => {
   res.status(200).render('overview', {
     title: 'All Tours'
   });
-};
+
+  next();
+});
 
 exports.getTour = (req, res) => {
   res.status(200).render('tour', {

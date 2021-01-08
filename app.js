@@ -155,6 +155,24 @@ app.get('/', (req, res) => {
   });
 });
 
+// PUG ROUTES
+// Create /overview route in get() and create overview.pug (in render)
+//    and render passing local - title
+app.get('/overview', (req, res) => {
+  res.status(200).render('overview', {
+    title: 'All Tours'
+  });
+});
+
+// Create /tour route in get() and create tour.pug (in render)
+//    and render passing local - title
+app.get('/tour', (req, res) => {
+  res.status(200).render('tour', {
+    title: 'The Forest Hiker Tour'
+  });
+});
+
+// COLLECTION ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

@@ -143,6 +143,9 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 
+// PUG ROUTES
+app.use('/', viewRouter);
+
 // COLLECTION ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

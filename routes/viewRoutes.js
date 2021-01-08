@@ -31,6 +31,5 @@ router.get('/tour', (req, res) => {
     title: 'The Forest Hiker Tour'
   });
 });
-router;
 
 module.exports = router;

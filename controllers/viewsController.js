@@ -1,4 +1,5 @@
 const Tour = require('./../models/tourModel');
+const catchAsync = require('./../utils/catchAsync');
 
 exports.getOverview = (req, res) => {
   // 1) Get tour data from collection

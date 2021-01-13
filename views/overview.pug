@@ -35,11 +35,11 @@ block content
 					.card__footer
 						p
 							span.card__footer-value= `$${tour.price}`
-							|
+							| &nbsp;&nbsp;
 							span.card__footer-text per person
 						p.card__ratings
 							span.card__footer-value= tour.ratingsAverage
-							|
+							| &nbsp;&nbsp;
 							span.card__footer-text= `rating (${tour.ratingsQuantity})`
 						a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details
 

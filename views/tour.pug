@@ -13,11 +13,11 @@ block content
 				.heading-box__detail
 					svg.heading-box__icon
 						use(xlink:href='/img/icons.svg#icon-clock')
-					span.heading-box__text 10 days
+					span.heading-box__text= `${tour.duration} days`
 				.heading-box__detail
 					svg.heading-box__icon
 						use(xlink:href='/img/icons.svg#icon-map-pin')
-					span.heading-box__text Las Vegas, USA
+					span.heading-box__text= tour.startLocation.description
 
 	section.section-description
 		.overview-box

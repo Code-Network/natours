@@ -45,7 +45,11 @@ block content
 					each guide in tour.guides
 						.overview-box__detail
 							img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
-							span.overview-box__label= guide.role
+
+							- if (guide.role === 'lead-guide')
+								span.overview-box__label Lead guide
+							- else
+								span.overview-box__label Tour guide
 							span.overview-box__text= guide.name
 
 		.description-box

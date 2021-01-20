@@ -31,11 +31,9 @@ block content
 			div
 				.overview-box__group
 					h2.heading-secondary.ma-bt-lg Quick facts
-					.overview-box__detail
-						svg.overview-box__icon
-							use(xlink:href='/img/icons.svg#icon-calendar')
-						span.overview-box__label Next date
-						span.overview-box__text August 2021
+
+					+overviewBox('calendar', 'Next date', tour.startDates[0])
+
 					.overview-box__detail
 						svg.overview-box__icon
 							use(xlink:href='/img/icons.svg#icon-trending-up')

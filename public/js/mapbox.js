@@ -23,7 +23,7 @@ console.log(locations);
 mapboxgl.accessToken = 'Put your access token here';
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'style mapbox cdn'
+  style: 'put your style mapbox cdn here'
   // center: [-118.11349, 34.111745]
   // zoom: 10,
   // interactive: true,
@@ -39,20 +39,24 @@ var map = new mapboxgl.Map({
      portion of the map to display in order to fit all the tour coordinates.
      -- LatLngBounds() is the area that will be displayed on the map.
  */
-const bounds = new mapboxgl.LatLngBounds();
+const bounds = new mapboxgl.LngLatBounds();
 
 // Extend LatLngBounds with all the locations in our locations array
 locations.forEach(loc => {
-  /*  Add marker from .marker class in our CSS file
-       .marker {
-           background-image: url('../img/pin.png');
-           background-size: cover;
-           width: 32px;
-           height: 40px;
-           cursor: pointer;
-       }
-
-   */
+  // Create marker
   const el = document.createElement('div');
-  el.className = 'marker;';
+  el.className = 'marker';
+
+  // Add marker
+  new mapboxgl.Marker({
+    element: el,
+    anchor: 'bottom'
+  })
+    .setLngLat(loc.coordinates)
+    .addTo(map);
+
+  // Extend map
+  bounds.extend(loc.coordinates);
 });
+
+map.fitBounds(bounds);

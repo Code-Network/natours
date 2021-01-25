@@ -24,6 +24,7 @@ mapboxgl.accessToken = 'Put your access token here';
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'put your style mapbox cdn here',
+  scrollZoom: false,
   // center: [-118.11349, 34.111745],
   // zoom: 1
   // interactive: true,

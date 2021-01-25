@@ -24,8 +24,8 @@ mapboxgl.accessToken = 'Put your access token here';
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'put your style mapbox cdn here'
-  // center: [-118.11349, 34.111745]
-  // zoom: 10,
+  // center: [-118.11349, 34.111745],
+  // zoom: 1
   // interactive: true,
   // trackResize: true,
   // pitch: 45
@@ -59,4 +59,11 @@ locations.forEach(loc => {
   bounds.extend(loc.coordinates);
 });
 
-map.fitBounds(bounds);
+map.fitBounds(bounds, {
+  padding: {
+    top: 200,
+    bottom: 150,
+    left: 100,
+    right: 100
+  }
+});

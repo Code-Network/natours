@@ -20,11 +20,39 @@ const locations = JSON.parse(document.getElementById('map').dataset.locations);
 
 console.log(locations);
 
-mapboxgl.accessToken = 'Put access key here';
+mapboxgl.accessToken = 'Put your access token here';
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'Put style mapbox cdn here',
-  center: [-118.11349, 34.111745],
-  zoom: 10,
-  interactive: false
+  style: 'style mapbox cdn'
+  // center: [-118.11349, 34.111745]
+  // zoom: 10,
+  // interactive: true,
+  // trackResize: true,
+  // pitch: 45
+});
+
+/*
+    TODO:
+     -- Create a bound var that automatically figures out the position
+     of the map based on our tour location points
+     -- Put all the locations for a certain tour on the map and figure out which
+     portion of the map to display in order to fit all the tour coordinates.
+     -- LatLngBounds() is the area that will be displayed on the map.
+ */
+const bounds = new mapboxgl.LatLngBounds();
+
+// Extend LatLngBounds with all the locations in our locations array
+locations.forEach(loc => {
+  /*  Add marker from .marker class in our CSS file
+       .marker {
+           background-image: url('../img/pin.png');
+           background-size: cover;
+           width: 32px;
+           height: 40px;
+           cursor: pointer;
+       }
+
+   */
+  const el = document.createElement('div');
+  el.className = 'marker;';
 });

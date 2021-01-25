@@ -55,6 +55,14 @@ locations.forEach(loc => {
     .setLngLat(loc.coordinates)
     .addTo(map);
 
+  // Add popup to display location
+  new mapboxgl.Popup({
+    offset: 30
+  })
+    .setLngLat(loc.coordinates)
+    .setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`)
+    .addTo(map);
+
   // Extend map
   bounds.extend(loc.coordinates);
 });

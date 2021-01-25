@@ -20,9 +20,11 @@ const locations = JSON.parse(document.getElementById('map').dataset.locations);
 
 console.log(locations);
 
-mapboxgl.accessToken = 'put your token here';
-
+mapboxgl.accessToken = 'Put access key here';
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11'
+  style: 'Put style mapbox cdn here',
+  center: [-118.11349, 34.111745],
+  zoom: 10,
+  interactive: false
 });

@@ -26,7 +26,7 @@ const createSendToken = (user, statusCode, res) => {
   /*
    todo: cookie options
    -- The expires property must be converted into milliseconds
-   Total milliseconds =  now + expiration * hours * min * sec * 1000
+   Total milliseconds = ( now + expiration * hours * min * sec * 1000 )
    -- Setting secure:true property sends Cookie only on an encrypted connection
    i.e. only via HTTPS (which it has not been set to yet)
    So, in development, the cookie would not be created or sent to client.
@@ -45,7 +45,6 @@ const createSendToken = (user, statusCode, res) => {
   };
 
   // todo: Only set cookie option property secure:true in production
-  //  i.e secure:true only in production
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
   // todo: Create and send an httpOnly cookie
@@ -193,16 +192,24 @@ exports.protect = catchAsync(async (req, res, next) => {
     // split() turns it into an array and we use the second element
     //    which would be the token, eventually
     token = req.headers.authorization.split(' ')[1];
+
+    /*
+      In createSendToken(), we created and sent a cookie called 'jwt'
+        -- res.cookie('jwt', token, cookieOptions);
+      todo: Check to see if the cookie exists; if it does, set token to jwt
+    */
+  } else if (req.cookies.jwt) {
+    token = res.cookies.jwt;
   }
 
-  // Log the token to the console
-  // console.log(token);
-
-  // Check to see if a token exists
-  // If there is no token, return a new operational error
-  //  using global handling middleware with an error which stipulates
-  //  that the user is not logged in and a statuscode 401 (Unauthorized Access)
   if (!token) {
+    // Log the token to the console
+    // console.log(token);
+
+    // Check to see if a token exists
+    // If there is no token, return a new operational error
+    //  using global handling middleware with an error which stipulates
+    //  that the user is not logged in and a statuscode 401 (Unauthorized Access)
     return next(
       new AppError('You are not logged in! Please log in to get access.', 401)
     );

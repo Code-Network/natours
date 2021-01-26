@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -16,12 +17,6 @@ const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
-/*app.use(
-  cors({
-    origin: 'http://127.0.0.1:3000',
-    credentials: true
-  })
-);*/
 
 app.use(
   cors({
@@ -96,6 +91,9 @@ app.use('/api', limiter);
 // Limit the amount of data passed into the body to 10 killibytes (for Security)
 app.use(express.json({ limit: '10kb' }));
 
+// TODO: Use cookie parser
+app.use(cookieParser());
+
 // ============================================================================
 // ============================================================================
 // TODO: Data Sanitization -- protect against two attacks
@@ -139,6 +137,7 @@ app.use(
 // TODO: Middleware for testing only
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log('COOKIES:  ', req.cookies);
 
   /*
       // Use this middleware to log the headers to the console

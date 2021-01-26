@@ -1,14 +1,24 @@
 /* eslint-disable */
 // Create login function
+
+// Note: This is client facing code and only the most modern browsers can run
+//   async/await functions
 const login = async (email, password) => {
-  await axios({
-    method: 'POST',
-    url: 'http://127.0.0.1:3000/api/v1/users/login',
-    data: {
-      email: email,
-      password: password
-    }
-  });
+  console.log(email, password);
+  try {
+    const res = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/users/login',
+      data: {
+        email: email,
+        password: password
+      }
+    });
+
+    console.log('This is res!  ', res);
+  } catch (err) {
+    console.log('THIS IS THE ERROR', err.response.data);
+  }
 };
 
 document.querySelector('.form').addEventListener('submit', e => {

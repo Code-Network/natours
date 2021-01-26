@@ -1,4 +1,5 @@
 const path = require('path');
+const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -15,6 +16,19 @@ const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
+/*app.use(
+  cors({
+    origin: 'http://127.0.0.1:3000',
+    credentials: true
+  })
+);*/
+
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+  })
+);
 
 // TODO:  Set up the Pug Engine
 // a) Inform express what engine we want to use.
@@ -44,7 +58,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ===========================================================================
 // ===========================================================================
 // TODO: Set Security HTTP headers
-app.use(helmet());
+// app.use(helmet());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
+      baseUri: ["'self'"],
+      fontSrc: ["'self'", 'https:', 'http:', 'data:'],
+      scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:']
+    }
+  })
+);
 
 // ============================================================================
 // ============================================================================

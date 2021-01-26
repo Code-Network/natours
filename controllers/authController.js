@@ -199,7 +199,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       todo: Check to see if the cookie exists; if it does, set token to jwt
     */
   } else if (req.cookies.jwt) {
-    token = res.cookies.jwt;
+    token = req.cookies.jwt;
   }
 
   if (!token) {

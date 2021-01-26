@@ -280,6 +280,48 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+// TODO:  Verify that User is Logged in
+// This middleware is only for protected pages so the goal here,
+//   is NOT to protect any route.
+// There will never be an error in this middleware.
+exports.isLoggedIn = async (req, res, next) => {
+  // For rendered pages, we will not have the token in the header
+  if (req.cookies.jwt) {
+    try {
+      //  1) Verify token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      //  2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+
+      //  3) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      //  THERE IS A LOGGED IN USER; make user accessible to template
+      //  This enables us to use 'user' in our templates because
+      //     every template has access to res.locals
+      res.locals.user = currentUser;
+      return next();
+
+      // If there is an error, just continue
+    } catch (err) {
+      return next();
+    }
+  }
+
+  // If there is no jwt cookie, simply continue because there is no
+  //    way that there is a logged in user.
+  next();
+};
+
 // =========================================================================
 // =========================================================================
 // TODO:  V.  Authentication: Setting User Roles and Permissions

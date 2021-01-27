@@ -234,13 +234,11 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   /* Example output of var decoded is
-    {
-       _id: 5fc7a9ce1b2d680866d10ac9,
-       name: 'bree01',
-       email: 'bree01@jonas.io',
-       password: '$2a$12$pS.Na/ld.Q2m1mc3qCdSJeFDlAW7WYW4IvWPgQHZhLiZG1pYLrOWa',
-       __v: 0
-     }
+      {
+        id: '5c8a1d5b0190b214360dc999',
+        iat: 1611763291,
+        exp: 1619539291
+      }
    */
   // console.log(decoded);
 
@@ -296,13 +294,12 @@ exports.isLoggedIn = async (req, res, next) => {
       /*
        TODO: 1) Verify token is real; remember that example output of var
               decoded is:
-        {
-         _id: 5fc7a9ce1b2d680866d10ac9,
-         name: 'bree01',
-         email: 'bree01@jonas.io',
-         password: '$2a$12$pS.Na/l.Q2m1mc3qCdSJeFDlAW7WYW4IvWPgQHZhLiZG1pYLrOWa',
-         __v: 0
-        } */
+           {
+              id: '5c8a1d5b0190b214360dc057',
+              iat: 1611762546,
+              exp: 1619538546
+           }
+     */
       const decoded = await promisify(jwt.verify)(
         req.cookies.jwt,
         process.env.JWT_SECRET

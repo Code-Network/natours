@@ -290,6 +290,7 @@ exports.isLoggedIn = async (req, res, next) => {
   // For rendered pages, we will not have the token in the header
   // Authorization will come from the cookie and not Authorization header
   // Authorization header is only for API
+  // NOTE:  If there is NO cookie then there is NO LOGGED IN USER
   if (req.cookies.jwt) {
     try {
       /*

@@ -289,6 +289,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.isLoggedIn = async (req, res, next) => {
   // For rendered pages, we will not have the token in the header
   // Authorization will come from the cookie and not Authorization header
+  // Authorization header is only for API
   if (req.cookies.jwt) {
     try {
       /*

@@ -288,6 +288,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     -- There will never be an error in this middleware.*/
 exports.isLoggedIn = async (req, res, next) => {
   // For rendered pages, we will not have the token in the header
+  // Authorization will come from the cookie and not Authorization header
   if (req.cookies.jwt) {
     try {
       /*

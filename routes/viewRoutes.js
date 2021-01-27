@@ -9,7 +9,7 @@ router.use(authController.isLoggedIn);
 
 router.get('/', viewsController.getOverview);
 
-// Test Only: protect getTour and test by removing cookie
+// NOTE: Test Only: protect getTour and test by removing cookie
 // router.get('/tour/:slug', authController.protect, viewsController.getTour);
 
 router.get('/tour/:slug', viewsController.getTour);

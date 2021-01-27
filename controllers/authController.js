@@ -319,8 +319,9 @@ exports.isLoggedIn = async (req, res, next) => {
       }
 
       //  THERE IS A LOGGED IN USER; make user accessible to our templates
-      //  This enables us to use 'user' in our templates because
-      //     every template has access to res.locals
+      //      by putting user on res.locals
+      //  - This enables us to use 'user' in our templates because
+      //      every template has access to res.locals
       res.locals.user = currentUser;
       return next();
 

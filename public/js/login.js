@@ -47,12 +47,10 @@ const login = async (email, password) => {
       alert('Logged in successfully');
       setTimeout(() => {
         location.assign('/');
-      });
+      }, 1500);
     }
-
-    console.log('This is res!  ', res);
   } catch (err) {
-    console.log('THIS IS THE ERROR', err.response.data);
+    alert(err.response.data.message);
   }
 };
 

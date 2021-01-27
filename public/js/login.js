@@ -43,6 +43,12 @@ const login = async (email, password) => {
             -- If the provided URL is not valid, a DOMException of the
             SYNTAX_ERROR type is thrown.
      */
+    if (res.data.status === 'success') {
+      alert('Logged in successfully');
+      setTimeout(() => {
+        location.assign('/');
+      });
+    }
 
     console.log('This is res!  ', res);
   } catch (err) {

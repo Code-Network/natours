@@ -16,8 +16,10 @@ const login = async (email, password) => {
 
     /*
         todo: When a user logs in, the user must refresh their page for their
-            image and name to show up on the top right of the page; we must
-            give the app time and force a reload
+              image and name to show up on the top right of the page; here we
+              correct this by displaying an alert which informs the user that
+              they have logged in successfully and then redirect them to the
+              home page
 
         Note: The window.location read-only property returns a Location
          object with information about the current location of the document.
@@ -41,14 +43,6 @@ const login = async (email, password) => {
             -- If the provided URL is not valid, a DOMException of the
             SYNTAX_ERROR type is thrown.
      */
-    if (res.data.status === 'success') {
-      alert('Logged in successfully');
-      // alert(location); // http://localhost:3000/login
-      window.setTimeout(() => {
-        // todo: On login, send user to the home page
-        location.assign('/');
-      });
-    }
 
     console.log('This is res!  ', res);
   } catch (err) {

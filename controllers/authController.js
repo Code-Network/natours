@@ -280,15 +280,26 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-// TODO:  Verify that User is Logged in
-// This middleware is only for protected pages so the goal here,
-//   is NOT to protect any route.
-// There will never be an error in this middleware.
+/*TODO: Verify that User is Currently Logged; if the user is logged
+    in then we want to have the user information available to the templates
+
+    -- This middleware is only for protected pages so the goal here,
+        is NOT to protect any route.
+    -- There will never be an error in this middleware.*/
 exports.isLoggedIn = async (req, res, next) => {
   // For rendered pages, we will not have the token in the header
   if (req.cookies.jwt) {
     try {
-      //  1) Verify token
+      /*
+       TODO: 1) Verify token is real; remember that example output of var
+              decoded is:
+        {
+         _id: 5fc7a9ce1b2d680866d10ac9,
+         name: 'bree01',
+         email: 'bree01@jonas.io',
+         password: '$2a$12$pS.Na/l.Q2m1mc3qCdSJeFDlAW7WYW4IvWPgQHZhLiZG1pYLrOWa',
+         __v: 0
+        } */
       const decoded = await promisify(jwt.verify)(
         req.cookies.jwt,
         process.env.JWT_SECRET

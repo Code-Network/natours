@@ -1,10 +1,12 @@
 /* eslint-disable */
 import axios from 'axios';
+import { hideAlert, showAlert } from './alert';
 
 // Create login function
 // Note: This is client facing code and only the most modern browsers can run
 //   async/await functions
 export const login = async (email, password) => {
+  console.log(email, password);
   try {
     const res = await axios({
       method: 'POST',
@@ -45,12 +47,12 @@ export const login = async (email, password) => {
             SYNTAX_ERROR type is thrown.
      */
     if (res.data.status === 'success') {
-      alert('Logged in successfully');
+      showAlert('success', 'Logged in successfully');
       setTimeout(() => {
         location.assign('/');
       }, 1500);
     }
   } catch (err) {
-    alert(err.response.data.message);
+    showAlert('error', err.response.data.message);
   }
 };

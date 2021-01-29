@@ -36,8 +36,10 @@ export const showAlert = (type, msg) => {
 				 }
   */
 
-  // todo: Step 3: Create div.alert.alert--success or div.alert.alert--error
-  //  element as the first element after the  body be gins
+  /*
+	 todo: Step 3: Create div.alert.alert--success or div.alert.alert--error
+	    element as the first element after the body begins
+	 */
   const markup = `<div class="alert alert--${type}">${msg}</div>`;
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
 

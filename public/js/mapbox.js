@@ -9,7 +9,7 @@
     interface, so, from the website, and then will delegate
     some actions into these other modules
  */
-export const display = locations => {
+export const displayMap = locations => {
   mapboxgl.accessToken = 'Put your access token here';
   var map = new mapboxgl.Map({
     container: 'map',

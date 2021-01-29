@@ -1,9 +1,10 @@
 /* eslint-disable */
-// Create login function
+import axios from 'axios';
 
+// Create login function
 // Note: This is client facing code and only the most modern browsers can run
 //   async/await functions
-const login = async (email, password) => {
+export const login = async (email, password) => {
   try {
     const res = await axios({
       method: 'POST',
@@ -53,12 +54,3 @@ const login = async (email, password) => {
     alert(err.response.data.message);
   }
 };
-
-document.querySelector('.form').addEventListener('submit', e => {
-  e.preventDefault();
-
-  // Get email and password value the user puts in
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  login(email, password);
-});

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import '@babel/polyfill';
-import { display, displayMap } from './mapbox';
+import { displayMap } from './mapbox';
 import { login } from './login';
 
 /*
@@ -22,6 +22,7 @@ import { login } from './login';
 const locations = JSON.parse(document.getElementById('map').dataset.locations);
 console.log(locations);
 
+// Call displayMap function from mapbox.js and pass in locations array
 displayMap(locations);
 
 document.querySelector('.form').addEventListener('submit', e => {

@@ -56,3 +56,32 @@ export const login = async (email, password) => {
     showAlert('error', err.response.data.message);
   }
 };
+
+export const logout = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://localhost:3000/api/v1/users/logout'
+    });
+    /*
+    todo: Reload the page (usually done manually when we delete a cookie)
+    Note: Since this is an AJAX request we cannot reload the page
+          on the backend side (with express) so we must reload programmatically.
+          -- Otherwise, we would technically be logged out but our
+           user menu would still show that we are logged in.
+          -- So, we reload the page which would send the invalid cookie
+          ( The dummy cookie we just received ) to the server and then
+          we are no longer logged in
+
+    Note: location.reload() is the same as clicking the refresh button */
+    if (res.data.status === 'success') location.reload();
+
+    /*
+     Note: There really can't be an error while logging out, but we have
+        this error just in case we have internet connection issues.
+     */
+  } catch (e) {
+    console.log(e.response);
+    showAlert('error', 'Error logging out! Try again.');
+  }
+};

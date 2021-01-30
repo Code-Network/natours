@@ -1,7 +1,7 @@
 /* eslint-disable */
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
-import { login } from './login';
+import { login, logout } from './login';
 
 // DOM ELEMENTS
 // Note: We ran into some problems where an error showed up when we were
@@ -26,3 +26,8 @@ if (loginForm) {
     login(email, password);
   });
 }
+
+// TODO: Set an event on the Logout link
+
+const logOutBtn = document.querySelector('.nav__el--logout');
+if (logOutBtn) logOutBtn.addEventListener('click', logout);

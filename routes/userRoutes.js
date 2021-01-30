@@ -11,6 +11,10 @@ const router = express.Router();
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
+// /logout route will be a GET route because we just get a cookie and will
+// not be sending any data along with the request or changing anything
+router.get('/logout', authController.logout);
+
 // Forgot Password only receives the email address
 router.post('/forgotPassword', authController.forgotPassword);
 

@@ -159,6 +159,34 @@ exports.login = catchAsync(async (req, res, next) => {
 
 // ============================================================
 // ============================================================
+/*
+  TODO:  LOG OUT USER
+  Note: The 'jwt' cookie has the token for the user to log in; since we set
+    httpOnly:true for security, the cookie cannot be deleted by us or the browser;
+    So, to be able to Log Out we need a workaround.
+     -- Set the cookie with the exact same name but
+        without a token and with a ten second expiration.
+     -- This will effectively logout the user.
+     -- We do not set it to secure:true because there is no sensitive data
+*/
+exports.logout = (req, res) => {
+  /*
+   Note: The secret is to give the new cookie the exact same name: 'jwt'
+   todo: Create cookie with the exact same name as the signin cookie
+          with a dummy text (instead of token) and cookie option expiration
+          date of current time plus ten seconds
+   */
+  res.cookie('jwt', 'Logged Out', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+  res.status(200).json({
+    status: 'success'
+  });
+};
+
+// ============================================================
+// ============================================================
 
 // TODO:  IV.  PROTECT ROUTES
 // The goal is to make the user's ID safe
@@ -271,7 +299,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // // GRANT ACCESS TO PROTECTED ROUTE
+  // GRANT ACCESS TO PROTECTED ROUTE
   // Put the entire user data on the request (req)
   // i.e. Store currentUser in req.user for global access
   req.user = currentUser;
@@ -283,7 +311,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     -- This middleware is only for protected pages so the goal here,
         is NOT to protect any route.
-    -- There will never be an error in this middleware.*/
+    -- There will never be an error in this middleware.
+    Note: It is important that we catch errors locally (try/catch) and
+     call next() because if we do not do so we will have an
+     error when we try to log out (since we are logging out
+     by sending a cookie with the same name but a dummy token/text) */
 exports.isLoggedIn = async (req, res, next) => {
   // For rendered pages, we will not have the token in the header
   // Authorization will come from the cookie and not Authorization header
@@ -304,6 +336,9 @@ exports.isLoggedIn = async (req, res, next) => {
         req.cookies.jwt,
         process.env.JWT_SECRET
       );
+
+      // todo: In order to add catchAsync back in this must be added in
+      // if (req.cookies.jwt === 'Logged Out') return next();
 
       //  2) Check if user still exists
       const currentUser = await User.findById(decoded.id);

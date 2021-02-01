@@ -54,7 +54,7 @@ const sendErrorDev = (err, req, res) => {
   //  - if it starts with '/api' then we send down the JSON info
   // API
   if (req.originalUrl.startsWith('/api')) {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
       status: err.status,
       error: err,
       message: err.message,
@@ -65,7 +65,8 @@ const sendErrorDev = (err, req, res) => {
     //   error website with err.message because we are in development
   } else {
     // RENDERED WEBSITE
-    res.status(err.statusCode).render('error', {
+    console.error('ERROR 💥', err);
+    return res.status(err.statusCode).render('error', {
       title: 'Something went wrong!',
       msg: err.message
     });
@@ -77,28 +78,46 @@ const sendErrorDev = (err, req, res) => {
 //  - If URL does not start with /api, we will render an Error website
 //      without the extended more verbose err.message
 const sendErrorProd = (err, req, res) => {
-  // Operational, trusted error: send message to client
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message
-    });
+  // A) API
+  if (req.originalUrl.startsWith('/api')) {
+    // A) Operational, trusted error: send message to client
+    if (err.isOperational) {
+      return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message
+      });
+    }
 
-    // todo: Programming or other unknown error:
-    //  don't leak error details
-  } else {
+    // B) Programming or other unknown error: don't leak error details
     // 1) Log error
-    // An error may occur if a token is expired
     console.error('ERROR 💥', err);
 
     // 2) Send generic message
-    // Note: Verified that the following is received in
-    //  production mode when a token is expired - TokenExpiredError
-    res.status(500).json({
+    return res.status(500).json({
       status: 'error',
       message: 'Something went very wrong!'
     });
   }
+
+  // B) RENDERED WEBSITE
+  // A) Operational, trusted error: send message to client
+  if (err.isOperational) {
+    console.log(err);
+    return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message
+    });
+  }
+
+  // B) Programming or other unknown error: don't leak error details
+  // 1) Log error
+  console.error('ERROR 💥', err);
+
+  // 2) Send generic message
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: 'Please try again later.'
+  });
 };
 
 module.exports = (err, req, res, next) => {
@@ -113,6 +132,8 @@ module.exports = (err, req, res, next) => {
     // { ...err } destructuring does not send error message in production
     // let error = { ...err };
     let error = Object.create(err);
+
+    // error.message = err.message;
 
     // Mongoose sends a CastError when a wrong URL is sent i.e. /apple
     if (error.name === 'CastError') error = handleCastErrorDB(error);

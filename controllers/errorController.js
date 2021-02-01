@@ -131,9 +131,10 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === 'production') {
     // { ...err } destructuring does not send error message in production
     // let error = { ...err };
+
     let error = Object.create(err);
 
-    // error.message = err.message;
+    error.message = err.message;
 
     // Mongoose sends a CastError when a wrong URL is sent i.e. /apple
     if (error.name === 'CastError') error = handleCastErrorDB(error);
@@ -156,6 +157,9 @@ module.exports = (err, req, res, next) => {
     //   functions in order to send client useful error messages in production
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
+
+    // console.log('error.message', error.message);
+    // console.log('err.message', err.message);
 
     sendErrorProd(error, req, res);
   }

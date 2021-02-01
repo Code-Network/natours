@@ -7,13 +7,13 @@ const router = express.Router();
 // Apply isLoggedIn to every single route we create on this page
 router.use(authController.isLoggedIn);
 
-router.get('/', viewsController.getOverview);
+router.get('/', authController.isLoggedIn, viewsController.getOverview);
 
 // NOTE: Test Only: protect getTour and test by removing cookie
 // router.get('/tour/:slug', authController.protect, viewsController.getTour);
 
-router.get('/tour/:slug', viewsController.getTour);
-router.get('/login', viewsController.getLoginForm);
+router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
+router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
 module.exports = router;

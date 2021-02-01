@@ -46,16 +46,37 @@ const handleJWTError = () =>
 const handleJWTExpiredError = () =>
   new AppError('Your token has expired! Please log in again.', 401);
 
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  });
+// TODO: Send an error website to the client in development
+//  - If the URL starts with /api, it will send a more verbose Development Error
+//     and we will render an error website with err.message
+const sendErrorDev = (err, req, res) => {
+  // Note: originalUrl is the entire URL and looks exactly like the route
+  //  - if it starts with '/api' then we send down the JSON info
+  // API
+  if (req.originalUrl.startsWith('/api')) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      error: err,
+      message: err.message,
+      stack: err.stack
+    });
+
+    // Note: If the URL does not start with '/api' then we want to render an
+    //   error website with err.message because we are in development
+  } else {
+    // RENDERED WEBSITE
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message
+    });
+  }
 };
 
-const sendErrorProd = (err, res) => {
+// Sends an error to the client in production
+//  - Here we distinguish between Operational Errors and Unknown Errors
+//  - If URL does not start with /api, we will render an Error website
+//      without the extended more verbose err.message
+const sendErrorProd = (err, req, res) => {
   // Operational, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode).json({
@@ -87,7 +108,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
-    sendErrorDev(err, res);
+    sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     // { ...err } destructuring does not send error message in production
     // let error = { ...err };
@@ -115,6 +136,6 @@ module.exports = (err, req, res, next) => {
     if (error.name === 'JsonWebTokenError') error = handleJWTError();
     if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
-    sendErrorProd(error, res);
+    sendErrorProd(error, req, res);
   }
 };

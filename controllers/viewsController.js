@@ -53,3 +53,12 @@ exports.getLoginForm = (req, res) => {
       title: 'Log into your account'
     });
 };
+
+// TODO:  Get the User Account Page
+exports.getAccount = (req, res) => {
+  // Simply render the account page
+  // No need to query the current user because that has already been done in the protect middleware
+  res.status(200).render('account', {
+    title: 'Your account'
+  });
+};

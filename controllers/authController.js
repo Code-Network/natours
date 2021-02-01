@@ -303,6 +303,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // Put the entire user data on the request (req)
   // i.e. Store currentUser in req.user for global access
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 

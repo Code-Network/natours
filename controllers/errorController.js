@@ -139,7 +139,7 @@ module.exports = (err, req, res, next) => {
     // Mongoose sends a CastError when a wrong URL is sent i.e. /apple
     if (error.name === 'CastError') error = handleCastErrorDB(error);
 
-    // A duplicategit field happens when a unique field is duplicated
+    // A duplicate git field happens when a unique field is duplicated
     //   i.e. creating a document with name: "The Forest Hunter"
     //   when that document name already exists
     // MongoDB declares error.name = "MongoError" when we have a duplicate field

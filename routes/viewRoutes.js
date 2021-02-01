@@ -5,7 +5,7 @@ const authController = require('./../controllers/authController');
 const router = express.Router();
 
 // Apply isLoggedIn to every single route we create on this page
-router.use(authController.isLoggedIn);
+// router.use(authController.isLoggedIn);
 
 router.get('/', authController.isLoggedIn, viewsController.getOverview);
 

@@ -15,20 +15,23 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  // 1) Get the data for the requested tour ( including reviews and guides )
+  // 1) todo: Get the data for the requested tour (including reviews and guides)
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
     path: 'reviews',
     fields: 'review rating user'
   });
 
-  // 2) Add some error handling in case there is not tour or a wrong tour is req
+  /*
+   2) todo: Add some error handling in case there is not tour or a wrong tour is req
+   Note: Without this, the entire error would be leaked to the client, such as
+    in the absence of the tour (i.e. such as a bad url) the error would display,
+     "Cannot read property 'name' of null" */
   if (!tour) {
     return next(new AppError('There is no tour with that name.', 404));
   }
 
-  // 3) Build template
-
-  // 4) Render template using the data from Step 1
+  // 3) todo: Build template
+  // 4) todo: Render template using the data from Step 1
 
   res
     .status(200)

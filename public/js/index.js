@@ -15,7 +15,7 @@ if (mapBox) {
 }
 
 // TODO: Remove submit event listener on pages where the form DNE
-const loginForm = document.querySelector('.form');
+const loginForm = document.querySelector('.form--login');
 if (loginForm) {
   loginForm.addEventListener('submit', e => {
     e.preventDefault();

@@ -16,4 +16,7 @@ router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
+// POST route used with form on account.pug
+router.post('/submit-user-data', viewsController.updateUserData);
+
 module.exports = router;

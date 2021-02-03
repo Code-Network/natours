@@ -28,6 +28,7 @@ if (loginForm) {
 }
 
 // TODO: Set an event on the Logout link
-
+// Log out link class added to _header.pug because it interfered with form on
+//   user form from account.pug
 const logOutBtn = document.querySelector('.nav__el--logout');
 if (logOutBtn) logOutBtn.addEventListener('click', logout);

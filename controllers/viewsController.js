@@ -72,4 +72,11 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   //  app.use(express.urlencoded({ extended: true, limit: '10kb' }))
   // Used for parsing application/x-www-form-urlencoded
   // console.log('UPDATING USER', req.body);
+
+  // TODO: Get the form user's information from the database
+  // Note: Ensure that the route which calls this handler is protected
+  const user = await User.findByIdAndUpdate(req.user.id, {
+    name: req.body.name,
+    email: req.body.email
+  });
 });

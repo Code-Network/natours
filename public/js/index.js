@@ -15,6 +15,8 @@ if (mapBox) {
 }
 
 // TODO: Remove submit event listener on pages where the form DNE
+// Note: We had to add .form--login to login.pug form because it
+//  interfered with User Account Settings page, '/me'
 const loginForm = document.querySelector('.form--login');
 if (loginForm) {
   loginForm.addEventListener('submit', e => {

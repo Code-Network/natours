@@ -79,7 +79,7 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   // Note: Do not pass in the entire request; we just want to update
   //    the name and the email.  This ensures that a hacker cannot
   //    add additional fields, storing malicious date into our DB.
-  // Note: Passwords are handles separartely;
+  // Note: Passwords are handles separately;
   //   -- We NEVER update password using findByIdAnUpdate because
   //    that will not run the safe middleware which will take care
   //    of encrypting our passwords. That is why we have a separate

@@ -85,10 +85,24 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
+// TODO: Parse urlencoded form data
+//  The express.urlencoded() function is a built-in middleware function
+//  in Express. It parses incoming requests with urlencoded payloads,
+//  such as form data and is based on body-parser.
+// -- Used for parsing application/x-www-form-urlencoded
+// Note: viewsController.js exports.updateUserData requires this in order to
+//   parse the form data. If not, then req.body at exports.updateUserData will
+//   be empty. The way that a form sends data to the server is also urlencoded,
+//   so we need this middleware to parse the data coming from a urlencoded form.
+// Set extended:true to allow us to pass more complex data in future if desired.
+// Set limit: 10kb
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
 // ============================================================================
 // ============================================================================
 // TODO: Body parser, reading data from body into req.body
 // Limit the amount of data passed into the body to 10 killibytes (for Security)
+// Used for parsing application/json
 app.use(express.json({ limit: '10kb' }));
 
 // TODO: Use cookie parser

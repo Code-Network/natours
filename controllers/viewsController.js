@@ -62,3 +62,14 @@ exports.getAccount = (req, res) => {
     title: 'Your account'
   });
 };
+
+// TODO: Create a handler for the /submit-user-data route required on
+//      first form on account.pug
+exports.updateUserData = catchAsync(async (req, res, next) => {
+  // Take a look at the body
+  // Note: req.body will be empty because we need an express middleware
+  //  in app.js in order to parse data from a form, i.e. In app.js,
+  //  app.use(express.urlencoded({ extended: true, limit: '10kb' }))
+  // Used for parsing application/x-www-form-urlencoded
+  // console.log('UPDATING USER', req.body);
+});

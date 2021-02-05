@@ -1,4 +1,5 @@
 const express = require('express');
+const User = require('./../models/userModel');
 const viewsController = require('./../controllers/viewsController');
 const authController = require('./../controllers/authController');
 
@@ -17,6 +18,12 @@ router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
 // POST route used with form on account.pug
-router.post('/submit-user-data', viewsController.updateUserData);
+// Note: We protect this route because we want to ensure that only the
+//  user can update their settings ( name, email and password )
+router.post(
+  '/submit-user-data',
+  authController.protect,
+  viewsController.updateUserData
+);
 
 module.exports = router;

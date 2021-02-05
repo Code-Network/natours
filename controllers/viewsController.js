@@ -75,9 +75,32 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   // console.log('UPDATING USER', req.body);
 
   // TODO: Get the form user's information from the database
-  // Note: Ensure that the route which calls this handler is protected
-  const user = await User.findByIdAndUpdate(req.user.id, {
-    name: req.body.name,
-    email: req.body.email
+  // Note: Ensure that the route which calls this handler is protected.
+  // Note: Do not pass in the entire request; we just want to update
+  //    the name and the email.  This ensures that a hacker cannot
+  //    add additional fields, storing malicious date into our DB.
+  // Note: Passwords are handles separartely;
+  //   -- We NEVER update password using findByIdAnUpdate because
+  //    that will not run the safe middleware which will take care
+  //    of encrypting our passwords. That is why we have a separate
+  //    route for that in our API and also why we have a separate
+  //    form for that in our user interface.
+  // Note: option new: true is to receive the latest update
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name: req.body.name,
+      email: req.body.email
+    },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  // Render the account page with the updated user information
+  res.status(200).render('account', {
+    title: 'Your account',
+    user: updatedUser
   });
 });

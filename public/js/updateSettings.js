@@ -6,7 +6,6 @@ import { showAlert } from './alert';
 // name and email are what we want to update
 export const updateData = async (name, email) => {
   try {
-    // Note: If there is an issue, we want to import showAlert from ./alert
     /*
     todo:  Use Axios to create the API call itself ( import from module )
 

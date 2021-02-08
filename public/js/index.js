@@ -39,7 +39,7 @@ if (logOutBtn) logOutBtn.addEventListener('click', logout);
 // TODO:  Set an event listener to update name and password from
 //    form on account.pug ( API Method )
 const userDataForm = document.querySelector('.form-user-data');
-const userPassword = document.querySelector('.form-user-password');
+const userPasswordForm = document.querySelector('.form-user-password');
 
 if (userDataForm) {
   userDataForm.addEventListener('submit', e => {
@@ -50,5 +50,23 @@ if (userDataForm) {
     const email = document.getElementById('email').value;
 
     updateSettings({ name, email }, 'data');
+  });
+}
+
+// TODO: Set an event listener to update user password from the Accounts Page
+// account.pug class => API property names
+// #password-current => passwordCurrent
+// #password => password
+// #password-confirm => passwordConfirm
+
+if (userPasswordForm) {
+  userPasswordForm.addEventListener('submit', evt => {
+    evt.preventDefault();
+
+    const passwordCurrent = document.getElementById('password-current').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+
+    updateSettings({ passwordCurrent, password, passwordConfirm }, 'password');
   });
 }

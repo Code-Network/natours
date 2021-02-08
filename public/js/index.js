@@ -2,7 +2,7 @@
 import '@babel/polyfill';
 import { displayMap } from './mapbox';
 import { login, logout } from './login';
-import { updateData } from './updateSettings';
+import { updateSettings } from './updateSettings';
 
 // DOM ELEMENTS
 // Note: We ran into some problems where an error showed up when we were
@@ -39,6 +39,7 @@ if (logOutBtn) logOutBtn.addEventListener('click', logout);
 // TODO:  Set an event listener to update name and password from
 //    form on account.pug ( API Method )
 const userDataForm = document.querySelector('.form-user-data');
+const userPassword = document.querySelector('.form-user-password');
 
 if (userDataForm) {
   userDataForm.addEventListener('submit', e => {
@@ -48,6 +49,6 @@ if (userDataForm) {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
 
-    updateData(name, email);
+    updateSettings({ name, email }, 'data');
   });
 }

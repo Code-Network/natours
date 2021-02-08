@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Hide the alert
 export const hideAlert = () => {
   const el = document.querySelector('.alert');

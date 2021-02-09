@@ -151,7 +151,7 @@ app.use(
 // TODO: Middleware for testing only
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log('COOKIES:  ', req.cookies);
+  // console.log('COOKIES:  ', req.cookies);
 
   /*
       // Use this middleware to log the headers to the console

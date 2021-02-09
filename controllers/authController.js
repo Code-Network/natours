@@ -519,7 +519,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // Explicitly ask for the password because it is not included in the output.
   // This was defined on the userSchema: select: false
   const user = await User.findById(req.user.id).select('+password');
-  console.log(user);
+  // console.log(user);
 
   // todo: 2) Check if POSTed current password is correct
   // Error if password is not correct; 401 = UnAuthorized

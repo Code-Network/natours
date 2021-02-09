@@ -33,7 +33,7 @@ const multerStorage = multer.diskStorage({
 
     Example of unique filename to be used for storage names
       user-userID-currentTimestamp-fileExtension
-      user-22abc3525abc525a-3323234235.jpeg
+     public/img/users/user-5c8a1f292f8fb814b56fa184-1612903766758.jpeg
     */
     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
   }
@@ -104,8 +104,21 @@ exports.getMe = (req, res, next) => {
 //  Logged in User gains ability to update their own data here.
 // Note: Currently, the user only update their name and email address
 exports.updateMe = catchAsync(async (req, res, next) => {
-  console.log('req.file from multer middleware', req.file);
-  console.log('req.body after multer middleware', req.body);
+  /*
+    Note: req.file example output
+   req.file from multer middleware {
+       fieldname: 'photo',
+       originalname: 'leo.jpg',
+       encoding: '7bit',
+       mimetype: 'image/jpeg',
+       destination: 'public/img/users',
+       filename: 'user-5c8a1f292f8fb814b56fa184-1612903766758.jpeg',
+       path: 'public/img/users/user-5c8a1f292f8fb814b56fa184-1612903766758.jpeg',
+       size: 207078
+   }
+   */
+  // console.log('req.file from multer middleware', req.file);
+  // console.log('req.body after multer middleware', req.body);
 
   // todo: 1) Create Error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
@@ -122,9 +135,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   //  to be updated
   // Filter req.body so that it only contains name and email
   const filteredBody = filterObj(req.body, 'name', 'email');
+  if (req.file) filteredBody.photo = req.file.filename;
 
   // todo: 3) Update user document
-  // filteredBody => data (must only contain name and email for now)
+  // filteredBody => data that gets updated - name, email, photo
   // We use filteredBody instead of req.body because we don't want to update all in the body
   //    We want to prevent user from updating role field, for instance
   //    User could have set req.body.role: 'admin' for instance

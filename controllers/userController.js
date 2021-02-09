@@ -1,7 +1,30 @@
+const multer = require('multer');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+
+/*
+ TODO: Configure a Multer upload to save all of the photos the user
+     would like to upload into public/img/users; this will be
+     used in the Accounts Settings page where the user gets to
+     'Choose new photo'
+ Note: Multer adds a body object and a file/files object to the request
+     object; the body object contains the values of the text fields of
+     the form, the file or files object contains the files uploaded via
+     the form.
+ Note: Images are not uploaded to the database directly; we just
+     upload them into our file system and then in the DB, we put a
+     link which points to that image; so in this case, in each
+     user document, we will have the name of the uploaded file.
+ NOTE: Multer will not process any form which is not multipart
+     (multipart/form-data).
+     -- Don't forget the enctype="multipart/form-data" in form.
+ */
+const upload = multer({ dest: 'public/img/users' });
+
+//  upload.single('photo'),
+exports.uploadUserPhoto = upload.single('photo');
 
 // param obj = req.body
 // param ...allowedFields will be an array containing 'name' and 'email' so far

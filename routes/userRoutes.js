@@ -1,26 +1,6 @@
 const express = require('express');
-const multer = require('multer');
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
-
-/*
- TODO: Configure a Multer upload to save all of the photos the user
-       would like to upload into public/img/users; this will be
-       used in the Accounts Settings page where the user gets to
-       'Choose new photo'
-  Note: Multer adds a body object and a file/files object to the request
-      object; the body object contains the values of the text fields of
-      the form, the file or files object contains the files uploaded via
-      the form.
-	Note: Images are not uploaded to the database directly; we just
-	    upload them into our file system and then in the DB, we put a
-		  link which points to that image; so in this case, in each
-		  user document, we will have the name of the uploaded file.
- NOTE: Multer will not process any form which is not multipart
-          (multipart/form-data).
-   -- Don't forget the enctype="multipart/form-data" in form.
- */
-const upload = multer({ dest: 'public/img/users' });
 
 const router = express.Router();
 
@@ -64,7 +44,11 @@ router.get('/me', userController.getMe, userController.getUser);
 //  Accounts Settings /updateMe route Use multer's .single( fieldname )
 //    to upload the photo to /public/img/users
 // Note: 'photo' is the name of the field that will hold the image to upload
-router.patch('/updateMe', upload.single('photo'), userController.updateMe);
+router.patch(
+  '/updateMe',
+  userController.uploadUserPhoto,
+  userController.updateMe
+);
 
 // Even though we do not delete the user data, we render it no longer accessible
 // Since data is no longer accessible, we can use the DELETE method

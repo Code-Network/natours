@@ -29,6 +29,9 @@ exports.getMe = (req, res, next) => {
 //  Logged in User gains ability to update their own data here.
 // Note: Currently, the user only update their name and email address
 exports.updateMe = catchAsync(async (req, res, next) => {
+  console.log('req.file from multer middleware', req.file);
+  console.log('req.body after multer middleware', req.body);
+
   // todo: 1) Create Error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
     // Status Code 400 = Bad Request

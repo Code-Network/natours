@@ -4,6 +4,54 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
+// TODO: Use multer to store user uploaded image with unique name into our
+//       file system.
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users');
+  },
+  filename: (req, file, cb) => {
+    /*
+      An example of req.file:
+     req.file from multer middleware {
+         fieldname: 'photo',
+         originalname: 'leo.jpg',
+         encoding: '7bit',
+         mimetype: 'image/jpeg',
+         destination: 'public/img/users',
+         filename: 'd12d5825d3c6fc76f7451556983adb1c',
+         path: 'public/img/users/d12d5825d3c6fc76f7451556983adb1c',
+         size: 207078
+     }*/
+    // extract fileExtention from the upload file stored in req.file
+    const ext = file.mimetype.split('/')[1]; // i.e. jpeg
+
+    /*
+    todo: Call the cb with no error (i.e. null) and then the unique filename
+     that we want to specify; this is a complete definition of we want to
+     store our files ( with the destination and the filename )
+
+    Example of unique filename to be used for storage names
+      user-userID-currentTimestamp-fileExtension
+      user-22abc3525abc525a-3323234235.jpeg
+    */
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  }
+});
+
+// TODO:  Create a Multer Filter
+// Goal:  Test to see if the uploaded file is an image; if it is so, we pass
+//     true into the callback function, if not then pass false with error.
+//-- We do this because we do not want files that are not images to be uploaded.
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    // status code 400 = Bad Request
+    cb(new AppError('Not an image! Please upload only images', 400), false);
+  }
+};
+
 /*
  TODO: Configure a Multer upload to save all of the photos the user
      would like to upload into public/img/users; this will be
@@ -21,7 +69,11 @@ const factory = require('./handlerFactory');
      (multipart/form-data).
      -- Don't forget the enctype="multipart/form-data" in form.
  */
-const upload = multer({ dest: 'public/img/users' });
+// const upload = multer({ dest: 'public/img/users' });
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
 
 //  upload.single('photo'),
 exports.uploadUserPhoto = upload.single('photo');

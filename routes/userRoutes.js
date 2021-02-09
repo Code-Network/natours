@@ -59,8 +59,12 @@ router.patch('/updateMyPassword', authController.updatePassword);
 // .protect() gives access to current user id == req.user.id
 router.get('/me', userController.getMe, userController.getUser);
 
-// User updates their data, name and email only (for now)
-router.patch('/updateMe', userController.updateMe);
+// User updates their data, name, email and photo
+// TODO: Use multer const upload middleware to update one single image from the
+//  Accounts Settings /updateMe route Use multer's .single( fieldname )
+//    to upload the photo to /public/img/users
+// Note: 'photo' is the name of the field that will hold the image to upload
+router.patch('/updateMe', upload.single('photo'), userController.updateMe);
 
 // Even though we do not delete the user data, we render it no longer accessible
 // Since data is no longer accessible, we can use the DELETE method

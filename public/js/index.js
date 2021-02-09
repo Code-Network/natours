@@ -60,13 +60,22 @@ if (userDataForm) {
 // #password-confirm => passwordConfirm
 
 if (userPasswordForm) {
-  userPasswordForm.addEventListener('submit', evt => {
+  userPasswordForm.addEventListener('submit', async evt => {
     evt.preventDefault();
+    document.querySelector('.btn--save-password').textContent = 'Updating...';
 
     const passwordCurrent = document.getElementById('password-current').value;
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('password-confirm').value;
 
-    updateSettings({ passwordCurrent, password, passwordConfirm }, 'password');
+    await updateSettings(
+      { passwordCurrent, password, passwordConfirm },
+      'password'
+    );
+
+    document.querySelector('.btn--save-password').textContent = 'Save Password';
+    document.getElementById('password-current').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('password-confirm').value = '';
   });
 }

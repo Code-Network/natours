@@ -24,6 +24,25 @@ const upload = multer({
   fileFilter: multerFilter
 });
 
+/*
+  TODO: Create the middleware from the upload
+  Note: Since we have two fields in the tourSchema which contain images,
+        Multer requires this syntax with
+        name: 'field name', maxCount: max # of images
+
+  Note: If we only had to deal with one tourSchema property,
+    but multiple photos, then the syntax may be:
+     -- exports.uploadTourPhotos = upload.array('images', 5);
+
+  Note: If we only required one field and one image, then, as in
+   userController photo uploaded from the Accounts Settings page:
+   -- exports.uploadUserPhoto = upload.single('photo');
+   */
+exports.uploadTourPhotos = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 }
+]);
+
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage,price';

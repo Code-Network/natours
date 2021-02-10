@@ -1,17 +1,19 @@
 const multer = require('multer');
+const sharp = require('sharp');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
+// Note: Switch to multer memory storage
 // TODO: Use multer to store user uploaded image with unique name into our
-//       file system.
-const multerStorage = multer.diskStorage({
+//       file system - public/img/users.
+/*const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/img/users');
   },
   filename: (req, file, cb) => {
-    /*
+    /!*
       An example of req.file:
      req.file from multer middleware {
          fieldname: 'photo',
@@ -22,22 +24,29 @@ const multerStorage = multer.diskStorage({
          filename: 'd12d5825d3c6fc76f7451556983adb1c',
          path: 'public/img/users/d12d5825d3c6fc76f7451556983adb1c',
          size: 207078
-     }*/
+     }*!/
     // extract fileExtention from the upload file stored in req.file
     const ext = file.mimetype.split('/')[1]; // i.e. jpeg
 
-    /*
+    /!*
     todo: Call the cb with no error (i.e. null) and then the unique filename
-     that we want to specify; this is a complete definition of we want to
+     that we want to specify; this is a complete definition of where we want to
      store our files ( with the destination and the filename )
 
     Example of unique filename to be used for storage names
       user-userID-currentTimestamp-fileExtension
      public/img/users/user-5c8a1f292f8fb814b56fa184-1612903766758.jpeg
-    */
+    *!/
     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
   }
-});
+});*/
+
+// TODO: Switch to multer memory storage so that the user directed upload
+//  image can be stored as a Buffer
+// Note: When we put the file into memory req.file is not set, and we will
+//  need req.file and req.file.filename in
+//  exports.resizeUserPhoto and in exports.updateMe middleware functions.
+const multerStorage = multer.memoryStorage();
 
 // TODO:  Create a Multer Filter
 // Goal:  Test to see if the uploaded file is an image; if it is so, we pass
@@ -77,6 +86,35 @@ const upload = multer({
 
 //  upload.single('photo'),
 exports.uploadUserPhoto = upload.single('photo');
+
+// TODO: Resize user uploaded images
+// Note: npm install sharp
+exports.resizeUserPhoto = (req, res, next) => {
+  // If the user has not uploaded an image, go on to next middleware
+  if (!req.file) return next();
+
+  /*
+    todo: Use sharp for image processing
+    Note: When doing image processing like this, right after uploading a file,
+          it's best to not save the file to the disk, but, instead, save it
+          to memory so that it can be stored as a Buffer.
+          The image will then be available at req.file.buffer
+          So, we must change our multer storage to:
+              const multerStorage = multer.memoryStorage()
+   Note: This is more efficient.  Instead of having to write the file to the
+          disk and then here read it again, we simply keep the image in
+          memory and just read it here
+   Note:  Because req.file.filename was not set when we switched to
+          multer.memoryStorage, we must set req.file.filename here */
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`);
+
+  next();
+};
 
 // param obj = req.body
 // param ...allowedFields will be an array containing 'name' and 'email' so far
@@ -135,6 +173,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   //  to be updated
   // Filter req.body so that it only contains name and email
   const filteredBody = filterObj(req.body, 'name', 'email');
+  // We rely on req.file.filename in order to save the filename into DB
   if (req.file) filteredBody.photo = req.file.filename;
 
   // todo: 3) Update user document

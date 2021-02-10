@@ -42,16 +42,38 @@ const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 
 if (userDataForm) {
-  userDataForm.addEventListener('submit', e => {
+  userDataForm.addEventListener('submit', async e => {
     e.preventDefault();
 
+    /*
+    Note: Because we are using the Multer to upload the user photo,
+          Multer requires the form attribute enctype='multipart/form-data',
+          Since we must use the API we need to programmatically
+          set this attribute; a good way to do this is to use FormData():
+    Note: From MDN: 'The FormData interface provides a way to easily
+       construct a set of key/value pairs representing form fields and their
+       values, which can then be easily sent using the
+       XMLHttpRequest.send() method. It uses the same format a form would
+       use if the encoding type were set to "multipart/form-data".'*/
     const form = new FormData();
 
-    // Get email and password value the user puts in
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
+    // Get email and password value the user puts in by appending key/value pairs
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
 
-    updateSettings({ name, email }, 'data');
+    // Append photo value in files, which is an Array; since there is only one
+    //      element in the Array, we select the
+    // first one
+    form.append('photo', document.getElementById('photo').files[0]);
+    console.log(form);
+
+    // Axios will recognize const form as an object and work the same as before
+    await updateSettings(form, 'data');
+
+    // Get email and password value the user puts in
+    // const name = document.getElementById('name').value;
+    // const email = document.getElementById('email').value;
+    // updateSettings({ name, email }, 'data');
   });
 }
 

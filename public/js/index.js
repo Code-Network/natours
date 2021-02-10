@@ -45,6 +45,8 @@ if (userDataForm) {
   userDataForm.addEventListener('submit', e => {
     e.preventDefault();
 
+    const form = new FormData();
+
     // Get email and password value the user puts in
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;

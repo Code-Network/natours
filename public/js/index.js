@@ -60,9 +60,24 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
 
-    /* TODO: Append photo value in files  ( from req.files created by Multer ),
-        which is an Array; since there is only one element in the Array,
-        we select the first one */
+    /* TODO: Append photo value in files which is an Array;
+        since there is only one element in the Array, we select the first one
+      Note: From MDN: 'A file input's value attribute contains a DOMString that
+        represents the path to the selected file(s). If the user selected
+        multiple files, the value represents the first file in the list of
+        files they selected. The other files can be identified using the
+        input's HTMLInputElement.files property.'
+      Note: From MDN: 'An object of this type is returned by the files property
+        of the HTML <input> element; this lets you access the list of files
+        selected with the <input type="file"> element.
+        -- All <input> element nodes have a files attribute of type FileList
+         on them which allows access to the items in this list.
+          - For example, if the HTML includes the following file input:
+              -- <input id="fileItem" type="file">
+          - The following line of code fetches the first file in the
+            node's file list as a File object:
+              -- var file = document.getElementById('fileItem').files[0];'
+        */
     form.append('photo', document.getElementById('photo').files[0]);
 
     // Axios will recognize const form as an object and work the same as before

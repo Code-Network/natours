@@ -43,6 +43,20 @@ exports.uploadTourPhotos = upload.fields([
   { name: 'images', maxCount: 3 }
 ]);
 
+// TODO:  Process Tour Images
+exports.resizeTourImages = (req, res, next) => {
+  /*
+    Notes on Multer
+    Note:
+      1. upload.single('image') produces req.file
+      2. upload.array('images', 5) produces req.files
+      3. upload.fields({...}, {...}) produces req.files
+  */
+  console.log('This is req.files from tourController.js:  ', req.files);
+
+  next();
+};
+
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage,price';

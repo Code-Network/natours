@@ -6,18 +6,6 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
-const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
-});
-
-exports.aliasTopTours = (req, res, next) => {
-  req.query.limit = '5';
-  req.query.sort = '-ratingsAverage,price';
-  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
-  next();
-};
-
 exports.getAllTours = factory.getAll(Tour);
 
 // exports.getAllTours = catchAsync(async (req, res, next) => {

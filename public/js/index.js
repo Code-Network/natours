@@ -36,7 +36,7 @@ if (loginForm) {
 const logOutBtn = document.querySelector('.nav__el--logout');
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
-// TODO:  Set an event listener to update name and password from
+// TODO:  Set an event listener to update name and email from
 //    form on account.pug ( API Method )
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');

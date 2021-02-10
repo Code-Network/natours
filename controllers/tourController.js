@@ -38,7 +38,7 @@ const upload = multer({
    userController photo uploaded from the Accounts Settings page:
    -- exports.uploadUserPhoto = upload.single('photo');
    */
-exports.uploadTourPhotos = upload.fields([
+exports.uploadTourImages = upload.fields([
   { name: 'imageCover', maxCount: 1 },
   { name: 'images', maxCount: 3 }
 ]);

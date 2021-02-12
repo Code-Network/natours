@@ -43,7 +43,7 @@ export const updateSettings = async (data, type) => {
 // export const updateData = async (name, email) => {
 //   try {
 //     /*
-//     todo:  Use Axios to create the API call itself ( import from module )
+//     step:  Use Axios to create the API call itself ( import from module )
 //
 //     Note: Hit 'Update Current User' route {{URL}}api/v1/users/updateMe
 //      which receives in the body only the data the user wants to update

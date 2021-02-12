@@ -45,7 +45,7 @@ exports.uploadTourImages = upload.fields([
 ]);
 
 // TODO:  Process Tour Images
-exports.resizeTourImages = (req, res, next) => {
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
   /*
     Notes on Multer
     Note:
@@ -80,8 +80,28 @@ exports.resizeTourImages = (req, res, next) => {
    */
   console.log('This is req.files from tourController.js:  ', req.files);
 
+  // step: If there are no images uploaded,
+  //  i.e. if imageCover OR images DNE (both must exist), return next()
+  if (!req.files.imageCover || !req.files.images) return next();
+
+  // Important: Ensure the updateFile tour handler picks up the
+  //  new imageCover file name by putting it right on the body
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
+  // step: Use sharp to process the tour images if exists
+  // resize to a 3:2 ratio
+  // req.params.id is the tourId
+  // store in public/img/tours/tourId-date-cover.jpeg
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`);
+
+  // step: Tour Images in a loop
+
   next();
-};
+});
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';

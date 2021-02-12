@@ -29,7 +29,7 @@ const factory = require('./handlerFactory');
     const ext = file.mimetype.split('/')[1]; // i.e. jpeg
 
     /!*
-    todo: Call the cb with no error (i.e. null) and then the unique filename
+    step: Call the cb with no error (i.e. null) and then the unique filename
      that we want to specify; this is a complete definition of where we want to
      store our files ( with the destination and the filename )
 
@@ -94,7 +94,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
   /*
-   todo: Use sharp for image processing
+   step: Use sharp for image processing
    Note: When doing image processing like this, right after uploading a file,
    it's best to not save the file to the disk, but, instead, save it
    to memory so that it can be stored as a Buffer.
@@ -107,6 +107,9 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
    Note:  Because req.file.filename was not set when we switched to
    multer.memoryStorage, we must set req.file.filename here */
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  // Note: await sharp because it returns a PROMISE and we don't want
+  //   it to block the event loop
   await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat('jpeg')
@@ -176,7 +179,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // We rely on req.file.filename in order to save the filename into DB
   if (req.file) filteredBody.photo = req.file.filename;
 
-  // todo: 3) Update user document
+  // step: 3) Update user document
   // filteredBody => data that gets updated - name, email, photo
   // We use filteredBody instead of req.body because we don't want to update all in the body
   //    We want to prevent user from updating role field, for instance

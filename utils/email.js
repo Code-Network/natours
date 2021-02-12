@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async options => {
-  // TODO: 1) Create a transporter
+  // step: 1) Create a transporter
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -11,7 +11,7 @@ const sendEmail = async options => {
     }
   });
 
-  // TODO: 2) Define the email options
+  // step: 2) Define the email options
   const mailOptions = {
     from: 'Bree Lorenz admin@jonas.io',
     to: options.email,
@@ -21,7 +21,7 @@ const sendEmail = async options => {
   };
 
   /*
-     3) TODO: Actually send the email with nodemailer sendMail()
+     3) step: Actually send the email with nodemailer sendMail()
       -- sendMail() syntax from nodemailer returns a PROMISE,
             so we will async/await instead
 

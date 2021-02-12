@@ -18,7 +18,7 @@ export const login = async (email, password) => {
     });
 
     /*
-        todo: When a user logs in, the user must refresh their page for their
+        step: When a user logs in, the user must refresh their page for their
               image and name to show up on the top right of the page; here we
               correct this by displaying an alert which informs the user that
               they have logged in successfully and then redirect them to the
@@ -64,7 +64,7 @@ export const logout = async () => {
       url: 'http://localhost:3000/api/v1/users/logout'
     });
     /*
-    todo: Reload the page (usually done manually when we delete a cookie)
+    step: Reload the page (usually done manually when we delete a cookie)
     Note: Since this is an AJAX request we cannot reload the page
           on the backend side (with express) so we must reload programmatically.
           -- Otherwise, we would technically be logged out but our

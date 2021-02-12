@@ -89,32 +89,32 @@ exports.uploadUserPhoto = upload.single('photo');
 
 // TODO: Resize user uploaded images
 // Note: npm install sharp
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   // If the user has not uploaded an image, go on to next middleware
   if (!req.file) return next();
 
   /*
-    todo: Use sharp for image processing
-    Note: When doing image processing like this, right after uploading a file,
-          it's best to not save the file to the disk, but, instead, save it
-          to memory so that it can be stored as a Buffer.
-          The image will then be available at req.file.buffer
-          So, we must change our multer storage to:
-              const multerStorage = multer.memoryStorage()
+   todo: Use sharp for image processing
+   Note: When doing image processing like this, right after uploading a file,
+   it's best to not save the file to the disk, but, instead, save it
+   to memory so that it can be stored as a Buffer.
+   The image will then be available at req.file.buffer
+   So, we must change our multer storage to:
+   const multerStorage = multer.memoryStorage()
    Note: This is more efficient.  Instead of having to write the file to the
-          disk and then here read it again, we simply keep the image in
-          memory and just read it here
+   disk and then here read it again, we simply keep the image in
+   memory and just read it here
    Note:  Because req.file.filename was not set when we switched to
-          multer.memoryStorage, we must set req.file.filename here */
+   multer.memoryStorage, we must set req.file.filename here */
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-  sharp(req.file.buffer)
+  await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(`public/img/users/${req.file.filename}`);
 
   next();
-};
+});
 
 // param obj = req.body
 // param ...allowedFields will be an array containing 'name' and 'email' so far

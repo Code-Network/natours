@@ -1,6 +1,7 @@
 const multer = require('multer');
 const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
+
 // const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
@@ -28,7 +29,7 @@ const upload = multer({
   TODO: Create the middleware from the upload
   Note: Since we have two fields in the tourSchema which contain images,
         Multer requires this syntax with
-        name: 'field name', maxCount: max # of images
+     --  name: 'field name', maxCount: max # of images
 
   Note: If we only had to deal with one tourSchema property,
     but multiple photos, then the syntax may be:

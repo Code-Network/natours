@@ -24,7 +24,7 @@ const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
   /*
-   todo: cookie options
+   step: cookie options
    -- The expires property must be converted into milliseconds
    Total milliseconds = ( now + expiration * hours * min * sec * 1000 )
    -- Setting secure:true property sends Cookie only on an encrypted connection
@@ -44,14 +44,14 @@ const createSendToken = (user, statusCode, res) => {
     httpOnly: true
   };
 
-  // todo: Only set cookie option property secure:true in production
+  // note: Only set cookie option property secure:true in production
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  // todo: Create and send an httpOnly cookie
+  // step: Create and send an httpOnly cookie
   // Cookie will be sent on signup
   res.cookie('jwt', token, cookieOptions);
 
-  // todo: Remove the password from the output
+  // step: Remove the password from the output
   // On SIGNUP, the password displays in the output even though we have
   //   userSchema password.select:false to not display password
   //   This comes when we create a new document (signup).
@@ -118,15 +118,15 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 // TODO:  III-B.  LOG IN
 exports.login = catchAsync(async (req, res, next) => {
-  // todo: 0) Read the email and password from the request body object - req.body
+  // step: 0) Read the email and password from the request body object - req.body
   const { email, password } = req.body;
 
-  // todo: 1) Check if email and password exist
+  // step: 1) Check if email and password exist
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
   }
 
-  // todo: 2) Check if user exists && password is correct
+  // step: 2) Check if user exists && password is correct
   const user = await User.findOne({ email }).select('+password');
 
   // correctPassword() is an async function implemented in userModel.js
@@ -172,7 +172,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.logout = (req, res) => {
   /*
    Note: The secret is to give the new cookie the exact same name: 'jwt'
-   todo: Create cookie with the exact same name as the signin cookie
+   step: Create cookie with the exact same name as the signin cookie
           with a dummy text (instead of token) and cookie option expiration
           date of current time plus ten seconds
    */
@@ -189,9 +189,9 @@ exports.logout = (req, res) => {
 // ============================================================
 
 // TODO:  IV.  PROTECT ROUTES
-// The goal is to make the user's ID safe
+// goal: make the user's ID safe
 exports.protect = catchAsync(async (req, res, next) => {
-  // TODO: 1) Get token and check if it is there
+  // step: 1) Get token and check if it is there
   // var token must be a let and not a const because the if statement is scoped
   //  and const token would not be available outside the if statement.
   let token;
@@ -210,7 +210,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //   connection: 'keep-alive'
   // }
   //
-  // Here we check to see if the following header exists:
+  // step: Check to see if the following header exists:
   // Key: "Authorization" and Value" "Bearer tokenID" exists.
   if (
     req.headers.authorization &&
@@ -224,7 +224,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     /*
       In createSendToken(), we created and sent a cookie called 'jwt'
         -- res.cookie('jwt', token, cookieOptions);
-      todo: Check to see if the cookie exists; if it does, set token to jwt
+      step: Check to see if the cookie exists; if it does, set token to jwt
     */
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
@@ -243,7 +243,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // todo: 2) Verification token -- Validate the token -- use jwt.verify()
+  // step: 2) Verification token -- Validate the token -- use jwt.verify()
   // Verifies if someone has manipulated the data (payload) or if
   //    the token has already expired
   // verify() will verify token and then when done, will call callback we specify
@@ -257,7 +257,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       secretOrPublicKey - Either the secret from HMAC algo
       or the PEM encoded public key for RSA and ECDSA
   */
-  // todo: -- use util.promisify to make it a PROMISE and use async/await
+  // step: -- use util.promisify to make it a PROMISE and use async/await
   // jwt.verify(token, process.env.JWT_SECRET);
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
@@ -270,13 +270,13 @@ exports.protect = catchAsync(async (req, res, next) => {
    */
   // console.log(decoded);
 
-  // todo: 3) Check if user still exists - at this point, the user is already verified
+  // step: 3) Check if user still exists - at this point, the user is already verified
   //  This is a good reason to have the user's _id in the payload
-  // .findById() is a convenience method on the model that's provided by Mongoose
+  // note: .findById() is a convenience method on the model that's provided by Mongoose
   //    to find a document by its _id. -- decoded.id is iat=issuedAt
   const currentUser = await User.findById(decoded.id);
 
-  // If there is no valid currentUser, create an instance of AppError stating
+  // step: If there is no valid currentUser, create an instance of AppError stating
   //  that this user belonging to this token no longer exists
   if (!currentUser) {
     return next(
@@ -284,14 +284,14 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // todo: 4) Check if user changed password after the token/JWT was issued
+  // step: 4) Check if user changed password after the token/JWT was issued
   // Note:  Documents are instances of a model, so technically,
   //    the user belongs to the User model and not to the Controller
   //   -- Each document (currentUser) is an instance of userSchema
   //   -- and each document (currentUser) has access to userSchema.methods
   //  -- iat is 'issued at' JWT payload
   //  -- userSchema.methods.changedPasswordAfter(JWTTimestamp) called from userModel.js
-  // todo: if the password was changed (true), then password changed and user
+  // important: If the password was changed (true), then password changed and user
   //  must log in again
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
@@ -299,7 +299,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // GRANT ACCESS TO PROTECTED ROUTE
+  // step: GRANT ACCESS TO PROTECTED ROUTE
   // Put the entire user data on the request (req)
   // i.e. Store currentUser in req.user for global access
   req.user = currentUser;
@@ -309,11 +309,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 /*TODO: Verify that User is Currently Logged; if the user is logged
     in then we want to have the user information available to the templates
-
+  Note:
     -- This middleware is only for protected pages so the goal here,
         is NOT to protect any route.
     -- There will never be an error in this middleware.
-    Note: It is important that we catch errors locally (try/catch) and
+    Important: It is important that we catch errors locally (try/catch) and
      call next() because if we do not do so we will have an
      error when we try to log out (since we are logging out
      by sending a cookie with the same name but a dummy token/text) */
@@ -325,7 +325,7 @@ exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
     try {
       /*
-       TODO: 1) Verify token is real; remember that example output of var
+       step: 1) Verify token is real; remember that example output of var
               decoded is:
            {
               id: '5c8a1d5b0190b214360dc057',
@@ -338,34 +338,34 @@ exports.isLoggedIn = async (req, res, next) => {
         process.env.JWT_SECRET
       );
 
-      // todo: In order to add catchAsync back in this must be added in
+      // note: In order to add catchAsync back in this must be added in
       // if (req.cookies.jwt === 'Logged Out') return next();
 
-      //  2) Check if user still exists
+      // step: 2) Check if user still exists
       const currentUser = await User.findById(decoded.id);
       if (!currentUser) {
         return next();
       }
 
-      //  3) Check if user changed password after the token was issued
+      // step: 3) Check if user changed password after the token was issued
       if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next();
       }
 
-      //  THERE IS A LOGGED IN USER; make user accessible to our templates
+      // step: THERE IS A LOGGED IN USER; make user accessible to our templates
       //      by putting user on res.locals
       //  - This enables us to use 'user' in our templates because
       //      every template has access to res.locals
       res.locals.user = currentUser;
       return next();
 
-      // If there is an error, just continue
+      // step: If there is an error, just continue
     } catch (err) {
       return next();
     }
   }
 
-  // If there is no jwt cookie, simply continue because there is no
+  // step: If there is no jwt cookie, simply continue because there is no
   //    way that there is a logged in user.
   next();
 };
@@ -373,7 +373,7 @@ exports.isLoggedIn = async (req, res, next) => {
 // =========================================================================
 // =========================================================================
 // TODO:  V.  Authentication: Setting User Roles and Permissions
-// We can't pass arguments into a Middleware function
+// Note: We can't pass arguments into a Middleware function,
 // but in this case we really do want to; we want to pass in the roles who are
 // allowed to access the resource ('admin', 'lead-guide').  So we need a way of
 // passing an argument into a Middleware function (a workaround).
@@ -397,7 +397,7 @@ exports.restrictTo = (...roles) => {
 // =========================================================================
 // TODO:  VI.  Forgot Password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  // todo: 1) Get user based on POSTed email
+  // step: 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
 
   // Verify the user exists
@@ -405,16 +405,16 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no user with email address', 404));
   }
 
-  // todo:  2) Generate Random Token
+  // step:  2) Generate Random Token
   // Create an instance method on the user because this has to to with the user itself
   // Put the function in userModel.js
   const resetToken = user.createPasswordResetToken();
 
-  // Now save it. If we save it without validateBeforeSave set to false, it will
+  // step: 3) Now save it. If we save it without validateBeforeSave set to false, it will
   //   throw an error requesting the user's email address
   await user.save({ validateBeforeSave: false });
 
-  // todo:  3) Send Random Token to user's email
+  // step: 4) Send Random Token to user's email
   // Create a Reset URL to make it easy for the user to reset their password
   // req.protocol = http or https, etc
   const resetURL = `
@@ -457,7 +457,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 // =========================================================================
 // TODO:  VII.  Reset Password
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  // todo: 1) Get user based on the token
+  // step: 1) Get user based on the token
   // Since the pwd stored in DB is encrypted and in userModel, the return is unencrypted
   // we have to encrypt it again before we compare; must use built-in crypto to decode
   // The token is in the URL => from userRoutes.js => '/resetPassword/:token'
@@ -473,32 +473,32 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     passwordResetExpires: { $gt: Date.now() }
   });
 
-  // todo: 2) If token has not expired, and there is a user, set new password
+  // step: 2) If token has not expired, and there is a user, set new password
   // Send an error if there is not user or if the token has expired;
   //   If the token has expired it simply won't return a user.
   if (!user) {
     return next(new AppError('Token is invalid or has expired', 400));
   }
 
-  // Set the Password because we would have sent the Password
+  // step: 3) Set the Password because we would have sent the Password
   //    and passwordConfirm via the body
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
 
-  // Delete the Reset Token (passwordResetToken) and the passwordResetExpires
+  // step: 4) Delete the Reset Token (passwordResetToken) and the passwordResetExpires
   //   and save to the database
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
 
-  // Save to the database and don't turn off the validators because in
+  // step: 5) Save to the database and don't turn off the validators because in
   //   this case we want the validator to confirm password and passwordConfirm
   //   are the same and we want the tokens to be encrypted
   await user.save();
 
-  // todo: 3) Update changedPasswordAt property for current user
-  // Do this in userModel.js by creating a new middleware
+  // note:  Update changedPasswordAt property for current user
+  //  -- Do this in userModel.js by creating a new middleware
 
-  // todo: 4) Log user in: send JWT to the web client
+  // step: 6) Log user in: send JWT to the web client
   /*const token = signToken(user._id);
 
   res.status(200).json({
@@ -515,13 +515,13 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // -- The Use Case argument for validation is when a user is logged in,
   //      walks away from their computer and someone else comes along
   //      and changes their password.
-  // todo: 1) Get logged in user from collection by id and add DB encrypted password
+  // step: 1) Get logged in user from collection by id and add DB encrypted password
   // Explicitly ask for the password because it is not included in the output.
   // This was defined on the userSchema: select: false
   const user = await User.findById(req.user.id).select('+password');
   // console.log(user);
 
-  // todo: 2) Check if POSTed current password is correct
+  // step: 2) Check if POSTed current password is correct
   // Error if password is not correct; 401 = UnAuthorized
   // Compare passwords using correctPassword() from userModel.js
   // Because correctPassword() is async, we must await
@@ -529,7 +529,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     return next(new AppError('Your current password is wrong', 401));
   }
 
-  // todo: 3) If password is correct, update password
+  // step: 3) If password is correct, update password
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
 
@@ -543,6 +543,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // userschema.pre('save',..) middlewares won't work on update()
   await user.save();
 
-  // todo: 4) Log user in with new password that was just updated
+  // step: 4) Log user in with new password that was just updated
   createSendToken(user, 200, res);
 });

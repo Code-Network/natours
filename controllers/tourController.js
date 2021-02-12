@@ -54,26 +54,29 @@ exports.resizeTourImages = (req, res, next) => {
       3. upload.fields({...}, {...}) produces req.files
 
     Note: Partial OP of req.files ( even imageCover is an Array with 1 obj ):
-   imageCover: [
-   {
-     fieldname: 'imageCover',
-     originalname: 'new-tour-1.jpg',
-     encoding: '7bit',
-     mimetype: 'image/jpeg',
-     buffer: <Buffer ff d8 ... 01 ... 1857218 more bytes>,
-     size: 1857268
-   }
-   ],
-   images: [
-   {
-     fieldname: 'images',
-     originalname: 'new-tour-2.jpg',
-     encoding: '7bit',
-     mimetype: 'image/jpeg',
-     buffer: <Buffer ff ... 01 ... 2321585 more bytes>,
-     size: 2321635
-   },
-    ...
+   [Object: null prototype] {
+     imageCover: [
+       {
+         fieldname: 'imageCover',
+         originalname: 'new-tour-1.jpg',
+         encoding: '7bit',
+         mimetype: 'image/jpeg',
+         buffer: <Buffer ff d8 ... 01 ... 1857218 more bytes>,
+         size: 1857268
+       }
+     ],
+     images: [
+       {
+         fieldname: 'images',
+         originalname: 'new-tour-2.jpg',
+         encoding: '7bit',
+         mimetype: 'image/jpeg',
+         buffer: <Buffer ff ... 01 ... 2321585 more bytes>,
+         size: 2321635
+       },
+       {...}
+     ]
+  }
    */
   console.log('This is req.files from tourController.js:  ', req.files);
 

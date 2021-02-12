@@ -33,8 +33,7 @@ block content
           //- WITHOUT API
           //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data')
 
-          //- WITH API - no action or method needed because
-          //-   it might actually submit the data to this URL
+          //- WITH API
           form.form.form-user-data
             .form__group
               label.form__label(for='name') Name
@@ -44,9 +43,7 @@ block content
               input#email.form__input(type='email', value=`${user.email}`, required, name='email')
             .form__group.form__photo-upload
               img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
-              //- Multer is expecting 'photo' as a fieldname
               input.form__upload(type='file', accept='image/*', id='photo', name='photo')
-              //- Clicking on label will activate input field so that we can select a file
               label(for='photo') Choose new photo
 
             .form__group.right

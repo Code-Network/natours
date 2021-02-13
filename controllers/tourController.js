@@ -1,11 +1,9 @@
 const multer = require('multer');
 const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
-
-// const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+const AppError = require('./../utils/appError');
 
 // On upload, store tour images and tour imageCover in memory
 const multerStorage = multer.memoryStorage();
@@ -15,8 +13,7 @@ const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {
-    // status code 400 = Bad Request
-    cb(new AppError('Not an image! Please upload only images', 400), false);
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
   }
 };
 
@@ -99,6 +96,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
     .toFile(`public/img/tours/${req.body.imageCover}`);
 
   // step: Tour Images in a loop
+  // 2) Images
 
   next();
 });
@@ -142,7 +140,7 @@ exports.getAllTours = factory.getAll(Tour);
          select: 'name photo'
        });
 */
-exports.getTour = factory.getOne(Tour, { path: 'reviews', select: '-__v' });
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 
 /*
 exports.getTour = catchAsync(async (req, res, next) => {

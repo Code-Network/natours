@@ -295,7 +295,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //  must log in again
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
-      new AppError('User recently changed password!  Please log in again', 401)
+      new AppError('User recently changed password! Please log in again.', 401)
     );
   }
 
@@ -447,7 +447,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     return next(
-      new AppError('There was an error sending the email.  Try again later!'),
+      new AppError('There was an error sending the email. Try again later!'),
       500
     );
   }

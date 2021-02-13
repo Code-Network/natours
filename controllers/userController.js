@@ -57,7 +57,7 @@ const multerFilter = (req, file, cb) => {
     cb(null, true);
   } else {
     // status code 400 = Bad Request
-    cb(new AppError('Not an image! Please upload only images', 400), false);
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
   }
 };
 
@@ -161,21 +161,22 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // console.log('req.file from multer middleware', req.file);
   // console.log('req.body after multer middleware', req.body);
 
-  // todo: 1) Create Error if user POSTs password data
+  // step: 1) Create Error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
     // Status Code 400 = Bad Request
     return next(
       new AppError(
-        'This route is not for password updates. Please use /updateMyPassword',
+        'This route is not for password updates. Please use /updateMyPassword.',
         400
       )
     );
   }
 
-  // TODO: Filter out unwanted field names that are not allowed
+  // step: Filter out unwanted field names that are not allowed
   //  to be updated
   // Filter req.body so that it only contains name and email
   const filteredBody = filterObj(req.body, 'name', 'email');
+
   // We rely on req.file.filename in order to save the filename into DB
   if (req.file) filteredBody.photo = req.file.filename;
 
@@ -191,26 +192,36 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    user: updatedUser
+    data: {
+      user: updatedUser
+    }
+  });
+});
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null
   });
 });
 
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message:
-      'This route is not defined and never will be! Please use /signup instead'
+    message: 'This route is not defined! Please use /signup instead'
   });
 };
 
-// Admins Only:  to update user
-// NOTE: Do NOT update passwords with this!
-exports.updateUser = factory.updateOne(User);
-
-exports.deleteMe = factory.deleteOne(User);
 exports.getUser = factory.getOne(User);
-exports.deleteUser = factory.deleteOne(User);
 exports.getAllUsers = factory.getAll(User);
+
+// Do NOT update passwords with this!
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);
+
+// exports.deleteMe = factory.deleteOne(User);
 
 // LEGACY CODE BELOW
 /*

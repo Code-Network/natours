@@ -37,7 +37,6 @@ router
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
 router.route('/tour-stats').get(tourController.getTourStats);
-
 router
   .route('/monthly-plan/:year')
   .get(

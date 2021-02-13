@@ -21,7 +21,7 @@ const reviewSchema = new mongoose.Schema(
       // This links to Tours; Tours does not link to this
       type: mongoose.Schema.ObjectId,
       ref: 'Tour',
-      required: [true, 'Review must belong to a tour']
+      required: [true, 'Review must belong to a tour.']
     },
     user: {
       // This is parent referencing; the User does not know about its users
@@ -205,7 +205,7 @@ reviewSchema.pre(/^findOneAnd/, async function(next) {
 // TODO:  Solution to getting nRating and averageRating on Editted Reviews
 //  after we know the new tourId but the new updates (i.e. rating) data
 //  has not persisted to the console
-reviewSchema.post(/^fineOneAnd/, async function() {
+reviewSchema.post(/^findOneAnd/, async function() {
   // After query has finished and new data updated to console and DB,
   //   we can now use reviewSchema.statics.calcAverageRatings(tourId).
   //  But we have to use a trick to gain access to the current tourId!
@@ -214,7 +214,7 @@ reviewSchema.post(/^fineOneAnd/, async function() {
   // Note: this.r == the current review
   // calcAverageRatings must be called on the model - this.constructor
   // await this.findOne() does NOT work here, query already executed
-  await this.constructor.calcAverageRatings(this.r.tour);
+  await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);

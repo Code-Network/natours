@@ -63,14 +63,14 @@ const sendErrorDev = (err, req, res) => {
 
     // Note: If the URL does not start with '/api' then we want to render an
     //   error website with err.message because we are in development
-  } else {
-    // RENDERED WEBSITE
-    console.error('ERROR 💥', err);
-    return res.status(err.statusCode).render('error', {
-      title: 'Something went wrong!',
-      msg: err.message
-    });
   }
+
+  // RENDERED WEBSITE
+  console.error('ERROR 💥', err);
+  return res.status(err.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: err.message
+  });
 };
 
 // Sends an error to the client in production

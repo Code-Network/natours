@@ -24,7 +24,7 @@ module.exports = class Email {
     this.from = `Bree Lorenz <${process.env.EMAIL_FROM}>`;
   }
 
-  // note: We want to have different transports for production and development
+  // step: Create different transports for production and development
   // Production => Sendgrid; Development => MailTrap
   createTransport() {
     // step: If in production, we will use Sendgrid
@@ -42,6 +42,20 @@ module.exports = class Email {
         pass: process.env.EMAIL_PASSWORD
       }
     });
+  }
+
+  // step: Create a send() method that will do all of the actual sending
+  // note: send() will receive a template and a subject
+  send(template, subject) {
+    // step:  Send the actual email
+  }
+
+  // step: Create function that will call send( template, subject )
+  // note: Will be used to create emails for all kinds of different situations
+  sendWelcome() {
+    // Use this.send because will be defined on the current object
+    // 'welcome' will be a pug template
+    this.send('welcome', 'Welcome to the Natours Family!');
   }
 };
 

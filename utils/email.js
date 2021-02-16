@@ -1,5 +1,30 @@
 const nodemailer = require('nodemailer');
 
+/*
+  Goal: Example instance would be:
+   new Email(user, url).sendWelcome()
+
+   user: Where we can extract the name or email
+   url: An example would be the reset URL for resetting the password
+
+   Goal: Methods to create
+    sendWelcome(): Used in authController in exports.signup;
+    -- The message that is going to be sent whenever a new user signs up for our
+          application
+    sendPasswordReset(): Used in authController, in exports.forgotPassword
+
+*/
+module.exports = class Email {
+  constructor(user, url) {
+    this.to = user.email;
+    this.firstName = user.name.split(' ')[0];
+    this.url = url;
+
+    // step: Set Email address as an environment variable in config
+    this.from = `Bree Lorenz <${process.env.EMAIL_FROM}>`;
+  }
+};
+
 const sendEmail = async options => {
   // step: 1) Create a transporter
   const transporter = nodemailer.createTransport({

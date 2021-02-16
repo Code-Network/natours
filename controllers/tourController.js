@@ -108,6 +108,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
     req.files.images.map(async (file, i) => {
       const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
 
+      // note: Remember that each image is in file.buffer
       await sharp(file.buffer)
         .resize(2000, 1333)
         .toFormat('jpeg')
@@ -117,6 +118,8 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
       req.body.images.push(filename);
     })
   );
+
+  // console.log(req.body);
 
   next();
 });

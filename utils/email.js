@@ -24,12 +24,16 @@ module.exports = class Email {
     this.from = `Bree Lorenz <${process.env.EMAIL_FROM}>`;
   }
 
-  // step: Create different transports for production and development
-  // Production => Sendgrid; Development => MailTrap
-  createTransport() {
-    // step: If in production, we will use Sendgrid
+  newTransport() {
     if (process.env.NODE_ENV === 'production') {
       // Sendgrid
+      // return nodemailer.createTransport({
+      //   service: 'SendGrid',
+      //   auth: {
+      //     user: process.env.SENDGRID_USERNAME,
+      //     pass: process.env.SENDGRID_PASSWORD
+      //   }
+      // });
       return 1;
     }
 
@@ -44,9 +48,8 @@ module.exports = class Email {
     });
   }
 
-  // step: Create a send() method that will do all of the actual sending
-  // note: send() will receive a template and a subject
-  send(template, subject) {
+  // TODO: Send the actual email
+  async send(template, subject) {
     /*
     step:  1) Render HTML based PUG template
     Note: Usually we use res.render('welcome'), for instance, to render a PUG
@@ -103,30 +106,24 @@ module.exports = class Email {
     };
 
     // step: 3) Create a transport and send email
+    // note: In the previous const sendEmail = async options => {}, we had
+    //        await transporter.sendMail(mailOptions);
+    //        this is what we are replacing
+    await this.newTransport().sendMail(mailOptions);
   }
 
   // step: Create function that will call send( template, subject )
   // note: Will be used to create emails for all kinds of different situations
-  sendWelcome() {
+  async sendWelcome() {
     // Use this.send because will be defined on the current object
     // 'welcome' will be a pug template
-    this.send('welcome', 'Welcome to the Natours Family!');
+    await this.send('welcome', 'Welcome to the Natours Family!');
+  }
+
+  async sendPasswordReset() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token (valid for only 10 minutes)'
+    );
   }
 };
-
-/*
- step: 2) Define the email options
- note:
-  -- from: 'sender name <senderAddress@email.com>
-   -- to: "bar@example.com, baz@example.com", // list of receivers
-   -- subject: "Hello ✔", // Subject line
-   -- text: "Hello world?", // plain text body
-   -- html: "<b>Hello world?</b>", // html body
-
-   -- console.log("Message sent: %s", info.messageId);
-   // OP:  Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-   // OP:   Preview only available when sending through an Ethereal account
-   -- console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
- */

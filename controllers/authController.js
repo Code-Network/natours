@@ -417,18 +417,22 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // step: 4) Send Random Token to user's email
   // Create a Reset URL to make it easy for the user to reset their password
   // req.protocol = http or https, etc
+  // goal: Send the plain, original reset token and not the encrypted one
   const resetURL = `
       ${req.protocol}://${req.get(
     'host'
   )}/api/v1/users/resetPassword/${resetToken}
   `;
 
-  const message = `Forgot your password?  Submit a PATCH request with your 
+  const message = `Forgot your password? Submit a PATCH request with your 
   new password and passwordConfirm to: ${resetURL}\nIf you didn't forget your 
   password, please ignore this email.`;
 
+  // note: We use try/catch because On Error we want to reset both token and
+  //      expires property
   try {
-    // sendEmail returns a promise, so await it
+    // note: sendEmail is async and returns a promise, so await it
+    // note: req.body.email === user.email
     await sendEmail({
       email: user.email,
       subject: 'Your password reset token (valid for 10 min)',
@@ -441,7 +445,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Token sent to email!'
     });
   } catch (e) {
-    // On Error, reset token and expires properties
+    // step: On Error, reset token and expires properties
+    // note: Resetting to undefined ony modifies the data, does not save it;
+    //  so we must save it ourselves; this is a use case for no validation
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });

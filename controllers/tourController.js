@@ -75,7 +75,6 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
      ]
   }
    */
-  console.log('This is req.files from tourController.js:  ', req.files);
 
   // step: If there are no images uploaded,
   //  i.e. if imageCover OR images DNE (both must exist), return next()
@@ -96,7 +95,28 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
     .toFile(`public/img/tours/${req.body.imageCover}`);
 
   // step: Tour Images in a loop
-  // 2) Images
+  //   Process images: [String] (besides the imageCover) in one iteration
+  // step:  Ensure that req.body.images is an empty Array
+  req.body.images = [];
+
+  // Note: Here we are not using async/await correctly as it will not stop from
+  //  going to next() middleware before the PROMISE is resolved; if we use map,
+  //  instead of forEach, we can save an Array of all of the PROMISES and
+  //  use Promise.all() to await all of them.
+  // Note: Without Promise.all() none of the image files will persist to the DB
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${filename}`);
+
+      req.body.images.push(filename);
+    })
+  );
 
   next();
 });

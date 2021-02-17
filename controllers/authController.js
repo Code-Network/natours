@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const sendEmail = require('./../utils/email');
+const Email = require('./../utils/email');
 
 // ============================================================
 // ============================================================
@@ -73,7 +73,7 @@ const createSendToken = (user, statusCode, res) => {
 exports.signup = catchAsync(async (req, res, next) => {
   // Create a new document based on the model
   // The data is in req.body
-  // Note: Serious security flaw because using req.body user can register as admin
+  // FIXME: Serious security flaw because using req.body user can register as admin
   // const newUser = await User.create(req.body);
 
   // TODO: Security fix for creating a new user
@@ -433,11 +433,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   try {
     // note: sendEmail is async and returns a promise, so await it
     // note: req.body.email === user.email
-    await sendEmail({
-      email: user.email,
-      subject: 'Your password reset token (valid for 10 min)',
-      message
-    });
+    // await sendEmail({
+    //   email: user.email,
+    //   subject: 'Your password reset token (valid for 10 min)',
+    //   message
+    // });
 
     // Send response - DO NOT SEND RESET TOKEN HERE!
     res.status(200).json({

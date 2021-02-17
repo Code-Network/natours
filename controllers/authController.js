@@ -86,30 +86,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     role: req.body.role
   });
 
-  // TODO:  Log the newUser in as soon as they signup by signing a
-  //  JWT (JSON Web Token) and then send it back to the client/user
-  // npm install jsonwebtoken - https://github.com/auth0/node-jsonwebtoken
-  // NOTE: Logging in a user just means to sign a
-  //    JSON Web Token (JWT) and send it back to the user.
-  // -- In config, define JWT_SECRET and JWT_EXPIRES_IN
-  // Note: In MongoDB, the id is _id
-  // -- When verifying the JWT token in the debugger at jwt.io,
-  //   remove the iat and exp fields from debugger payload to verify.
-  // Move to function signToken();
-
-  // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-  //   expiresIn: process.env.JWT_EXPIRES_IN
-  // });
-  /*const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success!',
-    token,
-    data: {
-      user: newUser
-    }
-  });*/
-
+  const url = 0;
+  await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
 });
 

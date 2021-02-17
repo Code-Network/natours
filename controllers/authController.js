@@ -76,7 +76,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // FIXME: Serious security flaw because using req.body user can register as admin
   // const newUser = await User.create(req.body);
 
-  // TODO: Security fix for creating a new user
+  // Todo: Security fix for creating a new user
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -86,8 +86,23 @@ exports.signup = catchAsync(async (req, res, next) => {
     role: req.body.role
   });
 
-  const url = 0;
+  // Goal: Send a Welcome Email on Signup
+  // Note: On views/email/welcome.pug there is an anchor tag used to Upload user photo
+  // For now, we are just going to point to the Account settings page but this
+  // would only work in development and not in production because
+  // http://localhost:3000/me does not exist when we are in production
+  // Get the data from the request, instead of:
+  // const url = 'http://localhost:3000/me';
+  // Important: To Test, just create a new user on POSTMAN ( i.e Signup );
+  //  when you do, you get a new email in mailtrap.io/inboxes/.../messages;
+  //  in the email you receive the welcome.pug page, and it is beautiful!
+  const url = `${req.protocol}://localhost:3000/me`;
+  if (process.env.NODE_ENV === 'production') {
+    url = `${req.protocol}://${req.get('host')}/me`;
+  }
+
   await new Email(newUser, url).sendWelcome();
+
   createSendToken(newUser, 201, res);
 });
 

@@ -407,30 +407,30 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   //   throw an error requesting the user's email address
   await user.save({ validateBeforeSave: false });
 
-  // step: 4) Send Random Token to user's email
-  // Create a Reset URL to make it easy for the user to reset their password
-  // req.protocol = http or https, etc
-  // goal: Send the plain, original reset token and not the encrypted one
-  const resetURL = `
-      ${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/resetPassword/${resetToken}
-  `;
-
-  const message = `Forgot your password? Submit a PATCH request with your 
-  new password and passwordConfirm to: ${resetURL}\nIf you didn't forget your 
-  password, please ignore this email.`;
-
   // note: We use try/catch because On Error we want to reset both token and
   //      expires property
+  // Important: To TEST this on POSTMAN:
+  //  1. Use the Forgot Password route ( {{URL}}api/v1/users/forgotPassword )
+  //  2  An email is then sent to Mailtrap, copy the new token.
+  //  3. Then go to the Reset Password route
+  //    => {{URL}}api/v1/users/resetPassword/0daac4f4718bf...5e2b8c7117a7
+  //    and put in a new password
+  //    4. Then test the email and new password on the actual site
   try {
-    // note: sendEmail is async and returns a promise, so await it
-    // note: req.body.email === user.email
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: 'Your password reset token (valid for 10 min)',
-    //   message
-    // });
+    // step: 4) Send Random Token to user's email
+    // Create a Reset URL to make it easy for the user to reset their password
+    // req.protocol = http or https, etc
+    // goal: Send the plain, original reset token and not the encrypted one
+
+    let resetURL = `${req.protocol}://localhost:3000/api/v1/users/resetPassword/${resetToken}`;
+    if (process.env.NODE_ENV === 'production') {
+      resetURL = `${req.protocol}://${req.get(
+        'host'
+      )}/api/v1/users/resetPassword/${resetToken}`;
+    }
+
+    // step: 5) Send email to the client with the resetURL
+    await new Email(user, resetURL).sendPasswordReset();
 
     // Send response - DO NOT SEND RESET TOKEN HERE!
     res.status(200).json({

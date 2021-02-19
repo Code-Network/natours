@@ -96,8 +96,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   // Important: To Test, just create a new user on POSTMAN ( i.e Signup );
   //  when you do, you get a new email in mailtrap.io/inboxes/.../messages;
   //  in the email you receive the welcome.pug page, and it is beautiful!
-  const url = `${req.protocol}://localhost:3000/me`;
+
+  let url = `${req.protocol}://localhost:3000/me`;
   if (process.env.NODE_ENV === 'production') {
+    // eslint-disable-next-line no-const-assign
     url = `${req.protocol}://${req.get('host')}/me`;
   }
 

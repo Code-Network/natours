@@ -6,7 +6,7 @@ const router = express.Router();
 
 // TODO: Create a route for the client to create a Stripe Checkout Session
 router.get(
-  '/checkout-session/:tourID',
+  '/checkout-session/:tourId',
   authController.protect,
   bookingController.getCheckoutSession
 );

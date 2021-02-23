@@ -37,8 +37,38 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 
   // Goal: 3) Create session as a response, i.e. Send it to the client
-  res.status(200).json({
-    status: 'success',
-    session
-  });
+  /*
+    Content-Security-Policy Issues
+    --  If you have deployed a CSP, the full set of directives that Stripe.js
+        and Checkout require are:  https://stripe.com/docs/security/guide
+
+    Stripe.js =>
+         connect-src, https://api.stripe.com
+         frame-src, https://js.stripe.com, https://hooks.stripe.com
+         script-src, https://js.stripe.com
+
+     Checkout =>
+         connect-src, https://checkout.stripe.com
+         frame-src, https://checkout.stripe.com
+         script-src, https://checkout.stripe.com
+         img-src, https://*.stripe.com
+
+
+
+   */
+  res
+    .status(200)
+    .set(
+      'Content-Security-Policy',
+      "default-src 'self'; connect-src  data: blob: https://bundle.js:* https://*.mapbox.com" +
+        ' https://*.cloudflare.com/' +
+        ' https://bundle.js:*' +
+        ' https://api.stripe.com  https://checkout.stripe.com; frame-src ' +
+        "'self' https://js.stripe.com  https://hooks.stripe.com https://checkout.stripe.com; script-src" +
+        " https://js.stripe.com https://checkout.stripe.com; img-src https://*.stripe.com 'self'"
+    )
+    .json({
+      status: 'success',
+      session
+    });
 });

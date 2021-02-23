@@ -54,19 +54,135 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ===========================================================================
 // ===========================================================================
 // TODO: Set Security HTTP headers
-// app.use(helmet());
-
+// Will have to do the extended version of helmet in production
 app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'", 'https:', 'http:', 'data:', 'ws:'],
-      baseUri: ["'self'"],
-      fontSrc: ["'self'", 'https:', 'http:', 'data:'],
-      scriptSrc: ["'self'", 'https:', 'http:', 'blob:'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https:', 'http:']
-    }
+  helmet({
+    contentSecurityPolicy: false
   })
 );
+
+// defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         defaultSrc: [
+//           "'self'",
+//           'data:',
+//           'blob:',
+//           'https:',
+//           'https://*.cloudflare.com',
+//           'https://js.stripe.com',
+//           'https://*.mapbox.com',
+//           'ws:'
+//         ],
+//         baseUri: ["'self'"],
+//         fontSrc: ["'self'", 'https:', 'data:'],
+//         scriptSrc: [
+//           "'self'",
+//           'https:',
+//           'http:',
+//           'blob:',
+//           'data:',
+//           'https://*.mapbox.com',
+//           'https://js.stripe.com',
+//           'https://m.stripe.network',
+//           'https://*.cloudflare.com',
+//           'https://checkout.stripe.com'
+//         ],
+//         frameSrc: [
+//           "'self'",
+//           'https://js.stripe.com',
+//           'https://hooks.stripe.com',
+//           'https://*.mapbox.com',
+//           'https://checkout.stripe.com'
+//         ],
+//         objectSrc: ["'none'"],
+//         styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+//         workerSrc: [
+//           "'self'",
+//           'data:',
+//           'blob:',
+//           'https://*.tiles.mapbox.com',
+//           'https://api.mapbox.com',
+//           'https://events.mapbox.com',
+//           'https://m.stripe.network'
+//         ],
+//         childSrc: ["'self'", 'blob:'],
+//         imgSrc: ["'self'", 'data:', 'blob:', 'https://*.stripe.com'],
+//         formAction: ["'self'"],
+//         connectSrc: [
+//           "'self'",
+//           'data:',
+//           'blob:',
+//           'https://*.stripe.com',
+//           'https://*.mapbox.com',
+//           'https://*.cloudflare.com/',
+//           'https://bundle.js:*',
+//           'https://checkout.stripe.com',
+//           'https://api.stripe.com'
+//
+//           // 'ws://127.0.0.1:*/'
+//         ],
+//         upgradeInsecureRequests: false
+//       }
+//     }
+//   })
+// );
+
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
+//         baseUri: ["'self'"],
+//         fontSrc: ["'self'", 'https:', 'data:'],
+//         scriptSrc: [
+//           "'self'",
+//           'https:',
+//           'http:',
+//           'blob:',
+//           'https://*.mapbox.com',
+//           'https://checkout.stripe.com',
+//           'https://js.stripe.com',
+//           'https://m.stripe.network',
+//           'https://*.cloudflare.com'
+//         ],
+//         frameSrc: [
+//           "'self'",
+//           'https://js.stripe.com',
+//           'https://checkout.stripe.com'
+//         ],
+//         objectSrc: ["'none'"],
+//         styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+//         workerSrc: [
+//           "'self'",
+//           'data:',
+//           'blob:',
+//           'https://*.tiles.mapbox.com',
+//           'https://api.mapbox.com',
+//           'https://events.mapbox.com',
+//           'https://m.stripe.network'
+//         ],
+//         childSrc: ["'self'", 'blob:'],
+//         imgSrc: ["'self'", 'data:', 'blob:'],
+//         formAction: ["'self'"],
+//         connectSrc: [
+//           "'self'",
+//           'data:',
+//           'blob:',
+//           'https://api.stripe.com',
+//           'https://*.stripe.com',
+//           'https://*.mapbox.com',
+//           'https://*.cloudflare.com/',
+//           'https://bundle.js:*'
+//           // 'ws://127.0.0.1:*/',
+//         ],
+//         upgradeInsecureRequests: false
+//       }
+//     }
+//   })
+// );
 
 // ============================================================================
 // ============================================================================

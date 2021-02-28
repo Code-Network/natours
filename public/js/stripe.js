@@ -14,23 +14,18 @@ const stripe = Stripe('pk_test_wD5MlN7eIOjyjhwwUqzimlkC00plhdq1vC');
  */
 export const bookTour = async tourId => {
   try {
-    // step: 1) Get the checkout session from the server/endpoint/API onto
-    //    client side => /checkout-session/:tourId;
-    //    -- store the session in const session
-    // note: The axios http call to this URL should return a Checkout Session
+    // 1) Get checkout session from API
     const session = await axios(
       `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`
     );
-    console.log('STRIPE CHECKOUT SESSION CREATED:  ', session);
+    console.log(session);
 
-    /* note: In order to look as this session object in our console,
-     connect this function we just created inside of stripe.js to the tour.pug
-     green button from tour.pug; do this in index.js  */
-    // console.log(session);
-
-    // step: 2) Use the Stripe object to create the checkout form
-    //    and charge/process the credit
-  } catch (e) {
-    showAlert('error', e);
+    // 2) Create checkout form + chanre credit card
+    await stripe.redirectToCheckout({
+      sessionId: session.data.session.id
+    });
+  } catch (err) {
+    console.log(err);
+    showAlert('error', err);
   }
 };

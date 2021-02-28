@@ -4,6 +4,8 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const csp = require('express-csp');
+
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
@@ -25,6 +27,7 @@ app.use(
     origin: 'http://localhost:3000'
   })
 );
+app.use(express.static('.'));
 
 // TODO:  Set up the Pug Engine
 // a) Inform express what engine we want to use.
@@ -55,134 +58,72 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ===========================================================================
 // TODO: Set Security HTTP headers
 // Will have to do the extended version of helmet in production
-app.use(
-  helmet({
-    contentSecurityPolicy: false
-  })
-);
-
-// defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: {
-//       directives: {
-//         defaultSrc: [
-//           "'self'",
-//           'data:',
-//           'blob:',
-//           'https:',
-//           'https://*.cloudflare.com',
-//           'https://js.stripe.com',
-//           'https://*.mapbox.com',
-//           'ws:'
-//         ],
-//         baseUri: ["'self'"],
-//         fontSrc: ["'self'", 'https:', 'data:'],
-//         scriptSrc: [
-//           "'self'",
-//           'https:',
-//           'http:',
-//           'blob:',
-//           'data:',
-//           'https://*.mapbox.com',
-//           'https://js.stripe.com',
-//           'https://m.stripe.network',
-//           'https://*.cloudflare.com',
-//           'https://checkout.stripe.com'
-//         ],
-//         frameSrc: [
-//           "'self'",
-//           'https://js.stripe.com',
-//           'https://hooks.stripe.com',
-//           'https://*.mapbox.com',
-//           'https://checkout.stripe.com'
-//         ],
-//         objectSrc: ["'none'"],
-//         styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
-//         workerSrc: [
-//           "'self'",
-//           'data:',
-//           'blob:',
-//           'https://*.tiles.mapbox.com',
-//           'https://api.mapbox.com',
-//           'https://events.mapbox.com',
-//           'https://m.stripe.network'
-//         ],
-//         childSrc: ["'self'", 'blob:'],
-//         imgSrc: ["'self'", 'data:', 'blob:', 'https://*.stripe.com'],
-//         formAction: ["'self'"],
-//         connectSrc: [
-//           "'self'",
-//           'data:',
-//           'blob:',
-//           'https://*.stripe.com',
-//           'https://*.mapbox.com',
-//           'https://*.cloudflare.com/',
-//           'https://bundle.js:*',
-//           'https://checkout.stripe.com',
-//           'https://api.stripe.com'
-//
-//           // 'ws://127.0.0.1:*/'
-//         ],
-//         upgradeInsecureRequests: false
-//       }
-//     }
-//   })
-// );
-
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: {
-//       directives: {
-//         defaultSrc: ["'self'", 'data:', 'blob:', 'https:', 'ws:'],
-//         baseUri: ["'self'"],
-//         fontSrc: ["'self'", 'https:', 'data:'],
-//         scriptSrc: [
-//           "'self'",
-//           'https:',
-//           'http:',
-//           'blob:',
-//           'https://*.mapbox.com',
-//           'https://checkout.stripe.com',
-//           'https://js.stripe.com',
-//           'https://m.stripe.network',
-//           'https://*.cloudflare.com'
-//         ],
-//         frameSrc: [
-//           "'self'",
-//           'https://js.stripe.com',
-//           'https://checkout.stripe.com'
-//         ],
-//         objectSrc: ["'none'"],
-//         styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
-//         workerSrc: [
-//           "'self'",
-//           'data:',
-//           'blob:',
-//           'https://*.tiles.mapbox.com',
-//           'https://api.mapbox.com',
-//           'https://events.mapbox.com',
-//           'https://m.stripe.network'
-//         ],
-//         childSrc: ["'self'", 'blob:'],
-//         imgSrc: ["'self'", 'data:', 'blob:'],
-//         formAction: ["'self'"],
-//         connectSrc: [
-//           "'self'",
-//           'data:',
-//           'blob:',
-//           'https://api.stripe.com',
-//           'https://*.stripe.com',
-//           'https://*.mapbox.com',
-//           'https://*.cloudflare.com/',
-//           'https://bundle.js:*'
-//           // 'ws://127.0.0.1:*/',
-//         ],
-//         upgradeInsecureRequests: false
-//       }
-//     }
-//   })
-// );
+app.use(helmet());
+csp.extend(app, {
+  policy: {
+    directives: {
+      'default-src': ['self'],
+      'style-src': ['self', 'unsafe-inline', 'https:'],
+      'font-src': ['self', 'https://fonts.gstatic.com'],
+      'script-src': [
+        'self',
+        'unsafe-inline',
+        'data',
+        'blob',
+        'https://js.stripe.com',
+        'https://*.mapbox.com',
+        'https://*.cloudflare.com/',
+        'https://bundle.js:8828',
+        'ws://localhost:56558/'
+      ],
+      'worker-src': [
+        'self',
+        'unsafe-inline',
+        'data:',
+        'blob:',
+        'https://*.stripe.com',
+        'https://*.mapbox.com',
+        'https://*.cloudflare.com/',
+        'https://bundle.js:*',
+        'ws://localhost:*/'
+      ],
+      'frame-src': [
+        'self',
+        'unsafe-inline',
+        'data:',
+        'blob:',
+        'https://*.stripe.com',
+        'https://*.mapbox.com',
+        'https://*.cloudflare.com/',
+        'https://bundle.js:*',
+        'ws://localhost:*/'
+      ],
+      'img-src': [
+        'self',
+        'unsafe-inline',
+        'data:',
+        'blob:',
+        'https://*.stripe.com',
+        'https://*.mapbox.com',
+        'https://*.cloudflare.com/',
+        'https://bundle.js:*',
+        'ws://localhost:*/'
+      ],
+      'connect-src': [
+        'self',
+        'unsafe-inline',
+        'data:',
+        'blob:',
+        // 'wss://<HEROKU-SUBDOMAIN>.herokuapp.com:<PORT>/',
+        'https://*.stripe.com',
+        'https://*.mapbox.com',
+        'https://*.cloudflare.com/',
+        'https://bundle.js:*',
+        'ws://localhost:*/'
+      ]
+    }
+  }
+});
 
 // ============================================================================
 // ============================================================================

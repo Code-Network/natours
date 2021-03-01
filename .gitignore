@@ -37,3 +37,6 @@ config.env
 
 
 /.cache/
+
+#Ignore dev-data
+dev-data/

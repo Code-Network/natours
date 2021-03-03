@@ -143,8 +143,18 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
     req.originalUrl.split('?')
   );
 
-  // step: Redirect to the home page without the query strings for a
-  //  bit more security
-  // note: We do not call next() because we will redirect to
+  // step: Redirect to the home page, which will direct us back here,
+  //  only without the query strings for a bit more security
+  // Note: On the second call to this middleware, since on redirect the
+  //  query strings have been removed, it will fail the if statement
+  //  which calls next()
+  // Note: We do not call next() the first time because we will redirect to
+  //  (make a request) to our root ( home page ) in
+  //  (completely stripped of the query strings)
+  //  In viewRoutes.js .get('/', bookController.createBookingCheckout.
+  //  a second call to this middleware is made, only this time,
+  //  the GET request will not have the query strings, thereby making
+  //  this call a little more secure.
+
   res.redirect(req.originalUrl.split('?')[0]);
 });

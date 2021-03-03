@@ -1,5 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('./../models/tourModel');
+const Booking = require('../models/bookingModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory');
 const appError = require('./../utils/appError');
@@ -101,4 +102,49 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       status: 'success',
       session
     });
+});
+
+// TODO: Create a new booking in the database
+// Important: Not to be confused with createBooking
+//  which will be accessible from our Booking API via POST url '/bookings'
+exports.createBookingCheckout = catchAsync(async (req, res, next) => {
+  // FIXME: This is only TEMPORARY, because it's UNSECURE:
+  //    everyone can make bookings without paying
+  // step: Get the data from the query string
+  const { tour, user, price } = req.query;
+
+  /*
+   step: Ensure the required fields exist
+   Note: What exactly is the next middleware?
+     - Remember that we want to create a new booking on the Home URL from:
+     exports.getCheckoutSession const session:
+       success_url: `${req.protocol}://${req.get('host')}/?tour=${
+                      req.params.tourId
+                     }&user=${req.user.id}&price=${tour.price}`,
+     because that is the URL that is called whenever a purchase is
+     successful with Stripe.
+     -- So, what we need to do is to add this
+     middleware function that we are creating right now onto the
+     middleware stack of this route handler.
+     -- What Route Handler is that?  It's the '/' route in
+          routes/viewRoutes.js - isLoggedIn
+     router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
+     Important: That is the route that will be hit when a credit card
+       is successfully charged.  This is also the point in time where
+       we want to create a new booking.
+   */
+  if (!tour && !user && !price) return next();
+
+  // step: Create the specific booking for the database
+  await Booking.create({ tour, user, price });
+
+  console.log(
+    'At createBookingCheckout, req.originalUrl.split("?")[0]  =>  ',
+    req.originalUrl.split('?')
+  );
+
+  // step: Redirect to the home page without the query strings for a
+  //  bit more security
+  // note: We do not call next() because we will redirect to
+  res.redirect(req.originalUrl.split('?')[0]);
 });

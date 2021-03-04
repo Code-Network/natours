@@ -138,10 +138,13 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   // step: Create the specific booking for the database
   await Booking.create({ tour, user, price });
 
-  console.log(
-    'At createBookingCheckout, req.originalUrl.split("?")[0]  =>  ',
-    req.originalUrl.split('?')
-  );
+  /* Example Output:
+     [
+        '/',
+        'tour=5c88fa8cf4afda39709c2955&user=60402477f3dc8d18f387de73&price=497'
+     ]
+   */
+  console.log(req.originalUrl.split('?'));
 
   // step: Redirect to the home page, which will direct us back here,
   //  only without the query strings for a bit more security

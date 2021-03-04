@@ -27,6 +27,14 @@ router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
+// TODO: A Page to contain all of the tours a user has booked
+router.get(
+  '/my-tours',
+  bookingController.createBookingCheckout,
+  authController.protect,
+  viewsController.getMyTours
+);
+
 // POST route used with form on account.pug
 // Important: We protect this route because we want to ensure that only the
 //  user can update their settings ( name, email and password )

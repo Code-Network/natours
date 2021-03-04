@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModel');
 const User = require('./../models/userModel');
+const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
@@ -103,3 +104,52 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     user: updatedUser
   });
 });
+
+// TODO:  Create a handler which connects to '/my-tours' route and displays
+//  a page of all the bookings a user has made
+// Note: We could use a virtual populate with tours and reviews,
+//  but here is an example of how we do it manually
+exports.getMyTours = catchAsync(async (req, res, next) => {
+  // step: 1) Find ALL bookings by the current user
+  // Note: Each booking schema as a user id; here we query by the user ID
+  const bookings = await Booking.find({ user: req.user.id });
+  console.log('Booking.find === ', bookings);
+
+  // todo: Create an Array of all of the tour ids
+  // step: 2) Find tours with the returned IDs;
+  //  the tour ids for the bookings for the user
+  // note: Go through users bookings and extract ids, put in an array.
+  const tourIDs = bookings.map(el => el.tour);
+  console.log('tourIds should be an array of tours booked', tourIDs);
+
+  // step: 3) Now, having all of the tour ids, we can get the tours
+  //  corresponding with those tour ids
+  // important: Do not use findById because we have to use the $in operator
+  const tours = await Tour.find({ _id: { $in: tourIDs } });
+  console.log('tours = Tour.find == ', tours);
+
+  // step: 4) Render the Overview Page with the matching tours the user has paid for
+  // note: We will end up with a page that looks like the overview page,
+  //  but only with the tours from const tours
+  res.status(200).render('overview', {
+    title: 'My Tours',
+    tours
+  });
+});
+
+/*  // todo: Alternate getMyTours
+    // note: fetching of the tours a user has purchased could be more straight forward
+     1.  const getMyTours = catchAsync(async (req, res, next) => {
+         const bookings = await Booking.find({ user: req.user.id });
+         const tours = await Promise.all(
+           bookings.map(async el => {
+            return await Tour.findById(el.tour);
+           })
+         );
+
+         res.status(200).render('overview', {
+           title: 'My Tours',
+           tours,
+         });
+       });
+*/

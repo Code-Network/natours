@@ -27,7 +27,7 @@ router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
-// TODO: A Page to contain all of the tours a user has booked
+// TODO: A route which will display all of the tours a user has booked
 router.get(
   '/my-tours',
   bookingController.createBookingCheckout,

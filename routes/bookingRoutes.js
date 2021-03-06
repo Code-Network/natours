@@ -21,6 +21,6 @@ router
 
 // Todo: Create routes which enables an admin or lead-guide to get a certain
 //  booking based on the booking id
-route.route('/:id').get(bookingController.getBooking);
+router.route('/:id').get(bookingController.getBooking);
 
 module.exports = router;

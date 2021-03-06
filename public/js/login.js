@@ -74,7 +74,7 @@ export const logout = async () => {
           we are no longer logged in
 
     Note: location.reload() is the same as clicking the refresh button */
-    if (res.data.status === 'success') location.reload();
+    if (res.data.status === 'success') window.location.replace('/');
 
     /*
      Note: There really can't be an error while logging out, but we have

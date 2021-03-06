@@ -14,6 +14,9 @@ router.get('/checkout-session/:tourId', bookingController.getCheckoutSession);
 router.use(authController.restrictTo('admin', 'lead-guide'));
 
 // Todo: Create main booking route
-router.route('/').get(bookingController.getAllBookings);
+router
+  .route('/')
+  .get(bookingController.getAllBookings)
+  .post(bookingController.createBooking);
 
 module.exports = router;

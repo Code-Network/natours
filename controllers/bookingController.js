@@ -163,3 +163,4 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBookings = factory.getAll(Booking);
+exports.createBooking = factory.getOne(Booking);

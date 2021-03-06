@@ -19,7 +19,7 @@ router
   .get(bookingController.getAllBookings)
   .post(bookingController.createBooking);
 
-// Todo: Create routes which enable an admin or lead guide to get a certain
+// Todo: Create routes which enables an admin or lead-guide to get a certain
 //  booking based on the booking id
 route.route('/:id').get(bookingController.getBooking);
 

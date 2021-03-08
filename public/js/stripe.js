@@ -11,13 +11,18 @@ const stripe = Stripe('pk_test_wD5MlN7eIOjyjhwwUqzimlkC00plhdq1vC');
      the tourId on the button's data attribute will pass onclick to this
      bookTour function; it will pass to the URL and begin a
      Stripe Checkout Session.
+
+  Important Update before deployment: because API and website are using the
+     same URL, we will remove the protocol and host; if we were hosting the
+     API on one URL and the website on  another, it would not work this way.
+
+     From this: `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`
+     To this: `/api/v1/bookings/checkout-session/${tourId}`
  */
 export const bookTour = async tourId => {
   try {
     // 1) Get checkout session from API
-    const session = await axios(
-      `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`
-    );
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
     // console.log(session);
 
     // 2) Create checkout form + charge credit card

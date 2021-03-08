@@ -5,12 +5,16 @@ import { hideAlert, showAlert } from './alert';
 // Create login function
 // Note: This is client facing code and only the most modern browsers can run
 //   async/await functions
+// Important Update before deployment: because API and website are using the
+//  same URL, we will remove the protocol and host; if we were hosting the API
+//  on one URL and the website on another, it would not work this way.
+
 export const login = async (email, password) => {
   // console.log(email, password);
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/v1/users/login',
+      url: '/api/v1/users/login',
       data: {
         email: email,
         password: password
@@ -57,11 +61,12 @@ export const login = async (email, password) => {
   }
 };
 
+// Important Update before deployment; see Important comment above
 export const logout = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: 'http://localhost:3000/api/v1/users/logout'
+      url: '0/api/v1/users/logout'
     });
     /*
     step: Reload the page (usually done manually when we delete a cookie)

@@ -8547,6 +8547,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Create login function
 // Note: This is client facing code and only the most modern browsers can run
 //   async/await functions
+// Important Update before deployment: because API and website are using the
+//  same URL, we will remove the protocol and host; if we were hosting the API
+//  on one URL and the website on another, it would not work this way.
 var login = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
     var res;
@@ -8558,7 +8561,7 @@ var login = /*#__PURE__*/function () {
             _context.next = 3;
             return (0, _axios.default)({
               method: 'POST',
-              url: 'http://localhost:3000/api/v1/users/login',
+              url: '/api/v1/users/login',
               data: {
                 email: email,
                 password: password
@@ -8621,7 +8624,8 @@ var login = /*#__PURE__*/function () {
   return function login(_x, _x2) {
     return _ref.apply(this, arguments);
   };
-}();
+}(); // Important Update before deployment; see Important comment above
+
 
 exports.login = login;
 
@@ -8636,7 +8640,7 @@ var logout = /*#__PURE__*/function () {
             _context2.next = 3;
             return (0, _axios.default)({
               method: 'GET',
-              url: 'http://localhost:3000/api/v1/users/logout'
+              url: '0/api/v1/users/logout'
             });
 
           case 3:
@@ -8710,6 +8714,10 @@ type = 'password' = 'Update Current Password' = http://localhost:3000/api/v1/use
          "password": "newpassword2",
          "passwordConfirm": "newpassword2"
        }
+
+ Important Update before deployment: because API and website are using the same
+   URL, we will remove the protocol and host; if we were hosting the API on one
+   URL and the website on  another, it would not work this way.
 */
 var updateSettings = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data, type) {
@@ -8720,7 +8728,7 @@ var updateSettings = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             //
-            url = type === 'password' ? 'http://localhost:3000/api/v1/users/updateMyPassword' : 'http://localhost:3000/api/v1/users/updateMe';
+            url = type === 'password' ? '/api/v1/users/updateMyPassword' : '/api/v1/users/updateMe';
             _context.next = 4;
             return (0, _axios.default)({
               method: 'PATCH',
@@ -8820,6 +8828,13 @@ var stripe = Stripe('pk_test_wD5MlN7eIOjyjhwwUqzimlkC00plhdq1vC');
      the tourId on the button's data attribute will pass onclick to this
      bookTour function; it will pass to the URL and begin a
      Stripe Checkout Session.
+
+  Important Update before deployment: because API and website are using the
+     same URL, we will remove the protocol and host; if we were hosting the
+     API on one URL and the website on  another, it would not work this way.
+
+     From this: `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`
+     To this: `/api/v1/bookings/checkout-session/${tourId}`
  */
 
 var bookTour = /*#__PURE__*/function () {
@@ -8831,7 +8846,7 @@ var bookTour = /*#__PURE__*/function () {
           case 0:
             _context.prev = 0;
             _context.next = 3;
-            return (0, _axios.default)("http://localhost:3000/api/v1/bookings/checkout-session/".concat(tourId));
+            return (0, _axios.default)("/api/v1/bookings/checkout-session/".concat(tourId));
 
           case 3:
             session = _context.sent;

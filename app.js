@@ -5,11 +5,11 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const csp = require('express-csp');
-
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -205,11 +205,15 @@ app.use(
   })
 );
 
+// TODO:  Compress files for deployment
+app.use(compression());
+
 // ============================================================================
 // ============================================================================
 // TODO: Middleware for testing only
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+
   // console.log('COOKIES:  ', req.cookies);
 
   /*

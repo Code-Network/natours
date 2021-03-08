@@ -36,6 +36,7 @@ app1.js
 config.env
 
 
+.cache/
 /.cache/
 
 #Ignore dev-data

@@ -221,7 +221,7 @@ userSchema.methods.createPasswordResetToken = function() {
   // along with its value.
   // resetToken is the plain token/password and will be sent to user email
   // this.passwordResetToken is the encrypted resetToken we will store in DB
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
 
   // Create a 10-min expiration for the reset token and store in new
   // userSchema field 'passwordResetExpires'

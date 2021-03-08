@@ -113,20 +113,18 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   // step: 1) Find ALL bookings by the current user
   // Note: Each booking schema as a user id; here we query by the user ID
   const bookings = await Booking.find({ user: req.user.id });
-  console.log('Booking.find === ', bookings);
+  // console.log('Booking.find === ', bookings);
 
   // todo: Create an Array of all of the tour ids
   // step: 2) Find tours with the returned IDs;
   //  the tour ids for the bookings for the user
   // note: Go through users bookings and extract ids, put in an array.
   const tourIDs = bookings.map(el => el.tour);
-  console.log('tourIds should be an array of tours booked', tourIDs);
 
   // step: 3) Now, having all of the tour ids, we can get the tours
   //  corresponding with those tour ids
   // important: Do not use findById because we have to use the $in operator
   const tours = await Tour.find({ _id: { $in: tourIDs } });
-  console.log('tours = Tour.find == ', tours);
 
   // step: 4) Render the Overview Page with the matching tours the user has paid for
   // note: We will end up with a page that looks like the overview page,

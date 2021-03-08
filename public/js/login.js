@@ -6,7 +6,7 @@ import { hideAlert, showAlert } from './alert';
 // Note: This is client facing code and only the most modern browsers can run
 //   async/await functions
 export const login = async (email, password) => {
-  console.log(email, password);
+  // console.log(email, password);
   try {
     const res = await axios({
       method: 'POST',
@@ -81,7 +81,7 @@ export const logout = async () => {
         this error just in case we have internet connection issues.
      */
   } catch (e) {
-    console.log(e.response);
+    // console.log(e.response);
     showAlert('error', 'Error logging out! Try again.');
   }
 };

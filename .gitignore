@@ -29,8 +29,8 @@ app1.js
 #Ignore .idea/
 .idea/
 
-#Ignore .env files
-.env
+#Ignore all .env files
+*.env
 
 #Ignore config.env
 config.env

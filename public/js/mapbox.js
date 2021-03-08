@@ -10,10 +10,11 @@
     some actions into these other modules
  */
 export const displayMap = locations => {
-  mapboxgl.accessToken = 'Put your access token here';
+  mapboxgl.accessToken =
+    'pk.eyJ1Ijoia29rb2RldiIsImEiOiJja2tjcGp3eXcwMnEyMnZvNWhiYmI2YzNnIn0.WP6FZ9ufCyuzw1L-utBMJQ';
   var map = new mapboxgl.Map({
     container: 'map',
-    style: 'put your style mapbox cdn here',
+    style: 'mapbox://styles/kokodev/ckkcvdhlc25np17mtynej0adn',
     scrollZoom: false,
     // center: [-118.11349, 34.111745],
     // zoom: 1

@@ -113,6 +113,7 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   // step: 1) Find ALL bookings by the current user
   // Note: Each booking schema as a user id; here we query by the user ID
   const bookings = await Booking.find({ user: req.user.id });
+
   // console.log('Booking.find === ', bookings);
 
   // todo: Create an Array of all of the tour ids

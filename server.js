@@ -34,6 +34,7 @@ mongoose
   })
   .then(() => console.log('DB connection successful!'));
 
+// Note: process.env.PORT is mandatory to deploy on heroku
 const port = process.env.PORT || 3000;
 
 // Put server in a variable

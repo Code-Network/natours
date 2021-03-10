@@ -115,7 +115,7 @@ csp.extend(app, {
         'unsafe-inline',
         'data:',
         'blob:',
-        // 'wss://<HEROKU-SUBDOMAIN>.herokuapp.com:<PORT>/',
+        'wss://boiling-beach-91681.herokuapp.com:53492',
         'https://*.stripe.com',
         'https://*.mapbox.com',
         'https://*.cloudflare.com/',

@@ -22,6 +22,20 @@ const viewRouter = require('./routes/viewRoutes');
 // Start express app
 const app = express();
 
+/*
+  Todo: Heroku uses proxies to redirect or modify connections; trust proxy
+  Note: By enabling the "trust proxy" setting via app.enable('trust proxy'),
+   Express will have knowledge that it's sitting behind a proxy and that
+   the X-Forwarded-* header fields may be trusted, which otherwise may be
+   easily spoofed. Enabling this setting has several subtle effects.
+   The first of which is that X-Forwarded-Proto may be set by the reverse
+   proxy to tell the app that it is https or simply http.
+   This value is reflected by req.protocol. The second change this makes is
+   the req.ip and req.ips values will be  populated with
+   X-Forwarded-For's list of addresses.
+*/
+app.enable('trust proxy');
+
 app.use(
   cors({
     credentials: true,

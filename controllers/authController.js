@@ -576,5 +576,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // step: 4) Log user in with new password that was just updated
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });

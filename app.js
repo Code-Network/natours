@@ -116,6 +116,7 @@ csp.extend(app, {
         'data:',
         'blob:',
         'wss://kokodev-natours.herokuapp.com:53492/',
+        'wss://kokodev-natours.herokuapp.com:62872/',
         'https://*.stripe.com',
         'https://*.mapbox.com',
         'https://*.cloudflare.com/',

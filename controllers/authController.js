@@ -537,7 +537,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     status: 'success',
     token
   });*/
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // TODO: Allow a Logged in User to Update Password

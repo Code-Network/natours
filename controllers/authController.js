@@ -180,7 +180,7 @@ exports.login = catchAsync(async (req, res, next) => {
     status: 'success',
     token
   });*/
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // ============================================================

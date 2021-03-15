@@ -8640,7 +8640,7 @@ var logout = /*#__PURE__*/function () {
             _context2.next = 3;
             return (0, _axios.default)({
               method: 'GET',
-              url: '0/api/v1/users/logout'
+              url: '/api/v1/users/logout'
             });
 
           case 3:
@@ -9309,7 +9309,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53492" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62872" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -66,7 +66,7 @@ export const logout = async () => {
   try {
     const res = await axios({
       method: 'GET',
-      url: '0/api/v1/users/logout'
+      url: '/api/v1/users/logout'
     });
     /*
     step: Reload the page (usually done manually when we delete a cookie)

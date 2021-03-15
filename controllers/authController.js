@@ -20,36 +20,67 @@ const signToken = id => {
 // ============================================================
 
 // TODO:  Create Send Token
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
   /*
-   step: cookie options
-   -- The expires property must be converted into milliseconds
-   Total milliseconds = ( now + expiration * hours * min * sec * 1000 )
-   -- Setting secure:true property sends Cookie only on an encrypted connection
-   i.e. only via HTTPS (which it has not been set to yet)
-   So, in development, the cookie would not be created or sent to client.
-   Set secure:true in production only.
-   -- Property httpOnly: true => Makes it so that the Cookie cannot be accessed
-   or modified in any way by the Browser.
-   This prevents cross-site scripting attacks. So all the Browser is going
-   to do when we set httpOnly:true is to basically receive the cookie,
-   store it, and then send it automatically along with every request
+   step: Set cookie options and Testing for https connections with HEROKU
+   Note: This cookie will have three options
+     1. When it expires
+     — The expires property must be converted into milliseconds
+     Total milliseconds = ( now + expiration * hours * min * sec * 1000 )
+     2. It can only be accessed via HTTP
+     --  Set httpOnly: true => Makes it so that the Cookie cannot be accessed
+     or modified in any way by the Browser.
+     — This prevents cross-site scripting attacks. So all the Browser is going
+     to do when we set httpOnly:true is to basically receive the cookie,
+     store it, and then send it automatically along with every request.
+     3. Test for HTTPS on all connections ( in production ONLY )
+     — Important: Set secure:true in production only.
+     Note:  The fact that we are in production does not mean that the connections
+       are actually secure.
+       — Not all deployed applications are automatically set to HTTPS.
+       We need to change the following code to include a HEROKU specific conditional:
+         code-sample: // Will not work with Heroku deployment
+          if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+      Note: Setting secure:true property sends Cookie only on an encrypted connection
+       i.e. only via HTTPS, but this will NOT work for HEROKU because HEROKU
+       redirects or modifies all incoming Requests into our App before they
+       actually reach the App.
+       — If deploying with Heroku, we have to also check that
+       req.header( ‘x-forwarded-proto’)===‘https’
+
+    Todo: Remove if statement which tested for production and put the
+     cookie options directly into res.cookie options adding the following:
+       code-sample:
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+
+       code-sample:
+        Option 1:
+          cookieOptions.secure = (req.secure || req.headers('x-forwarded-proto') === 'https');
+        Option 2:
+         {
+          expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+          ),
+          httpOnly: true,
+          secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+         }
+
+    Important: Express puts the headers and the secure property right on req,
+     so don't forget to put req in parameters
    */
-  const cookieOptions = {
+
+  // step: Create and send an httpOnly cookie
+  // Cookie will be sent on signup; contains the JSON web token
+  res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
-  };
-
-  // note: Only set cookie option property secure:true in production
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
-  // step: Create and send an httpOnly cookie
-  // Cookie will be sent on signup
-  res.cookie('jwt', token, cookieOptions);
+    httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+  });
 
   // step: Remove the password from the output
   // On SIGNUP, the password displays in the output even though we have

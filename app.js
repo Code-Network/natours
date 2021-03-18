@@ -36,12 +36,28 @@ const app = express();
 */
 app.enable('trust proxy');
 
-app.use(
-  cors({
-    credentials: true,
-    origin: 'http://localhost:3000'
-  })
-);
+// Todo: Implement CORS
+// Note:  Used in development
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: 'http://localhost:3000'
+//   })
+// );
+
+// Todo:  Implement CORS in production
+// Implement CORS
+app.use(cors());
+
+// Access-Control-Allow-Origin *
+// api.kokodev-adventures.herokuapp.com, front-end kokodev-adventures.herokuapp.com
+// app.use(cors({
+//   origin: 'https://kokodev-adventures.herokuapp.com'
+// }))
+
+app.options('*', cors());
+// app.options('/api/v1/tours/:id', cors());
+
 app.use(express.static('.'));
 
 // TODO:  Set up the Pug Engine
@@ -129,8 +145,7 @@ csp.extend(app, {
         'unsafe-inline',
         'data:',
         'blob:',
-        'wss://kokodev-natours.herokuapp.com:53492/',
-        'wss://kokodev-natours.herokuapp.com:62872/',
+        'wss://kokodev-adventures.herokuapp.com:58189',
         'https://*.stripe.com',
         'https://*.mapbox.com',
         'https://*.cloudflare.com/',

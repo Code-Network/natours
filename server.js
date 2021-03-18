@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 // This listener is put at the top of our application
 //  because it is synchronous. If we put it on the bottom
 //  then it will not catch any uncaught exception errors which
-//  would came before it.  It will even catch errors in app.js.
+//  came before it.  It will even catch errors in app.js.
 process.on('uncaughtException', err => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.log(err.name, err.message);
@@ -54,5 +54,18 @@ process.on('unhandledRejection', err => {
     //   abort all the requests that are currently still running/pending
     // This is the reason we first close the server and then shut down the app
     process.exit(1);
+  });
+});
+
+/* TODO:  Heroku shuts down a site daily by sendiing the SIGTERM signal.
+      Listen for SIGTERM and once received, gracefully terminate the app,
+       politely handling unhandled requests */
+process.on('SIGTERM', () => {
+  console.log('☘️ 🙌🏽 ☘️ SIGTERM RECEIVED. Shutting down gracefully ☘️ 👋🏽 ☘️');
+
+  // step: Use server.close() to allow for a Graceful shutdown which
+  //  enables all pending requests to process until the end.
+  server.close(() => {
+    console.log('☘️ 🙌🏽 ☘️ Process terminated! ☘️ 👋🏽 ☘️');
   });
 });

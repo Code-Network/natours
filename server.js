@@ -57,7 +57,7 @@ process.on('unhandledRejection', err => {
   });
 });
 
-/* TODO:  Heroku shuts down a site daily by sendiing the SIGTERM signal.
+/* TODO:  Heroku shuts down a site daily by sending the SIGTERM signal.
       Listen for SIGTERM and once received, gracefully terminate the app,
        politely handling unhandled requests */
 process.on('SIGTERM', () => {

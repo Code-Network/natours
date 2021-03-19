@@ -8523,7 +8523,7 @@ var showAlert = function showAlert(type, msg) {
   var markup = "<div class=\"alert alert--".concat(type, "\">").concat(msg, "</div>");
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup); // todo:  Step 4:  Hide alert after five seconds
 
-  window.setTimeout(hideAlert, 1000);
+  window.setTimeout(hideAlert, 5000);
 };
 
 exports.showAlert = showAlert;
@@ -9315,7 +9315,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50691" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52212" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

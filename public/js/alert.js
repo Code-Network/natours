@@ -45,5 +45,5 @@ export const showAlert = (type, msg, time = 7) => {
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
 
   // todo:  Step 4:  Hide alert after five seconds
-  window.setTimeout(hideAlert, 1000);
+  window.setTimeout(hideAlert, 5000);
 };

@@ -54,7 +54,7 @@
     "prettier": "^1.17.0"
   },
   "engines": {
-    "node": "^10"
+    "node": "^13"
   },
   "repository": {
     "type": "git",

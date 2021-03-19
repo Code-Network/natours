@@ -155,7 +155,8 @@ const createBookingCheckout = async session => {
   const user = (await User.findOne({ email: session.customer_email })).id;
 
   // price is stored in cents; divide by 100 to get dollar amount
-  const price = session.line_items[0].amount / 100;
+  // Note: Use display_items because Stripe changed the property name
+  const price = session.display_items[0].amount / 100;
   await Booking.create({ tour, user, price });
 };
 

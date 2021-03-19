@@ -47,16 +47,34 @@ app.enable('trust proxy');
 
 // Todo:  Implement CORS in production
 // Implement CORS
+// Note: The cors package adds appropriate headers for cross origin
+//  resource sharing to our response for all incoming GET and POST requests.
 app.use(cors());
 
-// Access-Control-Allow-Origin *
-// api.kokodev-adventures.herokuapp.com, front-end kokodev-adventures.herokuapp.com
+// Access-Control-Allow-Origin * (all)
+// if backend is at api.kokodev-adventures.herokuapp.com,
+//  and front-end is at kokodev-adventures.herokuapp.com ( different )
 // app.use(cors({
 //   origin: 'https://kokodev-adventures.herokuapp.com'
 // }))
 
+/*
+  Note: Enable pre-flight request for all more complex HTTP requests
+     (PATCH, DELETE and PUT or requests that send cookies or use nonstandard headers)
+     These require a pre-flight phase.
+   For complex requests, the browser sends an OPTIONS request when there
+     is a pre-flight phase to see if it is safe to send.
+   We must respond to that OPTIONS request from the browser on our own server
+     by sending back the same Access-Control-Allow-Origin header, etc.
+     (through CORS package)
+   Note that OPTIONS, is just another HTTP Request.
+   Note: We can allow a preflight phase on one route, but we will do them all.
+     code-sample: ( if one route )
+        app.options('/api/v1/tours/:id', cors());
+  step:
+   '*' Defines the route for which we want to handle the OPTIONS request (all)
+   The cors() middleware is the handler. */
 app.options('*', cors());
-// app.options('/api/v1/tours/:id', cors());
 
 app.use(express.static('.'));
 

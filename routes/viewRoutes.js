@@ -8,14 +8,9 @@ const router = express.Router();
 // Apply isLoggedIn to every single route we create on this page
 // router.use(authController.isLoggedIn);
 
-// Important: On Credit Card Charged Successfully after booking,
-//  this route will be hit; Stripe will send a GET request here.
-// FIXME: bookingController.createBookingCheckout here is
-//  temporary because it is UNSECURE; we will use this in development
-//  until we have our website deployed to a server
 router.get(
   '/',
-  bookingController.createBookingCheckout,
+  // bookingController.createBookingCheckout,
   authController.isLoggedIn,
   viewsController.getOverview
 );
@@ -30,7 +25,7 @@ router.get('/me', authController.protect, viewsController.getAccount);
 // TODO: A route which will display all of the tours a user has booked
 router.get(
   '/my-tours',
-  bookingController.createBookingCheckout,
+  // bookingController.createBookingCheckout,
   authController.protect,
   viewsController.getMyTours
 );

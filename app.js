@@ -17,6 +17,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const bookingController = require('./controllers/bookingController');
 const viewRouter = require('./routes/viewRoutes');
 
 // Start express app
@@ -192,6 +193,38 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
+/*
+  TODO: Add Stripe Webhook
+  Important: We put this route here in app.js instead of the booking router
+   because in this handler function, when we receive the body from Stripe,
+   the Stripe function that we are going to use to read the body needs
+   this body in a raw form, as a string and not as JSON.
+  Note: Again, we need the body coming from the request to NOT be in JSON.
+  Important that we put this route here BEFORE we call the body parser
+   because when it gets there, it will be put in req.body as JSON causing the
+   route handler ( bookingController.webhookCheckout ) to not work:
+      code-sample:  // Body Parser code
+        app.use(express.json({ limit: '10kb' }));
+   Note: We still need to parse the body, but in raw format.
+    Express has implemented a body parser of its own
+     'express.raw' instead of having to import it from NPM.
+   Note: The express.raw() function is a built-in middleware function in Express.
+     It parses incoming request payloads into a Buffer and is based on body-parser.
+      The options parameter contains properties like inflate, limit, type, etc.
+     code-sample:
+        express.raw( [options] ) // returns an Object */
+// app.post(
+//   '/webhook-checkout',
+//   express.raw({ type: 'application/json' }),
+//   bookingController.webhookCheckout
+// );
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: '*/*' }),
+  bookingController.webhookCheckout
+);
+
 // TODO: Parse urlencoded form data
 //  The express.urlencoded() function is a built-in middleware function
 //  in Express. It parses incoming requests with urlencoded payloads,
@@ -210,6 +243,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 // TODO: Body parser, reading data from body into req.body
 // Limit the amount of data passed into the body to 10 killibytes (for Security)
 // Used for parsing application/json
+// Note: as soon as we hit this middleware the body will be converted to JSON.
 app.use(express.json({ limit: '10kb' }));
 
 // TODO: Use cookie parser

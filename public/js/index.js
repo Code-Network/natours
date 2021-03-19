@@ -4,6 +4,7 @@ import { displayMap } from './mapbox';
 import { login, logout } from './login';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { hideAlert, showAlert } from './alert';
 
 // DOM ELEMENTS
 // Note: We ran into some problems where an error showed up when we were
@@ -121,3 +122,7 @@ if (bookBtn)
     const { tourId } = e.target.dataset;
     bookTour(tourId);
   });
+
+// On Booking Completion, sent alert if url query alert
+const alertMessage = document.querySelector('body').dataset.alert;
+if (alertMessage) showAlert('success', alertMessage, 20);

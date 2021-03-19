@@ -1,34 +1,19 @@
 const express = require('express');
 const viewsController = require('./../controllers/viewsController');
 const authController = require('./../controllers/authController');
-const bookingController = require('./../controllers/bookingController');
 
 const router = express.Router();
 
-// Apply isLoggedIn to every single route we create on this page
-// router.use(authController.isLoggedIn);
+router.use(viewsController.alerts);
 
-router.get(
-  '/',
-  // bookingController.createBookingCheckout,
-  authController.isLoggedIn,
-  viewsController.getOverview
-);
-
-// NOTE: Test Only: protect getTour and test by removing cookie
-// router.get('/tour/:slug', authController.protect, viewsController.getTour);
+router.get('/', authController.isLoggedIn, viewsController.getOverview);
 
 router.get('/tour/:slug', authController.isLoggedIn, viewsController.getTour);
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);
 router.get('/me', authController.protect, viewsController.getAccount);
 
 // TODO: A route which will display all of the tours a user has booked
-router.get(
-  '/my-tours',
-  // bookingController.createBookingCheckout,
-  authController.protect,
-  viewsController.getMyTours
-);
+router.get('/my-tours', authController.protect, viewsController.getMyTours);
 
 // POST route used with form on account.pug
 // Important: We protect this route because we want to ensure that only the

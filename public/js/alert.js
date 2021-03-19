@@ -7,7 +7,7 @@ export const hideAlert = () => {
 
 // TODO: Show alert
 // type is 'success' or 'error'
-export const showAlert = (type, msg) => {
+export const showAlert = (type, msg, time = 7) => {
   // todo: Step 1: Before we show an alert, first hide any alert that exists.
   hideAlert();
 
@@ -45,5 +45,5 @@ export const showAlert = (type, msg) => {
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
 
   // todo:  Step 4:  Hide alert after five seconds
-  window.setTimeout(hideAlert, 5000);
+  window.setTimeout(hideAlert, 1000);
 };
